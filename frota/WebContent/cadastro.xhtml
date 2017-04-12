@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+	<ui:define name="content">
+
+		<h:form>
+			<h1>Cadastros</h1>
+			<h:commandLink styleClass="fa fa-institution"
+				value="Cadastro de Setores" action="setor?faces-redirect=true"
+				immediate="true" />
+			<br />
+			<h:commandLink styleClass="fa fa-users" value=" Cadastro de Usuarios"
+				action="usuario?faces-redirect=true" immediate="true" />
+			<br />
+			<h:commandLink styleClass="fa fa-car" value="Cadastro de Veiculos"
+				action="veiculo?faces-redirect=true" immediate="true" />
+			<br />
+			<h:commandLink styleClass="fa fa-calendar-o"
+				value="Cadastro de Agendamentos" action="agenda?faces-redirect=true"
+				immediate="true" />
+			<br />
+			<h:commandLink styleClass="fa fa-rotate-right"
+				value="Cadastro de Abastecimentos"
+				action="abastecimento?faces-redirect=true" immediate="true" />
+			<br />
+			<br />
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

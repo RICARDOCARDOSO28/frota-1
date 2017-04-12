@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="abastecimentoId"
+			value="#{abastecimentoBean.abastecimentoId}" />
+		<f:viewAction
+			action="#{abastecimentoBean.recuperarAbastecimentoPorId}"
+			if="#{param.abastecimentoId != null}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h1>Abastecimentos</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formAbastecimento">
+			<p:fieldset legend="Dados do Abastecimento">
+				<h:panelGrid columns="3">
+
+					<h:outputLabel value="Veiculo pela Placa: " for="veiculoId" />
+					<h:selectOneMenu value="#{abastecimentoBean.veiculoId}"
+						id="veiculoId" required="true"
+						requiredMessage="#{abastecimentoBean.abastecimento.veiculo.tipoCombustivel.label}">
+						<c:choose>
+							<c:when
+								test="#{abastecimentoBean.abastecimento.veiculo.id == null}">
+								<f:selectItem itemValue="" itemLabel="Escolha um Veiculo" />
+							</c:when>
+							<c:when
+								test="#{abastecimentoBean.abastecimento.veiculo.id != null}">
+								<f:selectItem
+									itemValue="#{abastecimentoBean.abastecimento.veiculo.id}"
+									itemLabel="#{abastecimentoBean.abastecimento.veiculo.placa}" />
+							</c:when>
+						</c:choose>
+						<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo"
+							itemLabel="#{veiculo.placa}" itemValue="#{veiculo.id}" />
+						<f:ajax event="blur" render="veiculoIdMessage" />
+					</h:selectOneMenu>
+					<h:commandLink styleClass="fa fa-car" value=" Novo Veiculo"
+						action="veiculo?faces-redirect=true" immediate="true" />
+
+					<h:outputLabel value="Quantidade de Combustivel: "
+						for="qntCombustivel" />
+					<h:inputText id="qntCombustivel"
+						value="#{abastecimentoBean.abastecimento.qntCombustivel}"
+						required="true"
+						requiredMessage="Entre com a Quantidade de Combustivel">
+						<f:ajax event="blur" render="qntCombustivelMessage" />
+					</h:inputText>
+					<p:message for="qntCombustivel" id="qntCombustivelMessage" />
+
+					<h:outputLabel value="Data do Abastecimento:"
+						for="dataAbastecimento" />
+					<h:inputText id="dataAbastecimento"
+						value="#{abastecimentoBean.abastecimento.dataAbastecimento.time}"
+						required="true"
+						requiredMessage="Data de Abastecimento Obrigatória" maxlength="10">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:inputText>
+					<p:message for="dataAbastecimento" id="dataAbastecimentoMessage" />
+
+
+					<h:outputLabel value="Usuario: " for="usuarioId" />
+					<h:selectOneMenu value="#{abastecimentoBean.usuarioId}"
+						id="usuarioId">
+						<c:choose>
+							<c:when
+								test="#{abastecimentoBean.abastecimento.usuario.id == null}">
+								<f:selectItem itemValue="" itemLabel="Escolha um Motorista" />
+							</c:when>
+							<c:when
+								test="#{abastecimentoBean.abastecimento.usuario.id != null}">
+								<f:selectItem
+									itemValue="#{abastecimentoBean.abastecimento.usuario.id}"
+									itemLabel="#{abastecimentoBean.abastecimento.usuario.nome}" />
+							</c:when>
+						</c:choose>
+						<f:selectItems value="#{usuarioBean.motoristas}" var="motorista"
+							itemLabel="#{motorista.nome}" itemValue="#{motorista.id}" />
+					</h:selectOneMenu>
+					<h:commandLink styleClass="fa fa-user-plus" value=" Novo motorista"
+						action="usuario?faces-redirect=true" immediate="true" />
+
+
+					<h:outputLabel value="Observações:" for="descricao" />
+					<h:inputTextarea id="descricao"
+						value="#{abastecimentoBean.abastecimento.descricao}" />
+				</h:panelGrid>
+			</p:fieldset>
+
+			<div class="botoes">
+				<h:commandButton value="Gravar" action="#{abastecimentoBean.gravar}">
+					<f:ajax execute="@form" render="@form" />
+				</h:commandButton>
+				<h:commandButton value="Limpar" type="reset" />
+			</div>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

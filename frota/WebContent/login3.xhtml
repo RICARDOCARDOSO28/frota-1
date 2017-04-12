@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+
+	<ui:define name="content">
+
+		<div class="container-center .flex-column text-center">
+			<p:messages id="messages" globalOnly="true" />
+
+			<h:form id="formLogin" styleClass="ui-g-12 ui-md-6 ui-lg-4">
+				<p:fieldset>
+					<div id="panelLogin">
+						<h2>login</h2>
+
+						<h:panelGrid columns="3" id="tabelaLogin">
+							<h:outputLabel value="CPF: " for="cpf" />
+							<h:inputText id="cpf" value="#{loginBean.usuario.cpf}"
+								required="true" requiredMessage="CPF Invalido"
+								validatorMessage="CPF deve conter 11 caracteres" maxlength="11">
+								<f:validateLength minimum="11" />
+								<f:ajax event="blur" render="cpfMessage" />
+							</h:inputText>
+							<p:message for="cpf" id="cpfMessage" />
+
+							<h:outputLabel value="Senha: " for="senha" />
+							<h:inputSecret id="senha" value="#{loginBean.usuario.senha}"
+								required="true" requiredMessage="Senha obrigatória"
+								validatorMessage="Senha deve conter no minimo 6 caracteres">
+								<f:validateLength minimum="6" />
+								<f:ajax event="blur" render="senhaMessage" />
+							</h:inputSecret>
+							<p:message for="senha" id="senhaMessage" />
+						</h:panelGrid>
+
+						<h:commandButton value="EFETUAR LOGIN"
+							action="#{loginBean.efetuarLogin}" styleClass="ui-button">
+							<!-- 					<f:ajax execute="@form" render="@form" /> -->
+						</h:commandButton>
+						<br />
+
+						<h:commandLink value="Esqueci a Senha!"
+							action="login?faces-redirect=true" immediate="true"
+							styleClass="submeter" /><br/>
+						<h:commandLink value="Criar Sistema de Frota para sua empresa!"
+							action="login?faces-redirect=true" immediate="true"
+							styleClass="submeter" />
+					</div>
+				</p:fieldset>
+			</h:form>
+		</div>
+
+	</ui:define>
+</ui:composition>
+</html>

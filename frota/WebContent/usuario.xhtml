@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="usuarioId" value="#{usuarioBean.usuarioId}" />
+		<f:viewAction action="#{usuarioBean.recuperarUsuarioPorId}"
+			if="#{param.usuarioId != null}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h1>Usuario</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formUsuario">
+			<p:fieldset legend="Dados Pessoais">
+				<h:panelGrid columns="3">
+					<h:outputLabel value="Nome:" for="nome" />
+					<h:inputText id="nome" value="#{usuarioBean.usuario.nome}"
+						required="true"
+						requiredMessage="Nome completo do Usuario obrigatório"
+						validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres"
+						pt:placeholder="Nome Completo">
+						<f:validateLength maximum="80" minimum="2" />
+						<f:ajax event="blur" render="messages" />
+					</h:inputText>
+					<p:message for="nome" />
+
+					<h:outputLabel value="CPF:" for="cpf" />
+					<h:inputText id="cpf" value="#{usuarioBean.usuario.cpf}"
+						validatorMessage="CPF deve ter 11 caracteres" maxlength="11">
+						<f:validateLength minimum="11" />
+						<f:ajax event="blur" render="messages" />
+					</h:inputText>
+					<p:message for="cpf" />
+
+					<h:outputLabel value="Sexo:" for="sexo" />
+					<h:selectOneRadio value="#{usuarioBean.usuario.sexo}" id="sexo"
+						required="true" requiredMessage="Selecione uma opção de sexo">
+						<f:selectItems value="#{usuarioBean.tipoSexo}" var="sexo"
+							itemValue="#{sexo}" itemLabel="#{sexo.label}" />
+						<f:ajax event="blur" render="messages" />
+					</h:selectOneRadio>
+					<p:message for="sexo" />
+
+					<h:outputLabel value="Setor:" for="setorId" />
+					<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId">
+						<c:choose>
+							<c:when test="#{usuarioBean.usuario.setor.id == null}">
+								<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
+							</c:when>
+							<c:when test="#{usuarioBean.usuario.setor.id != null}">
+								<f:selectItem itemValue="#{usuarioBean.setorId}"
+									itemLabel="#{usuarioBean.usuario.setor.nome}" />
+							</c:when>
+						</c:choose>
+						<f:selectItems value="#{setorBean.setores}" var="setor"
+							itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
+					</h:selectOneMenu>
+					<h:commandLink value="Cadastrar Novo Setor"
+						action="setor?faces-redirect=true" immediate="true" />
+
+					<h:outputLabel value="Telefone:" for="fone" />
+					<h:inputText id="fone" value="#{usuarioBean.usuario.fone}"
+						validatorMessage="Telefone deve ter no maximo 11 caracteres">
+						<f:validateLength maximum="11" minimum="8" />
+						<f:ajax event="blur" render="messages" />
+					</h:inputText>
+					<p:message for="fone" />
+
+					<h:outputLabel value="Email:" for="email" />
+					<h:inputText id="email" value="#{usuarioBean.usuario.email}"
+						validatorMessage="insira um endereço de email válido"
+						maxlength="80">
+						<f:validateLength minimum="7" />
+						<f:ajax event="blur" render="emailMessage" />
+					</h:inputText>
+					<p:message for="email" id="emailMessage" />
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+
+
+
+			<p:fieldset legend="Dados do Motorista">
+				<h:panelGrid columns="3">
+					<h:outputLabel value="CNH:" for="cnh" />
+					<h:inputText id="cnh" value="#{usuarioBean.usuario.cnhId}"
+						validatorMessage="insira uma CNH válida" maxlength="11">
+						<f:validateLength minimum="11" />
+						<f:ajax event="blur" render="cnhIdMessage" />
+					</h:inputText>
+					<p:message for="cnh" id="cnhIdMessage" />
+
+					<h:outputLabel value="Validade da CNH:" for="cnhValidade" />
+					<h:inputText id="cnhValidade"
+						value="#{usuarioBean.usuario.cnhValidade.time}" maxlength="10">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:inputText>
+					<p:message for="cnhValidade" id="cnhValidadeMessage" />
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+
+			<div class="botoes">
+				<h:commandButton id="gravarUsuario" value="Gravar"
+					action="#{usuarioBean.gravar}">
+					<!-- 						<f:ajax execute="@form" render="@form" /> -->
+				</h:commandButton>
+
+				<c:choose>
+					<c:when test="#{usuarioBean.usuario.id == null}">
+						<h:commandButton value="Limpar" type="reset" />
+					</c:when>
+				</c:choose>
+
+				<h:commandButton value="Voltar" action="index?faces-redirect=true"
+					immediate="true" />
+			</div>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

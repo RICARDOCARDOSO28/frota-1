@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+	<ui:define name="content">
+
+		<h1>Agendamentos do Usuarios</h1>		
+
+		<h:form id="tabelaAgendamentos" styleClass="ui-g-12">
+			<p:dataTable var="agenda" value="#{agendaBean.agendas}"
+				style="margin-bottom:40px">
+
+				<p:column headerText="Destino">
+					<h:outputText value="#{agenda.destino}" />
+				</p:column>
+				<p:column headerText="Saida">
+					<h:outputText value="#{agenda.dataSaida.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText> as 
+					<h:outputText value="#{agenda.horaSaida}" />
+				</p:column>
+
+				<p:column headerText="Chegada">
+					<h:outputText value="#{agenda.dataChegada.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText> as 
+					<h:outputText value="#{agenda.horaChegada}" />
+				</p:column>
+
+				<p:column headerText="Veiculo">
+					<h:outputText value="#{agenda.tipoVeiculo.label}" />
+				</p:column>
+
+				<p:column headerText="Veiculo">
+					<h:outputText value="#{agenda.descricao}" />
+				</p:column>
+
+				<p:column headerText="Editar">
+					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						action="agenda?faces-redirect=true" />
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

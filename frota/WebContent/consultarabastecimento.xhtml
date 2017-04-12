@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/template/main.xhtml">
+
+	<ui:define name="content">
+		<h1>Consultar Abastecimentos</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formAbastecimentoConsulta" styleClass="ui-g-12">
+
+			<div class="ui-g-12 ui-md-4 flex">
+				<h:outputLabel value="Nome do Veiculo: " for="abastecimentoNome" />
+				<h:inputText value="#{abastecimentoBean.abastecimentoNome}"
+					id="abastecimentoNome" />
+			</div>
+
+			<div class="ui-g-12 ui-md-8 flex">
+				<h:commandButton value="Buscar"
+					action="#{abastecimentoBean.listarPorNome}" />
+				<h:commandButton value="Novo"
+					action="#{abastecimentoBean.novoAbastecimento}" />
+				<h:commandButton value="Voltar" action="index" />
+
+			</div>
+		</h:form>
+
+
+		<h:form id="tabelaAbastecimentos" styleClass="ui-g-12">
+			<p:dataTable var="abastecimento"
+				value="#{abastecimentoBean.abastecimentos}"
+				style="margin-bottom:40px">
+				<f:facet name="header">
+            Lista de Abastecimentos Abastecimentos
+        </f:facet>
+				<p:column headerText="Motorista">
+					<h:outputText value="#{abastecimento.usuario.nome}" />
+				</p:column>
+				<p:column headerText="Veiculo">
+					<h:outputText value="#{abastecimento.veiculo.placa}" />
+				</p:column>
+
+				<p:column headerText="Quantidade Combustivel">
+					<h:outputText value="#{abastecimento.qntCombustivel}" />
+				</p:column>
+
+				<p:column headerText="Data de Abastecimento">
+					<h:outputText value="#{abastecimento.dataAbastecimento.time}" >
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" /></h:outputText>
+				</p:column>
+
+				<p:column headerText="Editar">
+					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						action="#{abastecimentoBean.editar(abastecimento)}" />
+				</p:column>
+
+				<p:column headerText="Excluir">
+					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
+						action="#{abastecimentoBean.remover(abastecimento)}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

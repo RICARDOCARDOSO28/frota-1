@@ -1,0 +1,16 @@
+/* tamanho da fonte dos componentes do primefaces */
+html {
+	font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+}
+
+.ui-widget {
+	font-size: 19px !important;
+}
+
+
+
+input[type="button" i], input[type="submit" i], input[type="reset" i],
+	input[type="file" i]::-webkit-file-upload-button, button {
+	padding: 5px 20px;
+	margin: 5px 25px 5px 0;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="agendaId" value="#{agendaBean.agendaId}" />
+		<f:viewAction action="#{agendaBean.recuperarAgendaPorId}"
+			if="#{param.agendaId != null}" />
+	</f:metadata>
+
+	<ui:define name="content">
+
+		<f:view>
+			<h1>Agendamentos</h1>
+
+			<p:messages id="messages" globalOnly="true" />
+
+			<p:fieldset legend="Dados do Agendamento">
+				<h:form id="formAgendaBusca">
+					<h:panelGrid columns="3">
+						<h:outputLabel value="Solicitante" for="nome">
+							<h:inputText id="nome" value="#{usuarioBean.usuarioNome}"
+								required="true" requiredMessage="Nome do Usuario obrigatório"
+								validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres">
+								<f:validateLength maximum="30" minimum="2" />
+							</h:inputText>
+						</h:outputLabel>
+
+						<h:commandButton value="Buscar Solicitante"
+							action="#{usuarioBean.listarPorNome}" execute="@form"
+							render="@form" />
+					</h:panelGrid>
+				</h:form>
+
+				<h:form id="formAgendaCadastro">
+					<h:panelGrid columns="6">
+						<h:outputLabel value="Data de Saida:" for="dataSaida" />
+						<h:inputText id="dataSaida"
+							value="#{agendaBean.agenda.dataSaida.time}" required="true"
+							requiredMessage="Data de Saida Obrigatória" maxlength="10">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo" />
+						</h:inputText>
+						<h:outputLabel />
+
+						<h:outputLabel value="Hora de Saida:" for="horaSaida" />
+						<h:inputText id="horaSaida" value="#{agendaBean.agenda.horaSaida}"
+							required="true" requiredMessage="Hora de Saida Obrigatória"
+							maxlength="5">
+							<f:ajax event="blur" render="horaSaidaMessage" />
+						</h:inputText>
+						<p:message for="horaSaida" id="horaSaidaMessage" />
+
+						<h:outputLabel value="Data de Chegada:" for="dataChegada" />
+						<h:inputText id="dataChegada"
+							value="#{agendaBean.agenda.dataChegada.time}" required="true"
+							requiredMessage="Data de Chegada Obrigatória" maxlength="10">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo" />
+						</h:inputText>
+
+						<h:outputLabel />
+
+						<h:outputLabel value="Hora de Chegada:" for="horaChegada" />
+						<h:inputText id="horaChegada"
+							value="#{agendaBean.agenda.horaChegada}" required="true"
+							requiredMessage="Hora de Chegada Obrigatória" maxlength="5">
+							<f:ajax event="blur" render="horaChegadaMessage" />
+						</h:inputText>
+						<p:message for="horaChegada" id="horaChegadaMessage" />
+
+					</h:panelGrid>
+
+
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Tipo de Veiculo:" for="tipo" />
+						<h:selectOneMenu value="#{agendaBean.agenda.tipoVeiculo}"
+							id="tipo" required="true"
+							requiredMessage="Tipo de Veiculo obrigatório">
+							<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+								itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+						</h:selectOneMenu>
+
+						<h:outputLabel value="Destino:" for="destino" />
+						<h:inputText id="destino" value="#{agendaBean.agenda.destino}" />
+
+						<h:outputLabel value="Observações:" for="descricao" />
+						<h:inputTextarea id="descricao"
+							value="#{agendaBean.agenda.descricao}" />
+					</h:panelGrid>
+
+
+					<div class="flex">
+						<h:commandButton value="Gravar" action="#{agendaBean.gravar}">
+							<f:ajax execute="@form" render="@form" />
+						</h:commandButton>
+						<h:commandButton value="Limpar" type="reset" />
+					</div>
+				</h:form>
+			</p:fieldset>
+
+
+
+			<h:form id="tabelaUsuarios" styleClass="ui-g-12"
+				rendered="#{usuarioBean.usuarioNome != ''}">
+				<p:dataTable var="usuario" value="#{usuarioBean.usuarios}"
+					style="margin-bottom:40px">
+					<f:facet name="header">
+            Lista de Usuarios Usuarios
+        </f:facet>
+					<p:column headerText="Nome">
+						<h:outputText value="#{usuario.nome}" />
+					</p:column>
+					<p:column headerText="CPF">
+						<h:outputText value="#{usuario.cpf}" />
+					</p:column>
+					<p:column headerText="Setor">
+						<h:outputText value="#{usuario.setor.nome}" />
+					</p:column>
+					<p:column headerText="Telefone">
+						<h:outputText value="#{usuario.fone}" />
+					</p:column>
+					<p:column headerText="Carregar">
+						<h:commandButton styleClass="ui-button button.ui-button.ui-state-default ui-button.ui-state-default" value="Carregar"
+							action="#{agendaBean.carregarUsuario(usuario)}"
+							actionListener="#{usuarioBean.carregarUsuario(usuario)}" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</f:view>
+
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+
+	<f:metadata>
+		<f:viewParam name="veiculoId" value="#{veiculoBean.veiculoId}" />
+		<f:viewAction action="#{veiculoBean.recuperarVeiculoPorId}"
+			if="#{param.veiculoId != null}" />
+	</f:metadata>
+
+	<ui:define name="content">
+		<h1>Veiculos</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formVeiculo">
+			<p:fieldset legend="Dados do Veiculo">
+
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Placa:" for="placa" />
+					<h:inputText id="placa" value="#{veiculoBean.veiculo.placa}"
+						required="true" requiredMessage="Placa obrigatória"
+						validatorMessage="A placa deve possuir 7 (sete) caracteres"
+						maxlength="7">
+						<f:validateLength minimum="7" />
+					</h:inputText>
+
+					<h:outputLabel value="Marca:" for="marca" />
+					<h:inputText id="marca" value="#{veiculoBean.veiculo.marca}" />
+
+					<h:outputLabel value="Modelo:" for="modelo" />
+					<h:inputText id="modelo" value="#{veiculoBean.veiculo.modelo}"
+						required="true" requiredMessage="Modelo do Veiculo obrigatório"
+						validatorMessage="Modelo do Veiculo deve possuir no minimo 2 caracteres">
+						<f:validateLength minimum="2" />
+					</h:inputText>
+
+					<h:outputLabel value="Tipo do Veiculo: " for="tipoVeiculo" />
+					<h:selectOneMenu value="#{veiculoBean.veiculo.tipoVeiculo}"
+						id="tipoVeiculo" required="true"
+						requiredMessage="Tipo de Veiculo obrigatório">
+						<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+							itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="Ano:" for="ano" />
+					<h:inputText id="ano" value="#{veiculoBean.veiculo.ano}"
+						required="true" requiredMessage="Ano do Veiculo obrigatório"
+						validatorMessage="Ano do Veiculo deve possuir 4 caracteres"
+						maxlength="4">
+						<f:validateLength minimum="4" />
+					</h:inputText>
+
+					<h:outputLabel value="Odometro:" for="odometro" />
+					<h:inputText id="odometro" value="#{veiculoBean.veiculo.odometro}"
+						required="true" requiredMessage="Valor do Odometro obrigatório">
+					</h:inputText>
+
+					<h:outputLabel value="Tipo de Combustivel:" for="combustivel" />
+					<h:selectOneMenu value="#{veiculoBean.veiculo.tipoCombustivel}"
+						id="combustivel" required="true"
+						requiredMessage="Tipo de Veiculo obrigatório">
+						<f:selectItems value="#{veiculoBean.tipoCombustivel}"
+							var="combustivel" itemLabel="#{combustivel.label}"
+							itemValue="#{combustivel}" />
+					</h:selectOneMenu>
+
+				</h:panelGrid>
+			</p:fieldset>
+
+
+			<div class="botoes">
+				<h:commandButton value="Gravar" action="#{veiculoBean.gravar}">
+					<f:ajax execute="@form" render="@form" />
+				</h:commandButton>
+			</div>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

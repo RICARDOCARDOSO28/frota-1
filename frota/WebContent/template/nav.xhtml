@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<nav>
+	<h:form>
+		<p:menubar rendered="#{usuariologado == null}">
+			<p:menuitem value="Whatsapp" icon="ui-icon-fa-whatsapp" />
+		</p:menubar>
+
+		<p:menubar rendered="#{usuariologado != null}">
+			<p:menuitem value="Home" icon="fa fa-home"
+				action="index?faces-redirect=true" immediate="true" />
+			<p:menuitem value="Cadastros" icon="fa fa-home"
+				action="cadastro?faces-redirect=true" immediate="true" />
+			<p:menuitem value="Consulta" icon="fa fa-search"
+				action="consulta?faces-redirect=true" />
+				
+			<f:facet name="options">
+				<p:commandButton value="Logout" icon="ui-icon-extlink"
+					action="#{loginBean.logout}" />
+			</f:facet>
+		</p:menubar>
+	</h:form>
+</nav>
+
+
+<nav>
+	<h:form styleClass="ui-g-12 ui-corner-all ui-widget-content">
+
+
+		<p:commandLink id="dynaButton" value="Cadastros" type="button"
+			icon="ui-icon-extlink" />
+		<p:menu overlay="true" trigger="dynaButton" my="left top"
+			at="left bottom">
+			<p:menuitem value="Usuarios" action="usuario?faces-redirect=true"
+				icon="ui-icon-disk" />
+			<p:menuitem value="Veiculos" action="veiculo?faces-redirect=true"
+				icon="ui-icon-disk" />
+			<p:menuitem value="Agendamentos" action="agenda?faces-redirect=true"
+				icon="ui-icon-disk" />
+			<p:menuitem value="Controle de Circulação"
+				action="agenda?faces-redirect=true" icon="ui-icon-arrowrefresh-1-w" />
+		</p:menu>
+
+		<p:commandLink id="dynaButton2" value="Consultas" type="button"
+			icon="ui-icon-extlink" />
+		<p:menu overlay="true" trigger="dynaButton2" my="left top"
+			at="left bottom">
+			<p:menuitem value="Usuarios"
+				action="consultarusuario?faces-redirect=true" icon="ui-icon-disk" />
+			<p:menuitem value="Veiculos"
+				action="consultarveiculo?faces-redirect=true" icon="ui-icon-disk" />
+			<p:menuitem value="Agendamentos"
+				action="consultaragenda?faces-redirect=true" icon="ui-icon-disk" />
+			<p:menuitem value="Controle de Circulação"
+				action="consultaragenda?faces-redirect=true"
+				icon="ui-icon-arrowrefresh-1-w" />
+		</p:menu>
+
+		<p:commandButton value="Logout" icon="ui-icon-extlink"
+			action="#{loginBean.logout}" style="float: right;" />
+	</h:form>
+</nav>
+
+</html>

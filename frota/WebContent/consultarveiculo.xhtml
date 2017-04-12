@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/template/main.xhtml">
+
+	<ui:define name="content">
+		<h1>Consultar Veiculo</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formVeiculoConsulta" styleClass="ui-g-12">
+
+			<div class="ui-g-12 ui-md-4 flex">
+				<h:outputLabel value="Nome do Veiculo: " for="veiculoPlaca" />
+				<h:inputText value="#{veiculoBean.veiculoPlaca}" id="veiculoPlaca" />
+			</div>
+
+			<div class="ui-g-12 ui-md-8 flex">
+				<h:commandButton value="Buscar"
+					action="#{veiculoBean.listarPorNome}" />
+				<h:commandButton value="Novo" action="#{veiculoBean.novoVeiculo}" />
+				<h:commandButton value="Voltar" action="index" />
+
+			</div>
+		</h:form>
+
+
+		<h:form id="tabelaVeiculos" styleClass="ui-g-12">
+			<p:dataTable var="veiculo" value="#{veiculoBean.veiculos}"
+				style="margin-bottom:40px">
+				<f:facet name="header">
+            Lista de Veiculos Veiculos
+        </f:facet>
+				<p:column headerText="Placa">
+					<h:outputText value="#{veiculo.placa}" />
+				</p:column>
+				<p:column headerText="Marca">
+					<h:outputText value="#{veiculo.marca}" />
+				</p:column>
+
+				<p:column headerText="Modelo">
+					<h:outputText value="#{veiculo.modelo}" />
+				</p:column>
+
+				<p:column headerText="Ano">
+					<h:outputText value="#{veiculo.ano}" />
+				</p:column>
+
+				<p:column headerText="Tipo de Veiculo">
+					<h:outputText value="#{veiculo.tipoVeiculo.label}" />
+				</p:column>
+
+				<p:column headerText="Tipo de Combustivel">
+					<h:outputText value="#{veiculo.tipoCombustivel.label}" />
+				</p:column>
+
+				<p:column headerText="Editar">
+					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						action="#{veiculoBean.editar(veiculo)}" />
+				</p:column>
+
+				<p:column headerText="Excluir">
+					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
+						action="#{veiculoBean.remover(veiculo)}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

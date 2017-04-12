@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/template/main.xhtml">
+
+	<ui:define name="content">
+		<h1>Consultar Usuarios</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formUsuarioConsulta" styleClass="ui-g-12">
+
+			<div class="ui-g-12 ui-md-4 flex">
+				<h:outputLabel value="Nome do Usuario: " for="usuarioNome" />
+				<h:inputText value="#{usuarioBean.usuarioNome}" id="usuarioNome" />
+				</div>
+
+			<div class="ui-g-12 ui-md-8 flex">
+				<h:commandButton value="Buscar"
+					action="#{usuarioBean.listarPorNome}" />
+				<h:commandButton value="Novo" action="#{usuarioBean.novoUsuario}" />
+				<h:commandButton value="Voltar" action="index" />
+
+			</div>
+		</h:form>
+
+
+		<h:form id="tabelaUsuarios" styleClass="ui-g-12">
+			<p:dataTable var="usuario" value="#{usuarioBean.usuarios}"
+				style="margin-bottom:40px">
+				<f:facet name="header">
+            Lista de Usuarios Usuarios
+        </f:facet>
+				<p:column headerText="Nome" >
+					<h:outputText value="#{usuario.nome}" />
+				</p:column>
+				<p:column headerText="CPF" >
+					<h:outputText value="#{usuario.cpf}" />
+				</p:column>
+
+				<p:column headerText="Setor" >
+					<h:outputText value="#{usuario.setor.nome}" />
+				</p:column>
+
+				<p:column headerText="Telefone" >
+					<h:outputText value="#{usuario.fone}" />
+				</p:column>
+
+				<p:column headerText="Editar">
+					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						action="#{usuarioBean.editar(usuario)}" />
+				</p:column>
+
+				<p:column headerText="Excluir">
+					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
+						action="#{usuarioBean.remover(usuario)}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>
