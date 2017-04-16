@@ -18,13 +18,13 @@ public class Setor {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "nome", length = 80, nullable = false)
+	@Column(name = "nome", nullable = false)
 	private String nome;
 
-	@Column(name = "fone", length = 11, unique = true)
+	@Column(name = "fone", length = 11)
 	private String fone;
 
-	@Column(name = "email", length = 50)
+	@Column(name = "email")
 	private String email;
 
 	@OneToMany(mappedBy = "setor", cascade = CascadeType.ALL)
@@ -67,6 +67,16 @@ public class Setor {
 	}
 
 	public void removerUsuarios(Usuario usuario) {
+		getUsuarios().remove(usuario);
+	}
+
+	public void adicionarUsuario(Usuario usuario) {
+		usuario.setSetor(this);
+		getUsuarios().add(usuario);
+	}
+
+	public void removerUsuario(Usuario usuario) {
+		usuario.setSetor(null);
 		getUsuarios().remove(usuario);
 	}
 

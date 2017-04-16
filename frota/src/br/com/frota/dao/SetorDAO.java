@@ -22,15 +22,10 @@ public class SetorDAO {
 		em.getTransaction().commit();
 	}
 
-	public Setor buscaSetor(int id) {
-		Setor setor = em.find(Setor.class, id);
-		return setor;
-	}
-
-	public List<Setor> listarSetoresPorNome(String nome) {
-		TypedQuery<Setor> query = em.createQuery("select u from Setor u where u.nome like :pnome", Setor.class);
-		query.setParameter("pnome", '%' + nome + '%');
-		return query.getResultList();
+	public void atualizar(Setor setor) {
+		em.getTransaction().begin();
+		em.merge(setor);
+		em.getTransaction().commit();
 	}
 
 	public void remover(Setor setor) {
@@ -39,14 +34,23 @@ public class SetorDAO {
 		em.getTransaction().commit();
 	}
 
-	public void atualizar(Setor setor) {
-		em.getTransaction().begin();
-		em.merge(setor);
-		em.getTransaction().commit();
-	}
-	
-	public void encerrar(){
-		em.close();
+	public Setor buscaSetor(Integer id) {
+		return em.find(Setor.class, id);
 	}
 
+	public List<Setor> listarSetoresPorNome(String nome) {
+		String jpql = "select s from Setor s where s.nome like :pnome or s.fone like :pfone";
+
+		TypedQuery<Setor> query = em.createQuery(jpql, Setor.class);
+
+		query.setParameter("pnome", '%' + nome + '%');
+		query.setParameter("pfone", '%' + nome + '%');
+
+		System.out.println(jpql);
+		return query.getResultList();
+	}
+
+	public Integer contarUsuarios(Setor setor){
+		return setor.getUsuarios().size();
+	}
 }

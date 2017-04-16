@@ -9,6 +9,7 @@ import br.com.frota.dao.SetorDAO;
 import br.com.frota.dao.UsuarioDAO;
 import br.com.frota.model.Setor;
 import br.com.frota.model.Usuario;
+import br.com.frota.util.TipoUsuario;
 
 @ManagedBean
 @ViewScoped
@@ -45,11 +46,15 @@ public class AdministradorBean {
 
 	public String salvar() {
 		setorDAO.gravar(setor);
-		usuario.setTipoUsuario(0); //SuperUsuario
+		usuario.setTipoUsuario(TipoUsuario.SUPERUSER);
 		usuarioDAO.adicionar(usuario, setor.getId());
 		FacesContext.getCurrentInstance().addMessage("usuario",
 				new FacesMessage("Usuario " + usuario.getNome() + " Cadastrado com Sucesso"));
 		usuario = new Usuario();
 		return "login?faces-redirect=true";
+	}
+	
+	public void salvarAdm() {
+		//Chamar Enum tipoUsuario
 	}
 }

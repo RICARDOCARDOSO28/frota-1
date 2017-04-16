@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.ColumnDefault;
 
 import br.com.frota.util.TipoSexo;
+import br.com.frota.util.TipoUsuario;
 
 @Entity
 public class Usuario {
@@ -32,7 +33,7 @@ public class Usuario {
 	@Column(name = "nome", length = 80, nullable = false)
 	private String nome;
 
-	@Column(name = "cpf", length = 11, unique = true)
+	@Column(name = "cpf", length = 11)
 	private String cpf;
 
 	@Column(name = "sexo", length = 1, nullable = false)
@@ -46,11 +47,11 @@ public class Usuario {
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	private List<Abastecimento> abastecimentos = new ArrayList<>();
 
-	// @OneToMany(mappedBy = "usuario", cascade=CascadeType.ALL)
-	// private List<Agenda> agendas = new ArrayList<>();
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+	private List<Agenda> agendas = new ArrayList<>();
 
-	// @OneToMany(mappedBy = "motorista", cascade=CascadeType.ALL)
-	// private List<ControleCirculacao> controles = new ArrayList<>();
+	@OneToMany(mappedBy = "motorista", cascade = CascadeType.ALL)
+	private List<ControleCirculacao> controles = new ArrayList<>();
 
 	@Column(name = "fone", length = 11)
 	private String fone;
@@ -58,7 +59,7 @@ public class Usuario {
 	@Column(name = "email", length = 50)
 	private String email;
 
-	@Column(name = "senha", length=32)
+	@Column(name = "senha", length = 32)
 	private String senha;
 
 	@Column(name = "cnh_id", length = 11)
@@ -68,20 +69,11 @@ public class Usuario {
 	@Temporal(TemporalType.DATE)
 	private Calendar cnhValidade = Calendar.getInstance();
 
-	// 0 SuperUser(existe somente 1); 1 Admins; 2 Users
-	// @Column(name = "admin_status", nullable = false, length = 1)
-	// private Integer adminStatus;
-
-	@ColumnDefault("2")
-	@Column(name = "admin_status", nullable = false, length = 1)
-	private Integer tipoUsuario;
+	@Column(name = "tipo_usuario", nullable = false)
+	private TipoUsuario tipoUsuario;
 
 	@Column(name = "descricao")
 	private String descricao;
-
-	public Integer getId() {
-		return id;
-	}
 
 	public String getNome() {
 		return nome;
@@ -113,6 +105,30 @@ public class Usuario {
 
 	public void setSetor(Setor setor) {
 		this.setor = setor;
+	}
+
+	public List<Abastecimento> getAbastecimentos() {
+		return abastecimentos;
+	}
+
+	public void setAbastecimentos(List<Abastecimento> abastecimentos) {
+		this.abastecimentos = abastecimentos;
+	}
+
+	public List<Agenda> getAgendas() {
+		return agendas;
+	}
+
+	public void setAgendas(List<Agenda> agendas) {
+		this.agendas = agendas;
+	}
+
+	public List<ControleCirculacao> getControles() {
+		return controles;
+	}
+
+	public void setControles(List<ControleCirculacao> controles) {
+		this.controles = controles;
 	}
 
 	public String getFone() {
@@ -155,19 +171,11 @@ public class Usuario {
 		this.cnhValidade = cnhValidade;
 	}
 
-	public List<Abastecimento> getAbastecimentos() {
-		return abastecimentos;
-	}
-
-	public void setAbastecimentos(List<Abastecimento> abastecimentos) {
-		this.abastecimentos = abastecimentos;
-	}
-
-	public Integer getTipoUsuario() {
+	public TipoUsuario getTipoUsuario() {
 		return tipoUsuario;
 	}
 
-	public void setTipoUsuario(Integer tipoUsuario) {
+	public void setTipoUsuario(TipoUsuario tipoUsuario) {
 		this.tipoUsuario = tipoUsuario;
 	}
 
@@ -179,6 +187,40 @@ public class Usuario {
 		this.descricao = descricao;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void adicionarAbastecimento(Abastecimento a){
+		a.setUsuario(this);
+		getAbastecimentos().add(a);
+	}
+	
+	public void removerAbastecimento(Abastecimento a){
+		a.setUsuario(null);
+		getAbastecimentos().remove(a);
+	}
+	
+	public void adicionarAgenda(Agenda a){
+		a.setUsuario(this);
+		getAgendas().add(a);
+	}
+	
+	public void removerAgenda(Agenda a){
+		a.setUsuario(null);
+		getAgendas().remove(a);
+	}
+	
+	public void adicionarControle(ControleCirculacao c){
+		c.setMotorista(this);
+		getControles().add(c);
+	}
+	
+	public void removerControle(ControleCirculacao c){
+		c.setMotorista(null);
+		getControles().remove(c);
+	}
+	
 	@Override
 	public String toString() {
 		return "Usuario[id:" + getId() + ", nome:" + getNome() + ", cpf:" + getCpf() + ", sexo:" + getSexo()
@@ -189,7 +231,7 @@ public class Usuario {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -202,7 +244,10 @@ public class Usuario {
 		if (getClass() != obj.getClass())
 			return false;
 		Usuario other = (Usuario) obj;
-		if (id != other.id)
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}

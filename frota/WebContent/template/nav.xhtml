@@ -5,58 +5,44 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <nav>
-	<h:form>
-		<p:menubar rendered="#{usuariologado == null}">
-			<p:menuitem value="Whatsapp" icon="ui-icon-fa-whatsapp" />
-		</p:menubar>
-
-		<p:menubar rendered="#{usuariologado != null}">
-			<p:menuitem value="Home" icon="fa fa-home"
-				action="index?faces-redirect=true" immediate="true" />
-			<p:menuitem value="Cadastros" icon="fa fa-home"
-				action="cadastro?faces-redirect=true" immediate="true" />
-			<p:menuitem value="Consulta" icon="fa fa-search"
-				action="consulta?faces-redirect=true" />
-				
-			<f:facet name="options">
-				<p:commandButton value="Logout" icon="ui-icon-extlink"
-					action="#{loginBean.logout}" />
-			</f:facet>
-		</p:menubar>
-	</h:form>
-</nav>
-
-
-<nav>
 	<h:form styleClass="ui-g-12 ui-corner-all ui-widget-content">
 
-
-		<p:commandLink id="dynaButton" value="Cadastros" type="button"
-			icon="ui-icon-extlink" />
-		<p:menu overlay="true" trigger="dynaButton" my="left top"
+		<p:commandLink id="dynCadastro" value="Cadastros" type="button"
+			icon="ui-icon-extlink" styleClass="dynButton" />
+		<p:menu overlay="true" trigger="dynCadastro" my="left top"
 			at="left bottom">
+			<p:menuitem value="Setores" action="setor?faces-redirect=true"
+				icon="ui-icon-disk" />
 			<p:menuitem value="Usuarios" action="usuario?faces-redirect=true"
 				icon="ui-icon-disk" />
 			<p:menuitem value="Veiculos" action="veiculo?faces-redirect=true"
 				icon="ui-icon-disk" />
-			<p:menuitem value="Agendamentos" action="agenda?faces-redirect=true"
+			<p:menuitem value="Abastecimento"
+				action="abastecimento?faces-redirect=true"
+				icon="ui-icon-arrowrefresh-1-w" />
+			<p:menuitem value="Agendas" action="agenda?faces-redirect=true"
 				icon="ui-icon-disk" />
-			<p:menuitem value="Controle de Circulação"
-				action="agenda?faces-redirect=true" icon="ui-icon-arrowrefresh-1-w" />
+			<p:menuitem value="Controle" action="controle?faces-redirect=true"
+				icon="ui-icon-arrowrefresh-1-w" />
 		</p:menu>
 
-		<p:commandLink id="dynaButton2" value="Consultas" type="button"
-			icon="ui-icon-extlink" />
-		<p:menu overlay="true" trigger="dynaButton2" my="left top"
+		<p:commandLink id="dynConsulta" value="Consulta" type="button"
+			icon="ui-icon-extlink" styleClass="dynButton" />
+		<p:menu overlay="true" trigger="dynConsulta" my="left top"
 			at="left bottom">
+			<p:menuitem value="Setores"
+				action="consultarsetor?faces-redirect=true" icon="ui-icon-disk" />
 			<p:menuitem value="Usuarios"
 				action="consultarusuario?faces-redirect=true" icon="ui-icon-disk" />
 			<p:menuitem value="Veiculos"
 				action="consultarveiculo?faces-redirect=true" icon="ui-icon-disk" />
-			<p:menuitem value="Agendamentos"
+			<p:menuitem value="Abastecimento"
+				action="consultarabastecimento?faces-redirect=true"
+				icon="ui-icon-arrowrefresh-1-w" />
+			<p:menuitem value="Agendas"
 				action="consultaragenda?faces-redirect=true" icon="ui-icon-disk" />
-			<p:menuitem value="Controle de Circulação"
-				action="consultaragenda?faces-redirect=true"
+			<p:menuitem value="Controle"
+				action="consultarcontrole?faces-redirect=true"
 				icon="ui-icon-arrowrefresh-1-w" />
 		</p:menu>
 
@@ -64,5 +50,4 @@
 			action="#{loginBean.logout}" style="float: right;" />
 	</h:form>
 </nav>
-
 </html>

@@ -15,26 +15,26 @@
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formSetorConsulta" styleClass="ui-g-12">
+		<h:form id="formSetorConsulta" styleClass="ui-g-12 linha">
+			<h:outputLabel value="Nome do Setor: " for="setorNome"
+				styleClass="ui-g-12 ui-md-6 ui-lg-4">
+			<h:inputText value="#{setorBean.setorNome}" id="setorNome"
+				styleClass="ui-g-12" /></h:outputLabel>
 
-			<div class="ui-g-12 ui-md-6 flex">
-				<h:outputLabel value="Nome do Setor: " for="setorNome" />
-				<h:inputText value="#{setorBean.setorNome}" id="setorNome" />
-			</div>
-
-			<div class="ui-g-12 ui-md-6 flex">
-				<h:commandButton value="Buscar" action="#{setorBean.listarPorNome}" />
-				<h:commandButton value="Novo" action="#{setorBean.novoSetor}" />
-				<h:commandButton value="Voltar" action="index" />
-
-			</div>
+				<h:outputLabel styleClass="ui-g-1">
+					<h:commandButton value="Buscar" action="#{setorBean.listar}"
+						styleClass="ui-g-12 botao" />
+				</h:outputLabel>
+				<h:outputLabel styleClass="ui-g-1">
+					<h:commandButton value="Novo" action="#{setorBean.novo}"
+						styleClass="ui-g-12 botao" />
+				</h:outputLabel>
 		</h:form>
 
 
-		<h:form id="tabelaSetores" styleClass="ui-g-12">
+		<h:form id="tabelaSetores">
 			<p:dataTable id="setor" var="setor" value="#{setorBean.setores}"
-				style="margin-bottom:40px" rowKey="#{setor.nome}"
-                 selection="#{setorBean.setor}" selectionMode="single">
+				styleClass="tabela">
 				<f:facet name="header">
             Lista de Setores
         </f:facet>
@@ -45,18 +45,23 @@
 					<h:outputText value="#{setor.fone}" />
 				</p:column>
 
+				<p:column headerText="Numero de Funcionarios">
+					<h:outputText value="#{setor.usuarios.size()}" />
+				</p:column>
+
 				<p:column headerText="Email">
 					<h:outputText value="#{setor.email}" />
 				</p:column>
+
+				<p:column headerText="Editar">
+					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						outcome="#{setorBean.editar(setor)}" />
+				</p:column>
+				<p:column headerText="Excluir">
+					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
+						action="#{setorBean.remover(setor)}" />
+				</p:column>
 			</p:dataTable>
-
-
-			<p:contextMenu for="setor">
-				<p:menuitem value="Editar" icon="fa fa-search"
-					action="setor?faces-redirect=true" />
-				<p:menuitem value="Excluir" update="setor" icon="ui-icon-close"
-					actionListener="#{setorBean.remover}" />
-			</p:contextMenu>
 
 		</h:form>
 	</ui:define>

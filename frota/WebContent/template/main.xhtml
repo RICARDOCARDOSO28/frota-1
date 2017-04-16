@@ -13,11 +13,113 @@
 	<link
 		href="#{facesContext.externalContext.requestContextPath}/css/default.css"
 		rel="stylesheet" type="text/css" />
+
+	<style>
+/* html {font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;}  */
+/*  .ui-widget {font-size: 16px !important;}  */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html, body, header, footer, main, form {
+	width: 100%;
+}
+
+body {
+	padding: 0 25px;
+}
+
+fieldset {
+	margin: 0 0 20px 0;
+}
+
+label {
+	display: inline-table;
+}
+
+#content, .container {
+	display: flex;
+	flex-direction: column;
+}
+
+.linha {
+	display: flex;
+	align-items: flex-end;
+}
+
+.botao, .botoes, .dynButton {
+	border: 1px solid #cbc7bd;
+	background: #f8f7f6
+		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_10_f8f7f6_60x60.png.xhtml?ln=primefaces-pepper-grinder)
+		50% 50% repeat;
+	font-weight: bold;
+	color: #654b24;
+	margin-right: 20px;
+	cursor: pointer;
+	border-radius: 6px;
+	align-self: flex-end;
+}
+
+.botao:hover, .botoes:hover, .dynButton:hover {
+	border: 1px solid #654b24;
+	background: #654b24
+		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_65_654b24_60x60.png.xhtml?ln=primefaces-pepper-grinder)
+		50% 50% repeat;
+	color: #ffffff;
+}
+
+.dynButton {
+	text-decoration: none;
+	padding: .3em 1em .3em 1em;
+	float: inherit;
+}
+
+.tabela {
+	table-layout: auto !important;
+}
+
+.tabela tr:hover {
+	background: #654b24
+		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_65_654b24_60x60.png.xhtml?ln=primefaces-pepper-grinder)
+		50% 50% repeat;
+	color: #ffffff;
+	margin-bottom: 20px
+}
+
+.txt-center {
+	text-align: center;
+}
+
+/* --------------------- Elementos do Header --------------------- */
+#img-logo {
+	float: left;
+}
+/* #title-logo {} */
+
+/* --------------------- Elementos da Nav --------------------- */
+#navegacao {
+	padding-top: 0;
+}
+
+/* --------------------- Elementos do Footer --------------------- */
+#footer {
+	align-self: flex-end;
+	justify-content: center;
+	text-align: center;
+	padding-bottom: 0 !important;
+	margin-top: 20px;
+}
+
+footer {
+	padding: 15px;
+}
+</style>
+
 </h:head>
 
-<h:body id="body" styleClass="ui-widget"
-	style="display: flex;flex-direction: column;margin: 0 8px;height: 100vh;">
-	<!-- 	<ui:debug hotkey="x" rendered="#{initParam['javax.faces.FACELETS_DEVELOPMENT']}" /> -->
+<h:body id="body" styleClass="ui-widget">
 
 	<div id="header" class="ui-g-12">
 		<ui:include src="header.xhtml" />
@@ -31,8 +133,7 @@
 		<ui:insert name="content" />
 	</div>
 
-	<div id="footer" class="ui-g-12 ui-corner-top ui-widget-content"
-		style="display: flex;align-self: flex-end;justify-content: center;text-align: center;">
+	<div id="footer" class="ui-g-12">
 		<ui:include src="footer.xhtml" />
 	</div>
 </h:body>

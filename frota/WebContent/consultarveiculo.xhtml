@@ -15,26 +15,53 @@
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formVeiculoConsulta" styleClass="ui-g-12">
+		<h:form id="formVeiculoConsulta" styleClass="ui-g-12 linha">
 
-			<div class="ui-g-12 ui-md-4 flex">
-				<h:outputLabel value="Nome do Veiculo: " for="veiculoPlaca" />
-				<h:inputText value="#{veiculoBean.veiculoPlaca}" id="veiculoPlaca" />
-			</div>
+			<h:outputLabel value="Nome do Veiculo: " for="veiculoPlaca"
+				styleClass="ui-g-12 ui-md-6 ui-lg-3">
+				<h:inputText value="#{veiculoBean.veiculoPlaca}" id="veiculoPlaca"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
 
-			<div class="ui-g-12 ui-md-8 flex">
-				<h:commandButton value="Buscar"
-					action="#{veiculoBean.listarPorNome}" />
-				<h:commandButton value="Novo" action="#{veiculoBean.novoVeiculo}" />
-				<h:commandButton value="Voltar" action="index" />
+			<h:outputLabel value="Ano:" for="veiculoAno"
+				styleClass="ui-g-6 ui-md-2 ui-lg-1">
+				<h:inputText id="veiculoAno" value="#{veiculoBean.veiculoAno}"
+					validatorMessage="Ano do Veiculo deve possuir 4 caracteres"
+					maxlength="4" styleClass="ui-g-12">
+					<f:validateLength minimum="4" />
+					<f:ajax event="blur" render="messages" />
+				</h:inputText>
+			</h:outputLabel>
 
-			</div>
+			<h:outputLabel value="Tipo do Veiculo: " for="veiculoTipo"
+				styleClass="ui-g-12 ui-md-6 ui-lg-3">
+				<h:selectOneMenu value="#{veiculoBean.veiculoTipo}" id="veiculoTipo"
+					styleClass="ui-g-12">
+					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
+					<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+					<f:ajax execute="@form" render="@form :tabelaVeiculos" />
+				</h:selectOneMenu>
+			</h:outputLabel>
+
+			<h:outputLabel styleClass="ui-g-6 ui-md-2 ui-lg-1">
+				<h:commandButton value="Buscar" action="#{veiculoBean.listar}"
+					styleClass="ui-g-12 botao">
+					<f:ajax render="@form :tabelaVeiculos" execute="@form" />
+				</h:commandButton>
+			</h:outputLabel>
+
+			<h:outputLabel styleClass="ui-g-6 ui-md-2 ui-lg-1">
+				<h:commandButton value="Novo" action="#{veiculoBean.novo}"
+					styleClass="ui-g-12 botao" />
+			</h:outputLabel>
+
 		</h:form>
 
 
-		<h:form id="tabelaVeiculos" styleClass="ui-g-12">
+		<h:form id="tabelaVeiculos">
 			<p:dataTable var="veiculo" value="#{veiculoBean.veiculos}"
-				style="margin-bottom:40px">
+				styleClass="tabela">
 				<f:facet name="header">
             Lista de Veiculos Veiculos
         </f:facet>
@@ -61,9 +88,17 @@
 					<h:outputText value="#{veiculo.tipoCombustivel.label}" />
 				</p:column>
 
+				<p:column headerText="Número de Abastecimentos">
+					<h:outputText value="#{veiculo.abastecimentos.size()}" />
+				</p:column>
+
+				<p:column headerText="Número de viagens realizadas">
+					<h:outputText value="#{veiculo.controlesCirculacao.size()}" />
+				</p:column>
+
 				<p:column headerText="Editar">
-					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
-						action="#{veiculoBean.editar(veiculo)}" />
+					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						outcome="#{veiculoBean.editar(veiculo)}" />
 				</p:column>
 
 				<p:column headerText="Excluir">

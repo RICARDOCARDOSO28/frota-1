@@ -76,9 +76,9 @@
 			</p:fieldset>
 
 
-			<div class="botoes">
-				<h:commandButton value="Gravar" action="#{veiculoBean.gravar}">
-					<f:ajax execute="@form" render="@form" />
+			<div>
+				<h:commandButton value="Gravar" action="#{veiculoBean.gravar}" styleClass="ui-g-1 botao">
+					<f:ajax execute="@form" render="@form :messages" />
 				</h:commandButton>
 			</div>
 		</h:form>

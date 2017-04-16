@@ -1,6 +1,8 @@
 package br.com.frota.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,9 +14,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import br.com.frota.util.StatusAgenda;
 import br.com.frota.util.TipoVeiculo;
 
 @Entity
@@ -36,24 +40,19 @@ public class Agenda {
 	@Column(name = "data_chegada")
 	private Calendar dataChegada = Calendar.getInstance();
 
-//	@Temporal(TemporalType.TIME)
-//	@Column(name = "hora_saida", nullable = false)
-//	private Date horaSaida;
-//
-//	@Temporal(TemporalType.TIME)
-//	@Column(name = "hora_chegada")
-//	private Date horaChegada;
-	
-	@Column(name = "hora_saida", nullable = false, length = 30)
+	@Column(name = "hora_saida", nullable = false, length = 5)
 	private String horaSaida;
 
-	@Column(name = "hora_chegada", length = 30)
+	@Column(name = "hora_chegada", length = 5)
 	private String horaChegada;
-	
 
 	@Column(name = "tipo_veiculo", nullable = false, length = 30)
 	@Enumerated(EnumType.STRING)
 	private TipoVeiculo tipoVeiculo;
+	
+	@Column(name = "status_agenda", nullable = false, length = 30)
+	@Enumerated(EnumType.STRING)
+	private StatusAgenda statusAgenda;
 
 	@Column(name = "destino", length = 300)
 	private String destino;
@@ -61,8 +60,8 @@ public class Agenda {
 	@Column(name = "descricao", length = 450)
 	private String descricao;
 
-	// @OneToMany(mappedBy = "agenda")
-	// private List<ControleCirculacao> controlesCirculacao = new ArrayList<>();
+	@OneToMany(mappedBy = "agenda")
+	private List<ControleCirculacao> controlesCirculacao = new ArrayList<>();
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -111,6 +110,14 @@ public class Agenda {
 	public void setTipoVeiculo(TipoVeiculo tipoVeiculo) {
 		this.tipoVeiculo = tipoVeiculo;
 	}
+	
+	public StatusAgenda getStatusAgenda() {
+		return statusAgenda;
+	}
+
+	public void setStatusAgenda(StatusAgenda statusAgenda) {
+		this.statusAgenda = statusAgenda;
+	}
 
 	public String getDestino() {
 		return destino;
@@ -128,18 +135,28 @@ public class Agenda {
 		this.descricao = descricao;
 	}
 
-	// public List<ControleCirculacao> getControlesCirculacao() {
-	// return controlesCirculacao;
-	// }
-	//
-	// public void setControlesCirculacao(List<ControleCirculacao>
-	// controlesCirculacao) {
-	// this.controlesCirculacao = controlesCirculacao;
-	// }
+	public List<ControleCirculacao> getControlesCirculacao() {
+		return controlesCirculacao;
+	}
+
+	public void setControlesCirculacao(List<ControleCirculacao> controlesCirculacao) {
+		this.controlesCirculacao = controlesCirculacao;
+	}
 
 	public Integer getId() {
 		return id;
 	}
+	
+	public void adicionarControle(ControleCirculacao c){
+		c.setAgenda(this);
+		getControlesCirculacao().add(c);
+	}
+	
+	public void removerControle(ControleCirculacao c){
+		c.setAgenda(null);
+		getControlesCirculacao().remove(c);
+	}
+
 
 	@Override
 	public String toString() {

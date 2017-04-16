@@ -26,10 +26,10 @@ public class Veiculo {
 	@Column(name = "placa", length = 7, nullable = false, unique = true)
 	private String placa;
 
-	@Column(name = "marca", nullable = false, length = 30)
+	@Column(name = "marca", length = 30)
 	private String marca;
 
-	@Column(name = "modelo", nullable = false, length = 30)
+	@Column(name = "modelo", length = 30)
 	private String modelo;
 
 	@Column(name = "ano", nullable = false, length = 4)
@@ -49,8 +49,8 @@ public class Veiculo {
 	@OneToMany(mappedBy = "veiculo", cascade=CascadeType.MERGE)
 	private List<Abastecimento> abastecimentos = new ArrayList<>();
 
-//	@OneToMany(mappedBy = "veiculo")
-//	private List<ControleCirculacao> controlesCirculacao = new ArrayList<>();
+	@OneToMany(mappedBy = "veiculo")
+	private List<ControleCirculacao> controlesCirculacao = new ArrayList<>();
 
 	public Integer getId() {
 		return id;
@@ -104,13 +104,21 @@ public class Veiculo {
 		this.tipoVeiculo = tipoVeiculo;
 	}
 
-//	public List<ControleCirculacao> getControlesCirculacao() {
-//		return controlesCirculacao;
-//	}
-//
-//	public void setControlesCirculacao(List<ControleCirculacao> controlesCirculacao) {
-//		this.controlesCirculacao = controlesCirculacao;
-//	}
+	public List<Abastecimento> getAbastecimentos() {
+		return abastecimentos;
+	}
+
+	public void setAbastecimentos(List<Abastecimento> abastecimentos) {
+		this.abastecimentos = abastecimentos;
+	}
+
+	public List<ControleCirculacao> getControlesCirculacao() {
+		return controlesCirculacao;
+	}
+
+	public void setControlesCirculacao(List<ControleCirculacao> controlesCirculacao) {
+		this.controlesCirculacao = controlesCirculacao;
+	}
 
 	public TipoCombustivel getTipoCombustivel() {
 		return tipoCombustivel;
@@ -118,6 +126,27 @@ public class Veiculo {
 
 	public void setTipoCombustivel(TipoCombustivel tipoCombustivel) {
 		this.tipoCombustivel = tipoCombustivel;
+	}
+	
+	
+	public void adicionarAbastecimento(Abastecimento a){
+		a.setVeiculo(this);
+		getAbastecimentos().add(a);
+	}
+	
+	public void removerAbastecimento(Abastecimento a){
+		a.setVeiculo(null);
+		getAbastecimentos().remove(a);
+	}
+	
+	public void adicionarControle(ControleCirculacao c){
+		c.setVeiculo(this);
+		getControlesCirculacao().add(c);
+	}
+	
+	public void removerControle(ControleCirculacao c){
+		c.setVeiculo(null);
+		getControlesCirculacao().remove(c);
 	}
 
 	@Override

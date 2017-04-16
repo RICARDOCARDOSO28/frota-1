@@ -3,14 +3,15 @@ package br.com.frota.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import br.com.frota.dao.UsuarioDAO;
 import br.com.frota.model.Usuario;
+import br.com.frota.util.FacesContextUtil;
+import br.com.frota.util.Paginas;
 import br.com.frota.util.TipoSexo;
+import br.com.frota.util.TipoUsuario;
 
 @ManagedBean
 @ViewScoped
@@ -20,10 +21,10 @@ public class UsuarioBean implements Serializable {
 	private Usuario usuario = new Usuario();
 
 	private Integer usuarioId;
-	private String usuarioNome = "";
+	private String usuarioNome;
+	private TipoUsuario tipoUsuario;
 	private List<Usuario> usuarios;
 	private List<Usuario> motoristas;
-	private List<Usuario> administradores;
 
 	private Integer setorId;
 
@@ -61,8 +62,16 @@ public class UsuarioBean implements Serializable {
 		this.setorId = setorId;
 	}
 
+	public TipoUsuario getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+	public void setTipoUsuario(TipoUsuario tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
+	}
+
 	public List<Usuario> getUsuarios() {
-		usuarios = usuarioDAO.listarUsuariosPorNome(usuarioNome);
+		usuarios = usuarioDAO.listarUsuariosPorNome(usuarioNome, setorId, tipoUsuario);
 		return usuarios;
 	}
 
@@ -71,7 +80,7 @@ public class UsuarioBean implements Serializable {
 	}
 
 	public List<Usuario> getMotoristas() {
-		motoristas = usuarioDAO.listarMotoristas();
+		motoristas = usuarioDAO.listarUsuariosPorNome(null, null, tipoUsuario);
 		return motoristas;
 	}
 
@@ -79,39 +88,45 @@ public class UsuarioBean implements Serializable {
 		this.motoristas = motoristas;
 	}
 
-	public List<Usuario> getAdministradores() {
-		administradores = usuarioDAO.listarAdministradores();
-		return administradores;
-	}
-
-	public void setAdministradores(List<Usuario> administradores) {
-		this.administradores = administradores;
+	public void setUsuariosPorSetor(Integer setorId) {
+		this.setorId = setorId;
 	}
 
 	public TipoSexo[] getTipoSexo() {
 		return TipoSexo.values();
 	}
+	
+	public TipoUsuario[] getTipoUsuarios() {
+		return TipoUsuario.values();
+	}
+	
 
-	/*
-	 * Metodos CRUD
+	/**
+	 * Finalizados GET e SET - Iniciando MÉTODOS
 	 */
 
-	public String listarPorNome() {
-		listarUsuariosPorFiltros();
+	public String listar() {
 		return null;
 	}
 
 	public void gravar() {
+		System.out.println("Usuario [id:" + usuario.getId() + ", nome:" + usuario.getNome() + "]");
+		System.out.println("Setor [setorId:" + setorId);
 		if (usuario.getId() == null) {
-			usuario.setTipoUsuario(2);
+			usuario.setTipoUsuario(TipoUsuario.USUARIO);
 			usuarioDAO.adicionar(usuario, setorId);
-			FacesContext.getCurrentInstance().addMessage("usuario", new FacesMessage("Usuario Salvo com Sucesso"));
+			new FacesContextUtil().info(null, "Usuario Salvo com Sucesso");
 		} else {
 			usuarioDAO.atualizar(usuario, setorId);
-			FacesContext.getCurrentInstance().addMessage("usuario", new FacesMessage("Usuario Atualizado com Sucesso"));
+			new FacesContextUtil().info(null, "Usuario Atualizado com Sucesso");
 		}
 		usuario = new Usuario();
 		return;
+	}
+
+	public void remover() {
+		usuarioDAO.remover(usuario);
+		usuario = null;
 	}
 
 	public void remover(Usuario usuario) {
@@ -124,16 +139,13 @@ public class UsuarioBean implements Serializable {
 
 	public String editar(Usuario usuario) {
 		this.usuario = usuario;
-		this.setorId = usuario.getSetor().getId();
-		return "usuario?faces-redirect=true";
+		usuarioId = usuario.getId();
+		setorId = usuario.getSetor().getId();
+		return "usuario?usuarioId=" + usuarioId;
 	}
 
-	public String novoUsuario() {
-		return "usuario?faces-redirect=true";
-	}
-
-	public void listarUsuariosPorFiltros() {
-		usuarios = new UsuarioDAO().listarUsuariosPorFiltros(usuarioNome, setorId);
+	public String novo() {
+		return Paginas.CADASTROUSUARIO;
 	}
 
 	// public void confereSenha(FaceletContext fc, UIComponent component, Object
@@ -144,10 +156,13 @@ public class UsuarioBean implements Serializable {
 	// }
 	// }
 
-	
-	public String carregarUsuario(Usuario usuario){
+	public String carregarUsuario(Usuario usuario) {
 		this.usuario = usuario;
-		usuarioNome = this.usuario.getNome();
+		usuarioId = usuario.getId();
+		usuarioNome = usuario.getNome();
+		setorId = usuario.getSetor().getId();
+		tipoUsuario = usuario.getTipoUsuario();
 		return null;
 	}
+
 }

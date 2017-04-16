@@ -15,37 +15,63 @@
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formAbastecimentoConsulta" styleClass="ui-g-12">
+		<h:form id="formAbastecimentoConsulta" styleClass="ui-g-12 linha">
 
-			<div class="ui-g-12 ui-md-4 flex">
-				<h:outputLabel value="Nome do Veiculo: " for="abastecimentoNome" />
+			<h:outputLabel value="Nome do Veiculo: " for="abastecimentoNome"
+				styleClass="ui-g-3">
 				<h:inputText value="#{abastecimentoBean.abastecimentoNome}"
-					id="abastecimentoNome" />
-			</div>
+					id="abastecimentoNome" styleClass="ui-g-12" />
+			</h:outputLabel>
 
-			<div class="ui-g-12 ui-md-8 flex">
-				<h:commandButton value="Buscar"
-					action="#{abastecimentoBean.listarPorNome}" />
-				<h:commandButton value="Novo"
-					action="#{abastecimentoBean.novoAbastecimento}" />
-				<h:commandButton value="Voltar" action="index" />
+			<h:outputLabel value="Data Inicial:" for="dataInicial"
+				styleClass="ui-g-2">
+				<h:inputText id="dataInicial"
+					value="#{abastecimentoBean.dataInicial}" maxlength="10"
+					styleClass="ui-g-12">
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" />
+				</h:inputText>
+			</h:outputLabel>
 
-			</div>
+			<h:outputLabel value="Data Final:" for="dataFinal"
+				styleClass="ui-g-2">
+				<h:inputText id="dataFinal" value="#{abastecimentoBean.dataFinal}"
+					maxlength="10" styleClass="ui-g-12">
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" />
+				</h:inputText>
+			</h:outputLabel>
+			<h:outputLabel />
+
+
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Buscar" action="#{abastecimentoBean.listar}"
+					styleClass="ui-g-12 botao">
+					<f:ajax render="@form :tabelaAbastecimentos" execute="@form" />
+				</h:commandButton>
+			</h:outputLabel>
+
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Novo" action="#{abastecimentoBean.novo}"
+					styleClass="ui-g-12 botao" />
+			</h:outputLabel>
+
 		</h:form>
 
 
 		<h:form id="tabelaAbastecimentos" styleClass="ui-g-12">
 			<p:dataTable var="abastecimento"
-				value="#{abastecimentoBean.abastecimentos}"
-				style="margin-bottom:40px">
+				value="#{abastecimentoBean.abastecimentos}" styleClass="tabela">
 				<f:facet name="header">
-            Lista de Abastecimentos Abastecimentos
+            Lista de Abastecimentos
         </f:facet>
 				<p:column headerText="Motorista">
 					<h:outputText value="#{abastecimento.usuario.nome}" />
 				</p:column>
 				<p:column headerText="Veiculo">
-					<h:outputText value="#{abastecimento.veiculo.placa}" />
+					placa: <h:outputText value="#{abastecimento.veiculo.placa}" />
+					, <h:outputText value="#{abastecimento.veiculo.marca}" /> -
+					<h:outputText value="#{abastecimento.veiculo.modelo}" />
 				</p:column>
 
 				<p:column headerText="Quantidade Combustivel">
@@ -53,14 +79,15 @@
 				</p:column>
 
 				<p:column headerText="Data de Abastecimento">
-					<h:outputText value="#{abastecimento.dataAbastecimento.time}" >
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" /></h:outputText>
+					<h:outputText value="#{abastecimento.dataAbastecimento.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="Editar">
-					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
-						action="#{abastecimentoBean.editar(abastecimento)}" />
+					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						outcome="#{abastecimentoBean.editar(abastecimento)}" />
 				</p:column>
 
 				<p:column headerText="Excluir">

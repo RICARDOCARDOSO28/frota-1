@@ -3,13 +3,13 @@ package br.com.frota.bean;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import br.com.frota.dao.SetorDAO;
 import br.com.frota.model.Setor;
+import br.com.frota.util.FacesContextUtil;
+import br.com.frota.util.Paginas;
 
 @ManagedBean
 @ViewScoped
@@ -20,9 +20,9 @@ public class SetorBean implements Serializable {
 
 	private Setor setor = new Setor();
 
-	private List<Setor> setores;
 	private Integer setorId;
 	private String setorNome = "";
+	private List<Setor> setores;
 
 	public SetorBean() {
 		setorDAO = new SetorDAO();
@@ -57,28 +57,35 @@ public class SetorBean implements Serializable {
 		return setores;
 	}
 
-	/*
-	 * Métodos Sem retorno void - CRUD
+	/**
+	 * Finalizados GET e SET - Iniciando MÉTODOS
 	 */
 
-	// Create
+	public String listar() {
+		return null;
+	}
+
 	public void gravar() {
-		setorDAO.gravar(setor);
-		info();
+		String message = "";
+		if (setor.getId() == null) {
+			setorDAO.gravar(setor);
+			message += "Setor Cadastrado com Sucesso.";
+		} else {
+			setorDAO.atualizar(setor);
+			message += "Setor Atualizado com Sucesso.";
+		}
+		new FacesContextUtil().info(null, message);
 		setor = new Setor();
 	}
 
-	// Read
 	public void recuperarSetorPorId() {
 		setor = setorDAO.buscaSetor(setorId);
 	}
 
-	// Update
-	public void atualizar() {
-		setorDAO.atualizar(setor);
+	public String novo() {
+		return Paginas.CADASTROSETOR;
 	}
 
-	// Delete
 	public void remover() {
 		setorDAO.remover(setor);
 		setor = null;
@@ -88,27 +95,10 @@ public class SetorBean implements Serializable {
 		setorDAO.remover(setor);
 	}
 
-	public void encerrar() {
-		setorDAO.encerrar();
-	}
-
-	public String novoUsuario() {
-		return "setor?faces-redirect=true";
-	}
-
-	public String listarPorNome() {
-		return null;
-	}
-
 	public String editar(Setor setor) {
 		this.setor = setor;
-		return "setor?setorId=" + setorId;
-	}
-
-	public void info() {
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"Setor Cadastrado com Sucesso.",
-				"" + setor.getNome() + " , Telefone: " + setor.getFone() + ", Email: " + setor.getEmail() + "."));
+		setorId = setor.getId();
+		return "setor?setorId="+setorId;
 	}
 
 }

@@ -1,23 +1,17 @@
 package br.com.frota.dao;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.SetJoin;
 
 import br.com.frota.model.Setor;
 import br.com.frota.model.Usuario;
 import br.com.frota.util.JPAUtil;
+import br.com.frota.util.TipoUsuario;
 
 public class UsuarioDAO {
 
@@ -30,94 +24,66 @@ public class UsuarioDAO {
 	public void adicionar(Usuario usuario, int setorId) {
 		em.getTransaction().begin();
 		Setor setor = em.find(Setor.class, setorId);
-		usuario.setSetor(setor);
+		setor.adicionarUsuario(usuario);		
 		em.persist(usuario);
 		em.getTransaction().commit();
 	}
 
 	public void atualizar(Usuario usuario, int setorId) {
 		em.getTransaction().begin();
+		usuario.getSetor().removerUsuarios(usuario);
 		Setor setor = em.find(Setor.class, setorId);
-		usuario.setSetor(setor);
+		setor.adicionarUsuario(usuario);
 		em.merge(usuario);
 		em.getTransaction().commit();
 	}
 
 	public void remover(Usuario usuario) {
 		em.getTransaction().begin();
+		usuario.getSetor().removerUsuario(usuario);
 		em.remove(em.merge(usuario));
 		em.getTransaction().commit();
 	}
 
-	public Usuario buscarUsuario(int id) {
-		Usuario usuario = em.find(Usuario.class, id);
-		return usuario;
+	public Usuario buscarUsuario(Integer id) {
+		return em.find(Usuario.class, id);
 	}
 
-	public List<Usuario> listarUsuariosPorFiltros(String nome, Integer setorId) {
-		CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-		CriteriaQuery<Usuario> query = criteriaBuilder.createQuery(Usuario.class);
-		Root<Usuario> root = query.from(Usuario.class);
+	public List<Usuario> listarUsuariosPorNome(String nome, Integer setorId, TipoUsuario tipoUsuario) {
+		String jpql = "select u from Usuario u where ";
 
-		Path<String> nomePath = root.<String>get("nome");
-		Path<String> cpfPath = root.<String>get("nome");
-		Join<Usuario, Setor> setorPath = root.join("setor", JoinType.LEFT);
-		// Path<Integer> setorPath = root.join("setor").<Integer>get("id");
-		// SetJoin<Usuario, Setor> setorPath =
-		// root.join(root.getModel().getSet("setor", Setor.class));
-
-		Path<String> fonePath = root.<String>get("nome");
-
-		List<Predicate> predicates = new ArrayList<>();
-
-		if (nome.trim().length() > 2) {
-			Predicate nomeIgual = criteriaBuilder.like(nomePath, nome);
-			predicates.add(nomeIgual);
-			Predicate cpfIgual = criteriaBuilder.like(cpfPath, nome);
-			predicates.add(cpfIgual);
+		if (nome != null)
+			jpql += "u.nome like :pnome and ";
+		if (setorId != null)
+			jpql += "u.setor.id = :psetor and ";
+		if (tipoUsuario != null) {
+			if (tipoUsuario == TipoUsuario.MOTORISTA_ALL) {
+				jpql += "(u.cnhId != null or u.cnhId != '') and ";
+				if (tipoUsuario == TipoUsuario.MOTORISTA_OK)
+					jpql += "u.cnhValidade > :phoje and ";
+			} else {
+				jpql += "u.tipoUsuario = :ptipoUsuario and ";
+			}
 		}
-		if (nome.trim().length() > 7) {
-			Predicate foneIgual = criteriaBuilder.equal(fonePath, nome);
-			predicates.add(foneIgual);
+		jpql += "1 = 1";
+
+		TypedQuery<Usuario> query = em.createQuery(jpql, Usuario.class);
+
+		if (nome != null)
+			query.setParameter("pnome", '%' + nome + '%');
+		if (setorId != null)
+			query.setParameter("psetor", setorId);
+		if (tipoUsuario != null) {
+			if (tipoUsuario == TipoUsuario.MOTORISTA_ALL) {
+				if (tipoUsuario == TipoUsuario.MOTORISTA_OK)
+					query.setParameter("phoje", Calendar.getInstance().getTime(), TemporalType.DATE);
+			} else {
+				query.setParameter("ptipoUsuario", tipoUsuario);
+			}
 		}
-		if (nome.trim().length() > 10) {
-			Predicate cpfIgual = criteriaBuilder.like(cpfPath, nome);
-			predicates.add(cpfIgual);
-		}
-		if (setorId != null) {
-			Predicate setorIdIgual = criteriaBuilder.equal(setorPath, setorId);
-			predicates.add(setorIdIgual);
-		}
-
-		query.where((Predicate[]) predicates.toArray());
-
-		return em.createQuery(query).getResultList();
-	}
-
-	// public List<Usuario> listarUsuarios() {
-	// CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-	// CriteriaQuery<Usuario> criteriaQuery =
-	// criteriaBuilder.createQuery(Usuario.class);
-	// CriteriaQuery<Usuario> select =
-	// criteriaQuery.select(criteriaQuery.from(Usuario.class));
-	// TypedQuery<Usuario> query = em.createQuery(select);
-	// return query.getResultList();
-	// }
-
-	public List<Usuario> listarUsuariosPorNome(String nome) {
-		TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where u.nome like :pnome", Usuario.class);
-		query.setParameter("pnome", '%' + nome + '%');
+		System.out.println(jpql);
 		return query.getResultList();
 	}
-
-	// public List<Usuario> listarUsuariosPorNome(String nome, Integer setor) {
-	// TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where
-	// u.nome like :pnome JOIN FETCH Setor s on (s.id = :psetor)",
-	// Usuario.class);
-	// query.setParameter("pnome", '%' + nome + '%');
-	// query.setParameter("psetor", setor);
-	// return query.getResultList();
-	// }
 
 	public boolean usuarioExiste(Usuario usuario) {
 		TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where u.cpf = :pcpf and u.senha = :psenha",
@@ -142,17 +108,6 @@ public class UsuarioDAO {
 		} else {
 			return false;
 		}
-	}
-
-	public List<Usuario> listarMotoristas() {
-		// Comparar se CNH ainda esta dentro da validade
-		TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where u.cnhId != null", Usuario.class);
-		return query.getResultList();
-	}
-
-	public List<Usuario> listarAdministradores() {
-		TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where u.adminStatus < 2", Usuario.class);
-		return query.getResultList();
 	}
 
 }

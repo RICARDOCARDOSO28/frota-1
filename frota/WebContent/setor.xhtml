@@ -60,21 +60,17 @@
 					<p:message for="email" id="emailMessage" />
 				</h:panelGrid>
 			</p:fieldset>
-			
-			<div class="flex">
-			<h:commandButton styleClass="botoes" id="gravarSetor" value="Gravar"
-				action="#{setorBean.gravar}">
-				<!-- 						<f:ajax execute="@form" render="@form" /> -->
-			</h:commandButton>
-			<h:commandButton styleClass="botoes" value="Limpar" type="reset" />
-			<h:commandButton styleClass="botoes" value="Voltar"
-				action="index?faces-redirect=true" immediate="true" />
-		</div>
+
+			<div class="linha">
+				<h:commandButton id="gravarSetor" value="Gravar"
+					action="#{setorBean.gravar}" class="ui-g-1 botao">
+					<f:ajax execute="@form" render="@form :messages" />
+				</h:commandButton>
+				<h:commandButton value="Limpar" type="reset" class="ui-g-1 botao" />
+				<h:commandButton value="Voltar" action="index?faces-redirect=true"
+					immediate="true" class="ui-g-1 botao" />
+			</div>
 		</h:form>
-
-		
-
-
 	</ui:define>
 </ui:composition>
 </html>

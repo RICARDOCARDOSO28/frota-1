@@ -5,6 +5,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 
@@ -15,60 +16,107 @@
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formUsuarioConsulta" styleClass="ui-g-12">
+		<h:form id="formUsuarioConsulta" styleClass="ui-g-12 linha">
 
-			<div class="ui-g-6 ui-md-3">
-				<h:outputLabel value="Nome do Usuario: " for="usuarioNome" />
-				<h:inputText value="#{usuarioBean.usuarioNome}" id="usuarioNome" />
-				</div>
-				
-							<div class="ui-g-6 ui-md-3">
-				
-				<h:outputLabel value="Setor: " for="setorId">
-					<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId">
-						<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
-						<f:selectItems value="#{setorBean.setores}" var="setor"
-							itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
-					</h:selectOneMenu>
-				</h:outputLabel>
-				</div>
+			<h:outputLabel value="Nome do Usuario: " for="usuarioNome"
+				styleClass="ui-g-12 ui-md-3 ui-lg-4">
+				<h:inputText value="#{usuarioBean.usuarioNome}" id="usuarioNome"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
 
-			<div class="ui-g-6">
-				<h:commandButton  value="Buscar"
-					action="#{usuarioBean.listarPorNome}" />
-				<h:commandButton value="Novo" action="#{usuarioBean.novoUsuario}" />
-				<h:commandButton value="Voltar" action="index" />
+			<h:outputLabel value="Setor: " for="setorId"
+				styleClass="ui-g-12 ui-md-3 ui-lg-3">
+				<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId"
+					styleClass="ui-g-12">
+					<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
+					<f:selectItems value="#{setorBean.setores}" var="setor"
+						itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
+					<f:ajax execute="@form" render="@form :tabelaUsuarios" />
+				</h:selectOneMenu>
+			</h:outputLabel>
 
-			</div>
+			<h:outputLabel value="Status: " for="tipoUsuario"
+				styleClass="ui-g-12 ui-md-3 ui-lg-3">
+				<h:selectOneMenu value="#{usuarioBean.tipoUsuario}" id="tipoUsuario"
+					styleClass="ui-g-12">
+					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Usuario" />
+					<f:selectItems var="tipo" value="#{usuarioBean.tipoUsuarios}"
+						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+					<f:ajax execute="@form" render="@form :tabelaUsuarios" />
+				</h:selectOneMenu>
+			</h:outputLabel>
+
+			<h:outputLabel styleClass="ui-g-3 ui-md-2 ui-lg-1">
+				<h:commandButton value="Buscar" action="#{usuarioBean.listar}"
+					styleClass="ui-g-12 botao">
+					<f:ajax render="@form :tabelaUsuarios" execute="@form" />
+				</h:commandButton>
+			</h:outputLabel>
 		</h:form>
 
 
-		<h:form id="tabelaUsuarios" styleClass="ui-g-12">
+		<h:form id="tabelaUsuarios">
 			<p:dataTable var="usuario" value="#{usuarioBean.usuarios}"
-				style="margin-bottom:40px">
-				<f:facet name="header">
-            Lista de Usuarios Usuarios
-        </f:facet>
-				<p:column headerText="Nome" >
+				styleClass="tabela">
+				<c:choose>
+					<c:when test="#{usuarioBean.tipoUsuario == null}">
+						<f:facet name="header">Listagem de Todos os Usuarios</f:facet>
+					</c:when>
+					<c:when test="#{usuarioBean.tipoUsuario != null}">
+						<f:facet name="header">Listagem de #{usuario.tipoUsuario.label}</f:facet>
+					</c:when>
+				</c:choose>
+				<p:column headerText="Nome">
 					<h:outputText value="#{usuario.nome}" />
 				</p:column>
-				<p:column headerText="CPF" >
+				<p:column headerText="CPF">
 					<h:outputText value="#{usuario.cpf}" />
 				</p:column>
 
-				<p:column headerText="Setor" >
+				<p:column headerText="Setor">
 					<h:outputText value="#{usuario.setor.nome}" />
 				</p:column>
 
-				<p:column headerText="Telefone" >
+				<p:column headerText="Telefone">
 					<h:outputText value="#{usuario.fone}" />
 				</p:column>
 
-				<p:column headerText="Editar">
-					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
-						action="#{usuarioBean.editar(usuario)}" />
+				<c:choose>
+					<c:when test="#{usuarioBean.tipoUsuario.id >= 10}">
+						<p:column headerText="CNH">
+							<h:outputText value="#{usuario.cnhId}"
+								rendered="#{usuario.cnhId.length() == 11 }" />
+							<h:outputText value="Motorista Não regularizado"
+								rendered="#{usuario.cnhId.length() != 11 }" />
+						</p:column>
+						<p:column headerText="Validade"
+							rendered="#{usuario.cnhId != ''} and #{usuario.cnhId != null}">
+							<h:outputText value="#{usuario.cnhValidade.time}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Sao_Paulo" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Número de Abastecimentos">
+							<h:outputText value="#{usuario.abastecimentos.size()}"
+								rendered="#{usuario.abastecimentos.size() != 0}" />
+							<h:outputText value="Nenhum Abastecimento"
+								rendered="#{usuario.abastecimentos.size() == 0}" />
+						</p:column>
+					</c:when>
+				</c:choose>
+
+				<p:column headerText="Número de Agendamentos">
+					<h:outputText value="#{usuario.agendas.size()}" />
 				</p:column>
 
+				<p:column headerText="Número de Viagem realizadas">
+					<h:outputText value="#{usuario.controles.size()}" />
+				</p:column>
+
+				<p:column headerText="Editar">
+					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						outcome="#{usuarioBean.editar(usuario)}" />
+				</p:column>
 				<p:column headerText="Excluir">
 					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
 						action="#{usuarioBean.remover(usuario)}" />

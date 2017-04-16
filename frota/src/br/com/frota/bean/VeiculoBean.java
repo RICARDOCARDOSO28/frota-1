@@ -8,6 +8,7 @@ import javax.faces.bean.ViewScoped;
 
 import br.com.frota.dao.VeiculoDAO;
 import br.com.frota.model.Veiculo;
+import br.com.frota.util.Paginas;
 import br.com.frota.util.TipoCombustivel;
 import br.com.frota.util.TipoVeiculo;
 
@@ -20,7 +21,9 @@ public class VeiculoBean implements Serializable {
 
 	private Veiculo veiculo = new Veiculo();
 	private Integer veiculoId;
-	private String veiculoPlaca = "";
+	private String veiculoPlaca;
+	private Integer veiculoAno;
+	private TipoVeiculo veiculoTipo;
 	private List<Veiculo> veiculos;
 
 	public VeiculoBean() {
@@ -48,12 +51,28 @@ public class VeiculoBean implements Serializable {
 	}
 
 	public List<Veiculo> getVeiculos() {
-		veiculos = veiculoDAO.listarVeiculosPorNome(veiculoPlaca);
+		veiculos = veiculoDAO.listarVeiculosPorNome(veiculoPlaca, veiculoAno, veiculoTipo);
 		return veiculos;
 	}
 
 	public void setVeiculos(List<Veiculo> veiculos) {
 		this.veiculos = veiculos;
+	}
+
+	public TipoVeiculo getVeiculoTipo() {
+		return veiculoTipo;
+	}
+
+	public void setVeiculoTipo(TipoVeiculo veiculoTipo) {
+		this.veiculoTipo = veiculoTipo;
+	}
+
+	public Integer getVeiculoAno() {
+		return veiculoAno;
+	}
+
+	public void setVeiculoAno(Integer veiculoAno) {
+		this.veiculoAno = veiculoAno;
 	}
 
 	public TipoVeiculo[] getTipoVeiculo() {
@@ -64,10 +83,18 @@ public class VeiculoBean implements Serializable {
 		return TipoCombustivel.values();
 	}
 
-	/*
-	 * CRUD
+	/**
+	 * Finalizados GET e SET - Iniciando MÉTODOS
 	 */
 
+	public String listar() {
+		return null;
+	}
+	
+	public String novo() {
+		return Paginas.CADASTROVEICULO;
+	}
+	
 	public void gravar() {
 		veiculoDAO.gravar(veiculo);
 		veiculo = new Veiculo();
@@ -77,22 +104,19 @@ public class VeiculoBean implements Serializable {
 		veiculo = veiculoDAO.recuperarVeiculoPorId(veiculoId);
 	}
 	
-	public String listarPorNome() {
-		return null;
-	}
-	
-	public String novoVeiculo() {
-		return "veiculo?faces-redirect=true";
-	}
-	
-	
 	public void remover(Veiculo veiculo) {
 		veiculoDAO.remover(veiculo);
+	}
+	
+	public void remover() {
+		veiculoDAO.remover(veiculo);
+		veiculo = null;
 	}
 
 	public String editar(Veiculo veiculo) {
 		this.veiculo = veiculo;
-		return "veiculo?faces-redirect=true";
+		veiculoId = veiculo.getId();
+		return "veiculo?veiculoId="+veiculoId;
 	}
 
 }

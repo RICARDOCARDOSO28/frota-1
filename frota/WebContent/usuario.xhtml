@@ -60,7 +60,7 @@
 								<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
 							</c:when>
 							<c:when test="#{usuarioBean.usuario.setor.id != null}">
-								<f:selectItem itemValue="#{usuarioBean.setorId}"
+								<f:selectItem itemValue="#{usuarioBean.usuario.setor.id}"
 									itemLabel="#{usuarioBean.usuario.setor.nome}" />
 							</c:when>
 						</c:choose>
@@ -88,8 +88,6 @@
 					<p:message for="email" id="emailMessage" />
 				</h:panelGrid>
 			</p:fieldset>
-			<br />
-
 
 
 			<p:fieldset legend="Dados do Motorista">
@@ -111,22 +109,21 @@
 					<p:message for="cnhValidade" id="cnhValidadeMessage" />
 				</h:panelGrid>
 			</p:fieldset>
-			<br />
 
-			<div class="botoes">
+			<div class="ui-g-12">
 				<h:commandButton id="gravarUsuario" value="Gravar"
-					action="#{usuarioBean.gravar}">
-					<!-- 						<f:ajax execute="@form" render="@form" /> -->
+					action="#{usuarioBean.gravar}" styleClass="ui-g-1 botao">
+					<f:ajax execute="@form" render="@form :messages" />
 				</h:commandButton>
 
 				<c:choose>
 					<c:when test="#{usuarioBean.usuario.id == null}">
-						<h:commandButton value="Limpar" type="reset" />
+						<h:commandButton value="Limpar" type="reset" styleClass="ui-g-1 botao"/>
 					</c:when>
 				</c:choose>
 
 				<h:commandButton value="Voltar" action="index?faces-redirect=true"
-					immediate="true" />
+					immediate="true" styleClass="ui-g-1 botao"/>
 			</div>
 
 		</h:form>

@@ -13,15 +13,10 @@ import br.com.frota.model.Usuario;
 public class LoginBean {
 
 	private Usuario usuario = new Usuario();
-		
+
 	public Usuario getUsuario() {
 		return usuario;
 	}
-	
-//	public void setUsuario(Usuario usuario) {
-//		this.usuario = usuario;
-//		this.usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuariologado");
-//	}
 
 	public String efetuarLogin() {
 		System.out.println("efetuar login: " + usuario.getCpf());
@@ -29,7 +24,7 @@ public class LoginBean {
 		FacesContext context = FacesContext.getCurrentInstance();
 
 		boolean usuarioExiste = new UsuarioDAO().usuarioExiste(usuario);
-		
+
 		// Se usuario existir loga no sitema
 		if (usuarioExiste) {
 			context.getExternalContext().getSessionMap().put("usuariologado", usuario);

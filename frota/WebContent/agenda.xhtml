@@ -5,6 +5,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/template/main.xhtml">
@@ -22,120 +23,166 @@
 
 			<p:messages id="messages" globalOnly="true" />
 
-			<p:fieldset legend="Dados do Agendamento">
-				<h:form id="formAgendaBusca">
-					<h:panelGrid columns="3">
-						<h:outputLabel value="Solicitante" for="nome">
-							<h:inputText id="nome" value="#{usuarioBean.usuarioNome}"
-								required="true" requiredMessage="Nome do Usuario obrigatório"
-								validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres">
-								<f:validateLength maximum="30" minimum="2" />
-							</h:inputText>
-						</h:outputLabel>
+			<p:fieldset legend="Dados do Agendamento" id="fieldAgenda">
+				<h:inputHidden value="#{agendaBean.usuarioId}" />
+				<h:form id="formAgendaBusca" styleClass="linha">
+					<h:outputLabel value="Solicitante: " for="nome" styleClass="ui-g-4">
+						<h:inputText id="nome" value="#{usuarioBean.usuarioNome}"
+							required="true" requiredMessage="Nome do Usuario obrigatório"
+							validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres"
+							styleClass="ui-g-12">
+							<f:validateLength maximum="30" minimum="2" />
+							<f:ajax execute="@form"
+								render="@form :tabelaUsuarios :fieldAgenda" />
+						</h:inputText>
+					</h:outputLabel>
 
+					<h:outputLabel value="Setor: " for="setorId" styleClass="ui-g-3">
+						<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId"
+							styleClass="ui-g-12">
+							<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
+							<f:selectItems value="#{setorBean.setores}" var="setor"
+								itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
+							<f:ajax execute="@form"
+								render="@form :tabelaUsuarios :fieldAgenda" />
+						</h:selectOneMenu>
+					</h:outputLabel>
+
+					<h:outputLabel styleClass="ui-g-2">
 						<h:commandButton value="Buscar Solicitante"
-							action="#{usuarioBean.listarPorNome}" execute="@form"
-							render="@form" />
-					</h:panelGrid>
+							action="#{usuarioBean.listar}" styleClass="ui-g-12 botao">
+							<f:ajax execute="@form"
+								render="@form :tabelaUsuarios :fieldAgenda" />
+						</h:commandButton>
+					</h:outputLabel>
 				</h:form>
 
-				<h:form id="formAgendaCadastro">
-					<h:panelGrid columns="6">
-						<h:outputLabel value="Data de Saida:" for="dataSaida" />
-						<h:inputText id="dataSaida"
-							value="#{agendaBean.agenda.dataSaida.time}" required="true"
-							requiredMessage="Data de Saida Obrigatória" maxlength="10">
-							<f:convertDateTime pattern="dd/MM/yyyy"
-								timeZone="America/Sao_Paulo" />
-						</h:inputText>
-						<h:outputLabel />
+				<h:form id="tabelaUsuarios" styleClass="ui-g-12 tabela"
+					rendered="#{(usuarioBean.usuarioNome != usuarioBean.usuario.nome) and (usuarioBean.usuarioNome != '' )}">
+					<p:dataTable var="usuario" value="#{usuarioBean.usuarios}">
+						<p:column headerText="Nome">
+							<h:outputText value="#{usuario.nome}" />
+						</p:column>
+						<p:column headerText="CPF">
+							<h:outputText value="#{usuario.cpf}" />
+						</p:column>
+						<p:column headerText="Setor">
+							<h:outputText value="#{usuario.setor.nome}" />
+						</p:column>
+						<p:column headerText="Telefone">
+							<h:outputText value="#{usuario.fone}" />
+						</p:column>
+						<p:column headerText="Carregar">
+							<h:commandButton styleClass="ui-g-12" value="Carregar"
+								action="#{agendaBean.carregarUsuario(usuario)}"
+								actionListener="#{usuarioBean.carregarUsuario(usuario)}">
+							</h:commandButton>
+						</p:column>
+					</p:dataTable>
+				</h:form>
 
-						<h:outputLabel value="Hora de Saida:" for="horaSaida" />
-						<h:inputText id="horaSaida" value="#{agendaBean.agenda.horaSaida}"
-							required="true" requiredMessage="Hora de Saida Obrigatória"
-							maxlength="5">
-							<f:ajax event="blur" render="horaSaidaMessage" />
-						</h:inputText>
-						<p:message for="horaSaida" id="horaSaidaMessage" />
+				<h:form id="formAgendaCadastro" styleClass="container">
+					<div class="container">
+						<div class="linha">
+							<h:outputLabel value="Data de Saida:" for="dataSaida"
+								styleClass="ui-g-1" />
+							<h:inputText id="dataSaida"
+								value="#{agendaBean.agenda.dataSaida.time}" required="true"
+								requiredMessage="Data de Saida Obrigatória" maxlength="10"
+								styleClass="ui-g-2">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Sao_Paulo" />
+								<f:ajax event="blur" render="messagens" />
+							</h:inputText>
 
-						<h:outputLabel value="Data de Chegada:" for="dataChegada" />
-						<h:inputText id="dataChegada"
-							value="#{agendaBean.agenda.dataChegada.time}" required="true"
-							requiredMessage="Data de Chegada Obrigatória" maxlength="10">
-							<f:convertDateTime pattern="dd/MM/yyyy"
-								timeZone="America/Sao_Paulo" />
-						</h:inputText>
+							<h:outputLabel value="Hora de Saida:" for="horaSaida"
+								styleClass="ui-g-1" />
+							<h:inputText id="horaSaida"
+								value="#{agendaBean.agenda.horaSaida}" required="true"
+								requiredMessage="Hora de Saida Obrigatória" maxlength="5"
+								styleClass="ui-g-1">
+								<f:ajax event="blur" render="horaSaidaMessage" />
+							</h:inputText>
+							<p:message for="horaSaida" id="horaSaidaMessage"
+								styleClass="ui-g-3" />
+						</div>
 
-						<h:outputLabel />
+						<div class="linha">
+							<h:outputLabel value="Data de Chegada:" for="dataChegada"
+								styleClass="ui-g-1" />
+							<h:inputText id="dataChegada"
+								value="#{agendaBean.agenda.dataChegada.time}" required="true"
+								requiredMessage="Data de Chegada Obrigatória" maxlength="10"
+								styleClass="ui-g-2">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="America/Sao_Paulo" />
+								<f:ajax event="blur" render="messagens" />
+							</h:inputText>
 
-						<h:outputLabel value="Hora de Chegada:" for="horaChegada" />
-						<h:inputText id="horaChegada"
-							value="#{agendaBean.agenda.horaChegada}" required="true"
-							requiredMessage="Hora de Chegada Obrigatória" maxlength="5">
-							<f:ajax event="blur" render="horaChegadaMessage" />
-						</h:inputText>
-						<p:message for="horaChegada" id="horaChegadaMessage" />
-
-					</h:panelGrid>
-
-
-					<h:panelGrid columns="2">
-						<h:outputLabel value="Tipo de Veiculo:" for="tipo" />
-						<h:selectOneMenu value="#{agendaBean.agenda.tipoVeiculo}"
-							id="tipo" required="true"
-							requiredMessage="Tipo de Veiculo obrigatório">
-							<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
-								itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-						</h:selectOneMenu>
-
-						<h:outputLabel value="Destino:" for="destino" />
-						<h:inputText id="destino" value="#{agendaBean.agenda.destino}" />
-
-						<h:outputLabel value="Observações:" for="descricao" />
-						<h:inputTextarea id="descricao"
-							value="#{agendaBean.agenda.descricao}" />
-					</h:panelGrid>
-
-
-					<div class="flex">
-						<h:commandButton value="Gravar" action="#{agendaBean.gravar}">
-							<f:ajax execute="@form" render="@form" />
-						</h:commandButton>
-						<h:commandButton value="Limpar" type="reset" />
+							<h:outputLabel value="Hora de Chegada:" for="horaChegada"
+								styleClass="ui-g-1" />
+							<h:inputText id="horaChegada"
+								value="#{agendaBean.agenda.horaChegada}" required="true"
+								requiredMessage="Hora de Chegada Obrigatória" maxlength="5"
+								styleClass="ui-g-1">
+								<f:ajax event="blur" render="horaChegadaMessage" />
+							</h:inputText>
+							<p:message for="horaChegada" id="horaChegadaMessage"
+								styleClass="ui-g-3" />
+						</div>
 					</div>
+
+
+					<div class="container">
+						<div class="linha">
+							<h:outputLabel value="Tipo de Veiculo:" for="tipo"
+								styleClass="ui-g-1" />
+							<h:selectOneMenu value="#{agendaBean.agenda.tipoVeiculo}"
+								id="tipo" required="true"
+								requiredMessage="Tipo de Veiculo obrigatório"
+								styleClass="ui-g-3">
+								<c:choose>
+									<c:when test="#{agendaBean.agenda.tipoVeiculo == null}">
+										<f:selectItem itemValue=""
+											itemLabel="Escolha um Tipo de Veiculo" />
+									</c:when>
+								</c:choose>
+								<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+									itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+								<f:ajax event="blur" render="tipoMessage" />
+							</h:selectOneMenu>
+							<p:message for="tipo" id="tipoMessage" styleClass="ui-g-4" />
+						</div>
+
+						<div class="linha">
+							<h:outputLabel value="Destino:" for="destino" styleClass="ui-g-1" />
+							<h:inputText id="destino" value="#{agendaBean.agenda.destino}"
+								required="true"
+								requiredMessage="Descrição do Destino Obrigatória"
+								styleClass="ui-g-3">
+								<f:ajax event="blur" render="destinoMessage" />
+							</h:inputText>
+							<p:message for="destino" id="destinoMessage" styleClass="ui-g-4" />
+						</div>
+
+						<div class="linha">
+							<h:outputLabel value="Observações:" for="descricao"
+								styleClass="ui-g-1" />
+							<h:inputTextarea id="descricao"
+								value="#{agendaBean.agenda.descricao}" styleClass="ui-g-6"
+								rows="3" />
+						</div>
+					</div>
+
+
+					<h:outputLabel styleClass="ui-g-2">
+						<h:commandButton value="Gravar" action="#{agendaBean.gravar}"
+							styleClass="ui-g-12 botao">
+						</h:commandButton>
+					</h:outputLabel>
 				</h:form>
 			</p:fieldset>
-
-
-
-			<h:form id="tabelaUsuarios" styleClass="ui-g-12"
-				rendered="#{usuarioBean.usuarioNome != ''}">
-				<p:dataTable var="usuario" value="#{usuarioBean.usuarios}"
-					style="margin-bottom:40px">
-					<f:facet name="header">
-            Lista de Usuarios Usuarios
-        </f:facet>
-					<p:column headerText="Nome">
-						<h:outputText value="#{usuario.nome}" />
-					</p:column>
-					<p:column headerText="CPF">
-						<h:outputText value="#{usuario.cpf}" />
-					</p:column>
-					<p:column headerText="Setor">
-						<h:outputText value="#{usuario.setor.nome}" />
-					</p:column>
-					<p:column headerText="Telefone">
-						<h:outputText value="#{usuario.fone}" />
-					</p:column>
-					<p:column headerText="Carregar">
-						<h:commandButton styleClass="ui-button button.ui-button.ui-state-default ui-button.ui-state-default" value="Carregar"
-							action="#{agendaBean.carregarUsuario(usuario)}"
-							actionListener="#{usuarioBean.carregarUsuario(usuario)}" />
-					</p:column>
-				</p:dataTable>
-			</h:form>
 		</f:view>
-
 	</ui:define>
 </ui:composition>
 </html>

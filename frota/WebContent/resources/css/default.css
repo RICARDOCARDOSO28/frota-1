@@ -4,10 +4,8 @@ html {
 }
 
 .ui-widget {
-	font-size: 19px !important;
+	font-size: 14px !important;
 }
-
-
 
 input[type="button" i], input[type="submit" i], input[type="reset" i],
 	input[type="file" i]::-webkit-file-upload-button, button {

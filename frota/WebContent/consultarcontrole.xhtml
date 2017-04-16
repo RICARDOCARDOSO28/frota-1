@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/main.xhtml">
+
+	<ui:define name="content">
+		<h1>Consultar Agendamentos</h1>
+
+		<p:messages id="messages" globalOnly="true" />
+
+		<h:form id="formControleConsulta">
+		<div class="ui-g-12 linha">
+			<h:outputLabel value="Nome do Usuario: " for="usuarioNome"
+				styleClass="ui-g-3">
+				<h:inputText value="#{controleCirculacaoBean.usuario}" id="usuarioNome"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
+
+			<h:outputLabel value="Data Inicial:" for="dataInicial"
+				styleClass="ui-g-2">
+				<h:inputText id="dataInicial" value="#{controleCirculacaoBean.dataInicial}"
+					maxlength="10" styleClass="ui-g-12">
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" />
+				</h:inputText>
+			</h:outputLabel>
+
+			<h:outputLabel value="Data Final:" for="dataFinal"
+				styleClass="ui-g-2">
+				<h:inputText id="dataFinal" value="#{controleCirculacaoBean.dataFinal}"
+					maxlength="10" styleClass="ui-g-12">
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" />
+				</h:inputText>
+			</h:outputLabel>
+			<h:outputLabel />
+			</div>
+			
+			<div class="ui-g-12 linha">
+			<h:outputLabel value="Destino: " for="destino"
+				styleClass="ui-g-3">
+				<h:inputText value="#{controleCirculacaoBean.destino}" id="destino"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
+			
+			<h:outputLabel value="Motorista: " for="motorista"
+				styleClass="ui-g-3">
+				<h:inputText value="#{controleCirculacaoBean.motorista}" id="motorista"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
+			
+			<h:outputLabel value="Veiculo: " for="veiculo"
+				styleClass="ui-g-3">
+				<h:inputText value="#{controleCirculacaoBean.veiculo}" id="veiculo"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
+
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Buscar" action="#{controleCirculacaoBean.listar}"
+					styleClass="ui-g-12 botoes">
+					<f:ajax render="@form :tabelaControle" execute="@form" />
+				</h:commandButton>
+			</h:outputLabel>
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Novo" action="#{controleCirculacaoBean.novo}"
+					styleClass="ui-g-12 botoes" />
+			</h:outputLabel>
+			</div>
+		</h:form>
+
+
+		<h:form id="tabelaControle">
+			<p:dataTable var="controle" value="#{controleCirculacaoBean.controles}"
+				styleClass="tabela">
+				<f:facet name="header">
+            Listagem de Controle de Circulação
+        </f:facet>
+				<p:column headerText="Usuario">
+					<h:outputText value="#{controle.agenda.usuario.nome}" />
+					<br />
+					<h:outputText value="#{controle.agenda.usuario.setor.nome}" />
+				</p:column>
+
+				<p:column headerText="Destino">
+					<h:outputText value="#{controle.destino}" />
+				</p:column>
+
+				<p:column headerText="Motorista">
+					<h:outputText value="#{controle.motorista.nome}" />
+				</p:column>
+
+				<p:column headerText="Veiculo" style="text-align: center;">
+					<h:outputText value="#{controle.veiculo.placa}" /><br/>
+					<h:outputText value="#{controle.veiculo.marca} - #{controle.veiculo.modelo}" />
+				</p:column>
+
+				<p:column headerText="Horario de Saida" styleClass="txt-center">
+					<h:outputText value="#{controle.dataSaida.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value=" as #{controle.horaSaida}" />
+				</p:column>
+
+				<p:column headerText="Horario de Chegada" styleClass="txt-center">
+					<h:outputText value="#{controle.dataChegada.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value=" as #{controle.horaChegada}" />
+				</p:column>
+				
+				<p:column headerText="KM Rodados" style="text-align: center;">
+					<h:outputText value="#{controle.kmRodados}" />
+				</p:column>
+
+				<p:column headerText="Editar">
+					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						action="#{controleCirculacaoBean.editar(controle)}" />
+				</p:column>
+
+				<p:column headerText="Excluir">
+					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
+						action="#{controleCirculacaoBean.remover(controle)}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

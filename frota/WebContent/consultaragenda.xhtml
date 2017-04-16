@@ -7,60 +7,118 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
-		<h1>Consultar Usuarios</h1>
+		<h1>Consultar Agendamentos</h1>
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formUsuarioConsulta" styleClass="ui-g-12">
+		<h:form id="formAgendaConsulta" styleClass="ui-g-12 linha">
+			<h:outputLabel value="Nome do Usuario, destino ou veiculo: " for="usuarioNome"
+				styleClass="ui-g-3">
+				<h:inputText value="#{agendaBean.agendaNome}" id="usuarioNome"
+					styleClass="ui-g-12" />
+			</h:outputLabel>
 
-			<div class="ui-g-12 ui-md-4 flex">
-				<h:outputLabel value="Nome do Usuario: " for="usuarioNome" />
-				<h:inputText value="#{usuarioBean.usuarioNome}" id="usuarioNome" />
-				</div>
+			<h:outputLabel value="Data Inicial:" for="dataInicial"
+				styleClass="ui-g-2">
+				<h:inputText id="dataInicial" value="#{agendaBean.dataInicial}"
+					maxlength="10" styleClass="ui-g-12">
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" />
+				</h:inputText>
+			</h:outputLabel>
 
-			<div class="ui-g-12 ui-md-8 flex">
-				<h:commandButton value="Buscar"
-					action="#{usuarioBean.listarPorNome}" />
-				<h:commandButton value="Novo" action="#{usuarioBean.novoUsuario}" />
-				<h:commandButton value="Voltar" action="index" />
+			<h:outputLabel value="Data Final:" for="dataFinal"
+				styleClass="ui-g-2">
+				<h:inputText id="dataFinal" value="#{agendaBean.dataFinal}"
+					maxlength="10" styleClass="ui-g-12">
+					<f:convertDateTime pattern="dd/MM/yyyy"
+						timeZone="America/Sao_Paulo" />
+				</h:inputText>
+			</h:outputLabel>
+			<h:outputLabel />
+			
+			<h:outputLabel value="Status do Agendamento: " for="statusAgenda"
+				styleClass="ui-g-12 ui-md-6 ui-lg-2">
+				<h:selectOneMenu value="#{veiculoBean.veiculoTipo}" id="statusAgenda"
+					styleClass="ui-g-12">
+					<f:selectItem itemValue="" itemLabel="Situação do Agendamento" />
+					<f:selectItems value="#{agendaBean.statusAgenda}" var="status"
+						itemLabel="#{status.label}" itemValue="#{status}" />
+					<f:ajax execute="@form" render="@form :tabelaAgendamentos" />
+				</h:selectOneMenu>
+			</h:outputLabel>
 
-			</div>
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Buscar" action="#{agendaBean.listar}"
+					styleClass="ui-g-12 botoes">
+					<f:ajax render="@form :tabelaAgendamentos" execute="@form" />
+				</h:commandButton>
+			</h:outputLabel>
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Novo" action="#{agendaBean.novo}"
+					styleClass="ui-g-12 botoes" />
+			</h:outputLabel>
 		</h:form>
 
 
-		<h:form id="tabelaUsuarios" styleClass="ui-g-12">
-			<p:dataTable var="usuario" value="#{usuarioBean.usuarios}"
-				style="margin-bottom:40px">
+		<h:form id="tabelaAgendamentos">
+			<p:dataTable var="agenda" value="#{agendaBean.agendas}"
+				styleClass="tabela">
 				<f:facet name="header">
-            Lista de Usuarios Usuarios
+            Lista de Agendamentos
         </f:facet>
-				<p:column headerText="Nome" >
-					<h:outputText value="#{usuario.nome}" />
-				</p:column>
-				<p:column headerText="CPF" >
-					<h:outputText value="#{usuario.cpf}" />
-				</p:column>
-
-				<p:column headerText="Setor" >
-					<h:outputText value="#{usuario.setor.nome}" />
+				<p:column headerText="Solicitante">
+					<h:outputText value="#{agenda.usuario.nome}" />
+					<br />
+					<h:outputText value="#{agenda.usuario.setor.nome}" />
 				</p:column>
 
-				<p:column headerText="Telefone" >
-					<h:outputText value="#{usuario.fone}" />
+				<p:column headerText="Destino">
+					<h:outputText value="#{agenda.destino}" />
+				</p:column>
+
+				<p:column headerText="Descrição da Solicitação">
+					<h:outputText value="#{agenda.descricao}" />
+				</p:column>
+
+				<p:column headerText="Tipo de Veiculo" style="text-align: center;">
+					<h:outputText value="#{agenda.tipoVeiculo.label}" />
+				</p:column>
+
+				<p:column headerText="Horario para Saida" styleClass="txt-center">
+					<h:outputText value="#{agenda.dataSaida.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value=" as #{agenda.horaSaida}" />
+				</p:column>
+
+				<p:column headerText="Horario para Chegada" styleClass="txt-center">
+					<h:outputText value="#{agenda.dataChegada.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputText value=" as #{agenda.horaChegada}" />
+				</p:column>
+
+				<p:column headerText="Status do Agendamento">
+					<h:outputText value="Em Aberto"
+						rendered="#{agenda.controlesCirculacao.size() == 0}" />
+					<h:outputText value="Realizada"
+						rendered="#{agenda.controlesCirculacao.size() != 0}" />
 				</p:column>
 
 				<p:column headerText="Editar">
 					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
-						action="#{usuarioBean.editar(usuario)}" />
+						action="#{agendaBean.editar(agenda)}" />
 				</p:column>
 
 				<p:column headerText="Excluir">
 					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
-						action="#{usuarioBean.remover(usuario)}" />
+						action="#{agendaBean.remover(agenda)}" />
 				</p:column>
 			</p:dataTable>
 		</h:form>
