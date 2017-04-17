@@ -18,8 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import br.com.frota.util.TipoSexo;
 import br.com.frota.util.TipoUsuario;
 
@@ -191,40 +189,40 @@ public class Usuario {
 		return id;
 	}
 
-	public void adicionarAbastecimento(Abastecimento a){
+	public void adicionarAbastecimento(Abastecimento a) {
 		a.setUsuario(this);
 		getAbastecimentos().add(a);
 	}
-	
-	public void removerAbastecimento(Abastecimento a){
+
+	public void removerAbastecimento(Abastecimento a) {
 		a.setUsuario(null);
 		getAbastecimentos().remove(a);
 	}
-	
-	public void adicionarAgenda(Agenda a){
+
+	public void adicionarAgenda(Agenda a) {
 		a.setUsuario(this);
 		getAgendas().add(a);
 	}
-	
-	public void removerAgenda(Agenda a){
+
+	public void removerAgenda(Agenda a) {
 		a.setUsuario(null);
 		getAgendas().remove(a);
 	}
-	
-	public void adicionarControle(ControleCirculacao c){
+
+	public void adicionarControle(ControleCirculacao c) {
 		c.setMotorista(this);
 		getControles().add(c);
 	}
-	
-	public void removerControle(ControleCirculacao c){
+
+	public void removerControle(ControleCirculacao c) {
 		c.setMotorista(null);
 		getControles().remove(c);
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Usuario[id:" + getId() + ", nome:" + getNome() + ", cpf:" + getCpf() + ", sexo:" + getSexo()
-				+ ", setor:" + getSetor() + ", fone:" + getFone() + ", email:" + getEmail() + "]";
+		return "Usuario[id:" + getId() + ", nome:" + getNome() + ", cpf:" + getCpf() + ", sexo:" + getSexo() + "]\n"
+				+ getSetor().toString();
 	}
 
 	@Override

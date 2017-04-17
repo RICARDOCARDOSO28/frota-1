@@ -105,15 +105,16 @@
 				</p:column>
 
 				<p:column headerText="Status do Agendamento">
-					<h:outputText value="Em Aberto"
-						rendered="#{agenda.controlesCirculacao.size() == 0}" />
-					<h:outputText value="Realizada"
-						rendered="#{agenda.controlesCirculacao.size() != 0}" />
+						<h:link value="#{agenda.statusAgenda.label}" outcome="#{agendaBean.agendaControle(agenda)}" rendered="#{agenda.statusAgenda == 'EM_ABERTO'}"/>
+					<h:outputText value="#{agenda.statusAgenda.label}"
+						rendered="#{agenda.statusAgenda == 'ENCERRADO'}" />
+						<h:outputText value="#{agenda.statusAgenda.label}"
+						rendered="#{agenda.statusAgenda == 'CANCELADO'}" />
 				</p:column>
 
 				<p:column headerText="Editar">
-					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
-						action="#{agendaBean.editar(agenda)}" />
+					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
+						outcome="#{agendaBean.editar(agenda)}" />
 				</p:column>
 
 				<p:column headerText="Excluir">

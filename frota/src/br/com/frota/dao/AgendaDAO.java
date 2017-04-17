@@ -30,9 +30,15 @@ public class AgendaDAO {
 		em.getTransaction().commit();
 	}
 
-	public void atualizar(Agenda agenda, Integer usuarioId) {
+	public void atualizar(Agenda agenda, Integer usuarioId, StatusAgenda statusAgenda) {
+		
+		System.out.println("usuarioid="+usuarioId+", agenda.usuario.id=" +agenda.getUsuario().getId()+", status"+statusAgenda);
 		em.getTransaction().begin();
+		agenda.setStatusAgenda(statusAgenda);
 		agenda.getUsuario().removerAgenda(agenda);
+//		if (usuarioId == null)
+//			usuarioId = agenda.getUsuario().getId();
+
 		Usuario usuario = em.find(Usuario.class, usuarioId);
 		usuario.adicionarAgenda(agenda);
 		em.merge(agenda);

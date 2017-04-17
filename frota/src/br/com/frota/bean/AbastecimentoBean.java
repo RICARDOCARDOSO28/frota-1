@@ -108,7 +108,8 @@ public class AbastecimentoBean {
 	}
 
 	public Abastecimento recuperarAbastecimentoPorId() {
-		return abastecimentoDAO.recuperarAbastecimentoPorId(abastecimentoId);
+		abastecimento = abastecimentoDAO.recuperarAbastecimentoPorId(abastecimentoId);
+		return abastecimento;
 	}
 
 	public void remover(Abastecimento abastecimento) {

@@ -47,7 +47,8 @@ public class ControleCirculacaoBean {
 	}
 
 	public List<ControleCirculacao> getControles() {
-		controles = controleDAO.listarControle(usuario, veiculoId, motoristaId, veiculo, destino, motorista, dataInicial, dataFinal);
+		controles = controleDAO.listarControle(usuario, veiculoId, motoristaId, veiculo, destino, motorista,
+				dataInicial, dataFinal);
 		return controles;
 	}
 
@@ -169,5 +170,10 @@ public class ControleCirculacaoBean {
 
 	public String novo() {
 		return Paginas.CADASTROCONTROLE;
+	}
+
+	public void carregarAgenda(Integer agendaId) {
+		System.out.println("agendaId= " + agendaId);
+		this.agendaId = agendaId;
 	}
 }

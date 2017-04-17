@@ -160,9 +160,9 @@ public class Agenda {
 
 	@Override
 	public String toString() {
-		return "Agenda[id:" + getId() + ", dataSaida:" + getDataSaida() + ", dataChegada:" + getDataChegada()
+		return "Agenda[id:" + getId() + ", dataSaida:" + getDataSaida().getTime() + ", dataChegada:" + getDataChegada().getTime()
 				+ ", horaSaida:" + getHoraSaida() + ", horaChegada:" + getHoraChegada() + ", tipoVeiculo:"
-				+ getTipoVeiculo() + ", destino:" + getDestino() + ", descricao:" + getDescricao() + "]\n\t"
+				+ getTipoVeiculo() + ", destino:" + getDestino() + ", descricao:" + getDescricao() + "]\n"
 				+ getUsuario().toString();
 	}
 

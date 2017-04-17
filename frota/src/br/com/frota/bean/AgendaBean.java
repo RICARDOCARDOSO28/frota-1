@@ -86,7 +86,7 @@ public class AgendaBean {
 	public void setDataFinal(Date dataFinal) {
 		this.dataFinal = dataFinal;
 	}
-	
+
 	public StatusAgenda[] getStatusAgenda() {
 		return StatusAgenda.values();
 	}
@@ -103,8 +103,14 @@ public class AgendaBean {
 		agenda = new Agenda();
 	}
 
+	public void atualizar() {
+		agendaDAO.atualizar(agenda, usuarioId, statusAgenda);
+		agenda = new Agenda();
+	}
+
 	public Agenda recuperarAgendaPorId() {
-		return agendaDAO.recuperarAgendaPorId(agendaId);
+		agenda = agendaDAO.recuperarAgendaPorId(agendaId);
+		return agenda;
 	}
 
 	public String carregarUsuario(Usuario usuario) {
@@ -124,11 +130,28 @@ public class AgendaBean {
 	public String editar(Agenda agenda) {
 		this.agenda = agenda;
 		agendaId = agenda.getId();
-		usuarioId = agenda.getUsuario().getId();
+		usuarioId = agenda.getUsuario().getId(); 
 		return "agenda?agendaId=" + agendaId;
 	}
 
 	public String novo() {
 		return Paginas.CADASTROAGENDA;
+	}
+
+	public String agendaControle(Agenda agenda) {
+		this.agenda = agenda;
+		agendaId = agenda.getId();
+		return "controle?agendaId=" + agendaId;
+	}
+
+	public String cancelarAgenda() {
+		usuarioId = agenda.getUsuario().getId();
+		agendaDAO.atualizar(agenda, usuarioId, StatusAgenda.CANCELADO);
+		return null;
+	}
+	
+	public void encerrarAgenda(){
+		this.statusAgenda = StatusAgenda.ENCERRADO;
+		usuarioId = agenda.getUsuario().getId();
 	}
 }

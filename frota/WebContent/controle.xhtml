@@ -16,6 +16,10 @@
 		<f:viewAction
 			action="#{controleCirculacaoBean.recuperarControlePorId}"
 			if="#{param.controleId != null}" />
+
+		<f:viewParam name="agendaId" value="#{agendaBean.agendaId}" />
+		<f:viewAction action="#{agendaBean.recuperarAgendaPorId}"
+			if="#{param.agendaId != null}" />
 	</f:metadata>
 
 	<ui:define name="content">
@@ -27,81 +31,182 @@
 
 			<p:fieldset legend="Dados do Controle de Circulação"
 				id="fieldControle">
-				<h:form id="formControleCadastro"
-					style="width: 100%;display: flex;flex-direction: column;">
-					<div
-						style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
+				<h:form id="infoAgenda" styleClass="informacao bg-green">
+
+					<div class="linha">
+						<h:outputLabel value="Nome:" />
+						<h:outputText value="#{agendaBean.agenda.usuario.nome}"
+							styleClass="txt-info" />
+
+						<h:outputLabel value="Setor:" />
+						<h:outputText value="#{agendaBean.agenda.usuario.setor.nome}"
+							styleClass="txt-info" />
+					</div>
+
+					<div class="linha">
+						<h:outputLabel value="Destino:" />
+						<h:outputText value="#{agendaBean.agenda.destino}"
+							styleClass="txt-info" />
+					</div>
+					<div class="linha">
+						<h:outputLabel value="Descrição:" />
+						<h:outputText value="#{agendaBean.agenda.descricao}"
+							styleClass="txt-info" />
+					</div>
+
+					<div class="linha">
+						<h:outputLabel value="Horario de Saida:" />
+						<h:outputText value="#{agendaBean.agenda.dataSaida.time}"
+							styleClass="txt-info">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo" />
+						</h:outputText>
+						<h:outputLabel value="as  " />
+						<h:outputText value="#{agendaBean.agenda.horaSaida}"
+							styleClass="txt-info" />
+					</div>
+
+					<div class="linha">
+						<h:outputLabel value="Horario de Retorno:" />
+						<h:outputText value="#{agendaBean.agenda.dataChegada.time}"
+							styleClass="txt-info">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo" />
+						</h:outputText>
+						<h:outputLabel value="as  " />
+						<h:outputText value="#{agendaBean.agenda.horaChegada}"
+							styleClass="txt-info" />
+					</div>
+
+					<div class="linha">
+						<h:outputLabel value="Tipo de Veiculo: " />
+						<h:outputText value="#{agendaBean.agenda.tipoVeiculo.label}"
+							styleClass="txt-info" />
+					</div>
+
+					<h:outputText
+						value="Agendamento #{agendaBean.agenda.statusAgenda.label}"
+						styleClass="status-info status-info-center" />
+
+					<div class="linha" style="justify-content: center;">
+						<c:choose>
+							<c:when test="#{agendaBean.agenda.statusAgenda == 'EM_ABERTO'}">
+								<h:commandButton value="CANCELAR"
+									action="#{agendaBean.cancelarAgenda}" styleClass="ui-g-2 botao" />
+
+								<h:commandButton styleClass="ui-g-2 botao" value="ENCERRAR"
+									action="#{controleCirculacaoBean.carregarAgenda(agendaBean.agenda.id)}" actionListener="#{agendaBean.encerrarAgenda}"/>
+							</c:when>
+
+							<c:when test="#{agendaBean.agenda.statusAgenda == 'CANCELADO'}">
+								<h:commandButton value="INICIO"
+									action="index?faces-redirect=true" styleClass="ui-g-2 botao" />
+								<h:commandButton styleClass="ui-g-2 botao" value="AGENDAMENTOS"
+									action="consultaragenda?faces-redirect=true" immediate="true" />
+							</c:when>
+						</c:choose>
+					</div>
+				</h:form>
+
+
+
+				<h:form id="formControleCadastro" styleClass="container"
+					rendered="#{controleCirculacaoBean.agendaId != null}">
+					<div class="linha">
 						<h:outputLabel value="Motorista: " for="motoristaId"
 							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
 						<h:selectOneMenu value="#{controleCirculacaoBean.motoristaId}"
 							id="motoristaId" styleClass="ui-g-3">
 							<f:selectItem itemValue="" itemLabel="Escolha um Motorista" />
 							<f:selectItems value="#{usuarioBean.motoristas}" var="motorista"
-								itemLabel="#{motorista.nome} - #{motorista.setor.nome}" itemValue="#{motorista.id}" />
+								itemLabel="#{motorista.nome} - #{motorista.setor.nome}"
+								itemValue="#{motorista.id}" />
 						</h:selectOneMenu>
 					</div>
 
-
-					<div style="width: 100%; display: flex; flex-direction: column;">
-						<div
-							style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
-							<h:outputLabel value="Data de Saida:" for="dataSaida"
-								styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:inputText id="dataSaida"
-								value="#{controleCirculacaoBean.controle.dataSaida.time}"
-								required="true" requiredMessage="Data de Saida Obrigatória"
-								maxlength="10" styleClass="ui-g-1">
-								<f:convertDateTime pattern="dd/MM/yyyy"
-									timeZone="America/Sao_Paulo" />
-								<f:ajax event="blur" render="messagens" />
-							</h:inputText>
-
-							<h:outputLabel value="Hora de Saida:" for="horaSaida"
-								styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:inputText id="horaSaida"
-								value="#{controleCirculacaoBean.controle.horaSaida}"
-								required="true" requiredMessage="Hora de Saida Obrigatória"
-								maxlength="5" styleClass="ui-g-1">
-								<f:ajax event="blur" render="horaSaidaMessage" />
-							</h:inputText>
-							<p:message for="horaSaida" id="horaSaidaMessage"
-								styleClass="ui-g-3" />
-						</div>
-
-						<div
-							style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
-							<h:outputLabel value="Data de Chegada:" for="dataChegada"
-								styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:inputText id="dataChegada"
-								value="#{controleCirculacaoBean.controle.dataChegada.time}"
-								required="true" requiredMessage="Data de Chegada Obrigatória"
-								maxlength="10" styleClass="ui-g-1">
-								<f:convertDateTime pattern="dd/MM/yyyy"
-									timeZone="America/Sao_Paulo" />
-								<f:ajax event="blur" render="messagens" />
-							</h:inputText>
-
-							<h:outputLabel value="Hora de Chegada:" for="horaChegada"
-								styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:inputText id="horaChegada"
-								value="#{controleCirculacaoBean.controle.horaChegada}"
-								required="true" requiredMessage="Hora de Chegada Obrigatória"
-								maxlength="5" styleClass="ui-g-1">
-								<f:ajax event="blur" render="horaChegadaMessage" />
-							</h:inputText>
-							<p:message for="horaChegada" id="horaChegadaMessage"
-								styleClass="ui-g-3" />
-						</div>
+					<div class="linha">
+						<h:outputLabel value="Selecione um Veiculo: " for="veiculoId"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:selectOneMenu value="#{controleCirculacaoBean.veiculoId}"
+							id="veiculoId" required="true"
+							requiredMessage="Escolha um veiculo na Lista" styleClass="ui-g-3">
+							<c:choose>
+								<c:when
+									test="#{controleCirculacaoBean.controle.veiculo.id == null}">
+									<f:selectItem itemValue="" itemLabel="Escolha um Veiculo" />
+								</c:when>
+								<c:when
+									test="#{controleCirculacaoBean.controle.veiculo.id != null}">
+									<f:selectItem
+										itemValue="#{controleCirculacaoBean.controle.veiculo.id}"
+										itemLabel="#{controleCirculacaoBean.controle.veiculo.placa}" />
+								</c:when>
+							</c:choose>
+							<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo"
+								itemLabel="#{veiculo.placa}, #{veiculo.marca} - #{veiculo.modelo}"
+								itemValue="#{veiculo.id}" />
+							<f:ajax event="blur" render="veiculoIdMessage" />
+						</h:selectOneMenu>
+						<h:commandLink styleClass="fa fa-car" value=" Novo Veiculo"
+							action="veiculo?faces-redirect=true" immediate="true" />
+						<p:message for="destino" id="veiculoIdMessage" styleClass="ui-g-3" />
 					</div>
 
-					<div
-						style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
+
+					<div class="linha">
+						<h:outputLabel value="Data de Saida:" for="dataSaida"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:inputText id="dataSaida"
+							value="#{controleCirculacaoBean.controle.dataSaida.time}"
+							required="true" requiredMessage="Data de Saida Obrigatória"
+							maxlength="10" styleClass="ui-g-1">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo" />
+							<f:ajax event="blur" render="messagens" />
+						</h:inputText>
+
+						<h:outputLabel value="Hora de Saida:" for="horaSaida"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:inputText id="horaSaida"
+							value="#{controleCirculacaoBean.controle.horaSaida}"
+							required="true" requiredMessage="Hora de Saida Obrigatória"
+							maxlength="5" styleClass="ui-g-1">
+							<f:ajax event="blur" render="horaSaidaMessage" />
+						</h:inputText>
+						<p:message for="horaSaida" id="horaSaidaMessage"
+							styleClass="ui-g-3" />
+					</div>
+
+					<div class="linha">
+						<h:outputLabel value="Data de Chegada:" for="dataChegada"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:inputText id="dataChegada"
+							value="#{controleCirculacaoBean.controle.dataChegada.time}"
+							required="true" requiredMessage="Data de Chegada Obrigatória"
+							maxlength="10" styleClass="ui-g-1">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo" />
+							<f:ajax event="blur" render="messagens" />
+						</h:inputText>
+
+						<h:outputLabel value="Hora de Chegada:" for="horaChegada"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:inputText id="horaChegada"
+							value="#{controleCirculacaoBean.controle.horaChegada}"
+							required="true" requiredMessage="Hora de Chegada Obrigatória"
+							maxlength="5" styleClass="ui-g-1">
+							<f:ajax event="blur" render="horaChegadaMessage" />
+						</h:inputText>
+						<p:message for="horaChegada" id="horaChegadaMessage"
+							styleClass="ui-g-3" />
+					</div>
+
+					<div class="linha">
 						<h:outputLabel value="Odometro Inicial:" for="odometroInicial"
 							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
 						<h:inputText id="odometroInicial"
 							value="#{controleCirculacaoBean.controle.odometroSaida}"
-							required="true"
-							requiredMessage="Valor do Odometro obrigatório"
+							required="true" requiredMessage="Valor do Odometro obrigatório"
 							maxlength="8" styleClass="ui-g-1">
 							<f:ajax event="blur" render="odometroInicialMessage" />
 						</h:inputText>
@@ -118,66 +223,32 @@
 							styleClass="ui-g-4" />
 					</div>
 
-					<div style="width: 100%; display: flex; flex-direction: column;">
-						<div
-							style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
-							<h:outputLabel value="Selecione um Veiculo: " for="veiculoId"
-								styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:selectOneMenu value="#{controleCirculacaoBean.veiculoId}"
-								id="veiculoId" required="true"
-								requiredMessage="Escolha um veiculo na Lista"
-								styleClass="ui-g-3">
-								<c:choose>
-									<c:when
-										test="#{controleCirculacaoBean.controle.veiculo.id == null}">
-										<f:selectItem itemValue="" itemLabel="Escolha um Veiculo" />
-									</c:when>
-									<c:when
-										test="#{controleCirculacaoBean.controle.veiculo.id != null}">
-										<f:selectItem
-											itemValue="#{controleCirculacaoBean.controle.veiculo.id}"
-											itemLabel="#{controleCirculacaoBean.controle.veiculo.placa}" />
-									</c:when>
-								</c:choose>
-								<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo"
-									itemLabel="#{veiculo.placa}, #{veiculo.marca} - #{veiculo.modelo}" itemValue="#{veiculo.id}" />
-								<f:ajax event="blur" render="veiculoIdMessage" />
-							</h:selectOneMenu>
-							<h:commandLink styleClass="fa fa-car" value=" Novo Veiculo"
-								action="veiculo?faces-redirect=true" immediate="true" />
-							<p:message for="destino" id="veiculoIdMessage"
-								styleClass="ui-g-3" />
-						</div>
-
-						<div
-							style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
-							<h:outputLabel value="Destino:" for="destino" styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:inputText id="destino"
-								value="#{controleCirculacaoBean.controle.destino}"
-								required="true"
-								requiredMessage="Descrição do Destino Obrigatória"
-								styleClass="ui-g-5">
-								<f:ajax event="blur" render="destinoMessage" />
-							</h:inputText>
-							<p:message for="destino" id="destinoMessage" styleClass="ui-g-3" />
-						</div>
-
-						<div
-							style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
-							<h:outputLabel value="Observações:" for="descricao"
-								styleClass="ui-g-4 ui-md-2 ui-lg-1" />
-							<h:inputTextarea id="descricao"
-								value="#{controleCirculacaoBean.controle.descricao}"
-								styleClass="ui-g-5" rows="3" />
-						</div>
+					<div class="linha">
+						<h:outputLabel value="Destino:" for="destino"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:inputText id="destino"
+							value="#{controleCirculacaoBean.controle.destino}"
+							required="true"
+							requiredMessage="Descrição do Destino Obrigatória"
+							styleClass="ui-g-5">
+							<f:ajax event="blur" render="destinoMessage" />
+						</h:inputText>
+						<p:message for="destino" id="destinoMessage" styleClass="ui-g-3" />
 					</div>
 
+					<div class="linha">
+						<h:outputLabel value="Observações:" for="descricao"
+							styleClass="ui-g-4 ui-md-2 ui-lg-1" />
+						<h:inputTextarea id="descricao"
+							value="#{controleCirculacaoBean.controle.descricao}"
+							styleClass="ui-g-5" rows="3" />
+					</div>
 
-					<div
-						style="width: 100%; margin: 5px 0px; display: flex; align-items: center;">
+					<div class="linha">
 						<h:outputLabel styleClass="ui-g-6 ui-md-3 ui-lg-2">
 							<h:commandButton value="Gravar"
-								action="#{controleCirculacaoBean.gravar}" styleClass="ui-g-12 botao">
+								action="#{controleCirculacaoBean.gravar}" actionListener="#{agendaBean.atualizar}"
+								styleClass="ui-g-12 botao">
 								<f:ajax execute="@form" render="@form :messages" />
 							</h:commandButton>
 						</h:outputLabel>
