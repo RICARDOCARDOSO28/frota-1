@@ -42,8 +42,18 @@
 				</h:inputText>
 			</h:outputLabel>
 			<h:outputLabel />
-
-
+			
+			<h:outputLabel value="Tipo do Veiculo: " for="veiculoTipo"
+				styleClass="ui-g-12 ui-md-6 ui-lg-3">
+				<h:selectOneMenu value="#{veiculoBean.veiculoTipo}" id="veiculoTipo"
+					styleClass="ui-g-12">
+					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
+					<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+					<f:ajax execute="@form" render="@form :tabelaVeiculos" />
+				</h:selectOneMenu>
+			</h:outputLabel>
+			
 			<h:outputLabel styleClass="ui-g-1">
 				<h:commandButton value="Buscar" action="#{abastecimentoBean.listar}"
 					styleClass="ui-g-12 botao">

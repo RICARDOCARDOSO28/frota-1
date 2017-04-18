@@ -13,7 +13,7 @@ import br.com.frota.model.Usuario;
 public class LoginBean {
 
 	private Usuario usuario = new Usuario();
-
+	
 	public Usuario getUsuario() {
 		return usuario;
 	}
@@ -41,5 +41,6 @@ public class LoginBean {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getExternalContext().getSessionMap().remove("usuariologado");
 		return "login?faces-redirect=true";
-	}
+	}	
+	
 }

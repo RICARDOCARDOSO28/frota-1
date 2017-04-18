@@ -12,6 +12,7 @@ import br.com.frota.model.Agenda;
 import br.com.frota.model.Usuario;
 import br.com.frota.util.Paginas;
 import br.com.frota.util.StatusAgenda;
+import br.com.frota.util.TipoVeiculo;
 
 @ManagedBean
 @ViewScoped
@@ -26,9 +27,10 @@ public class AgendaBean {
 
 	private Integer usuarioId;
 
+	private StatusAgenda statusAgenda;
+	private TipoVeiculo tipoVeiculo;
 	private Date dataInicial = null;
 	private Date dataFinal = Calendar.getInstance().getTime();
-	private StatusAgenda statusAgenda;
 
 	public AgendaBean() {
 		agendaDAO = new AgendaDAO();
@@ -55,7 +57,7 @@ public class AgendaBean {
 	}
 
 	public List<Agenda> getAgendas() {
-		agendas = agendaDAO.listarAgenda(agendaNome, dataInicial, dataFinal, statusAgenda);
+		agendas = agendaDAO.listarAgenda(agendaNome, dataInicial, dataFinal, tipoVeiculo, statusAgenda);
 		return agendas;
 	}
 
@@ -69,6 +71,22 @@ public class AgendaBean {
 
 	public void setUsuarioId(Integer usuarioId) {
 		this.usuarioId = usuarioId;
+	}
+
+	public StatusAgenda getStatusAgenda() {
+		return statusAgenda;
+	}
+
+	public void setStatusAgenda(StatusAgenda statusAgenda) {
+		this.statusAgenda = statusAgenda;
+	}
+
+	public TipoVeiculo getTipoVeiculo() {
+		return tipoVeiculo;
+	}
+
+	public void setTipoVeiculo(TipoVeiculo tipoVeiculo) {
+		this.tipoVeiculo = tipoVeiculo;
 	}
 
 	public Date getDataInicial() {
@@ -87,8 +105,12 @@ public class AgendaBean {
 		this.dataFinal = dataFinal;
 	}
 
-	public StatusAgenda[] getStatusAgenda() {
+	public StatusAgenda[] getStatusAgendas() {
 		return StatusAgenda.values();
+	}
+
+	public TipoVeiculo[] getTipoVeiculos() {
+		return TipoVeiculo.values();
 	}
 
 	/**
@@ -130,7 +152,7 @@ public class AgendaBean {
 	public String editar(Agenda agenda) {
 		this.agenda = agenda;
 		agendaId = agenda.getId();
-		usuarioId = agenda.getUsuario().getId(); 
+		usuarioId = agenda.getUsuario().getId();
 		return "agenda?agendaId=" + agendaId;
 	}
 
@@ -149,8 +171,8 @@ public class AgendaBean {
 		agendaDAO.atualizar(agenda, usuarioId, StatusAgenda.CANCELADO);
 		return null;
 	}
-	
-	public void encerrarAgenda(){
+
+	public void encerrarAgenda() {
 		this.statusAgenda = StatusAgenda.ENCERRADO;
 		usuarioId = agenda.getUsuario().getId();
 	}

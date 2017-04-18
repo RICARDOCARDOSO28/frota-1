@@ -12,6 +12,7 @@ import br.com.frota.model.Agenda;
 import br.com.frota.model.Usuario;
 import br.com.frota.util.JPAUtil;
 import br.com.frota.util.StatusAgenda;
+import br.com.frota.util.TipoVeiculo;
 
 public class AgendaDAO {
 
@@ -31,13 +32,14 @@ public class AgendaDAO {
 	}
 
 	public void atualizar(Agenda agenda, Integer usuarioId, StatusAgenda statusAgenda) {
-		
-		System.out.println("usuarioid="+usuarioId+", agenda.usuario.id=" +agenda.getUsuario().getId()+", status"+statusAgenda);
+
+		System.out.println("usuarioid=" + usuarioId + ", agenda.usuario.id=" + agenda.getUsuario().getId() + ", status"
+				+ statusAgenda);
 		em.getTransaction().begin();
 		agenda.setStatusAgenda(statusAgenda);
 		agenda.getUsuario().removerAgenda(agenda);
-//		if (usuarioId == null)
-//			usuarioId = agenda.getUsuario().getId();
+		// if (usuarioId == null)
+		// usuarioId = agenda.getUsuario().getId();
 
 		Usuario usuario = em.find(Usuario.class, usuarioId);
 		usuario.adicionarAgenda(agenda);
@@ -56,40 +58,42 @@ public class AgendaDAO {
 		return em.find(Agenda.class, id);
 	}
 
-	public List<Agenda> listarAgenda(String nome, Date dataInicial, Date dataFinal, StatusAgenda status) {
+	public List<Agenda> listarAgenda(String agendaNome, Date dataInicial, Date dataFinal, TipoVeiculo tipoVeiculo,
+			StatusAgenda statusAgenda) {
 		String jpql = "select a from Agenda a where ";
 
-		if (nome != null) {
-			jpql += "(a.usuario.nome like :pnome or a.destino like :pdestino or a.tipoVeiculo.label like :ptipoVeiculo) and ";
+		if (agendaNome != null) {
+			jpql += "a.usuario.nome like :pusuario and ";
 		}
-
+		if (tipoVeiculo != null) {
+			jpql += "a.tipoVeiculo = :ptipoVeiculo and ";
+		}
+		if (statusAgenda != null) {
+			jpql += "a.statusAgenda = :pstatusAgenda and ";
+		}
 		if (dataInicial != null) {
 			if (dataFinal == null) {
 				dataFinal = Calendar.getInstance().getTime();
 			}
-			jpql += "(a.dataSaida between :pdataInicial and :pdataFinal) and (a.dataChegada between :pdataInicial and :pdataFinal) and ";
-		}
-		if (status != null) {
-			jpql += "a.statusAgenda = :pstatus and ";
+			jpql += "((a.dataChegada between :pdataInicial and :pdataFinal) and (a.dataSaida between :pdataInicial and :pdataFinal)) and ";
 		}
 		jpql += "1 = 1";
 
 		TypedQuery<Agenda> query = em.createQuery(jpql, Agenda.class);
 
-		if (nome != null) {
-			query.setParameter("pnome", '%' + nome + '%');
-			query.setParameter("pdestino", '%' + nome + '%');
-			query.setParameter("ptipoVeiculo", '%' + nome + '%');
-		}
+		if (agendaNome != null)
+			query.setParameter("pusuario", '%' + agendaNome + '%');
+		if (tipoVeiculo != null)
+			query.setParameter("ptipoVeiculo", tipoVeiculo);
+		if (statusAgenda != null)
+			query.setParameter("pstatusAgenda", statusAgenda);
+
 		if (dataInicial != null) {
 			query.setParameter("pdataInicial", dataInicial, TemporalType.DATE);
 			query.setParameter("pdataFinal", dataFinal, TemporalType.DATE);
 		}
-		if (status != null)
-			query.setParameter("pstatus", status);
 
 		System.out.println(jpql);
 		return query.getResultList();
 	}
-
 }

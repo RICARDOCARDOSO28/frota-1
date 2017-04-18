@@ -7,7 +7,6 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
@@ -16,10 +15,9 @@
 		<p:messages id="messages" globalOnly="true" />
 
 		<h:form id="formAgendaConsulta" styleClass="ui-g-12 linha">
-
-			<h:outputLabel value="Nome do Veiculo: " for="agendaNome"
+			<h:outputLabel value="Nome do Usuario, destino ou veiculo: " for="usuarioNome"
 				styleClass="ui-g-3">
-				<h:inputText value="#{agendaBean.agendaNome}" id="agendaNome"
+				<h:inputText value="#{agendaBean.agendaNome}" id="usuarioNome"
 					styleClass="ui-g-12" />
 			</h:outputLabel>
 
@@ -40,36 +38,31 @@
 						timeZone="America/Sao_Paulo" />
 				</h:inputText>
 			</h:outputLabel>
-
-			<h:outputLabel value="Tipo do Veiculo: " for="veiculoTipo"
-				styleClass="ui-g-12 ui-md-6 ui-lg-2">
-				<h:selectOneMenu value="#{agendaBean.tipoVeiculo}" id="veiculoTipo"
-					styleClass="ui-g-12">
-					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
-					<f:selectItems value="#{agendaBean.tipoVeiculos}" var="tipo"
-						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-					<f:ajax execute="@form" render="@form :tabelaAgenda" />
-				</h:selectOneMenu>
-			</h:outputLabel>
-
+			<h:outputLabel />
+			
 			<h:outputLabel value="Status do Agendamento: " for="statusAgenda"
-				styleClass="ui-g-12 ui-md-3 ui-lg-2">
-				<h:selectOneMenu value="#{agendaBean.statusAgenda}"
-					id="statusAgenda" styleClass="ui-g-12">
-					<f:selectItem itemValue="" itemLabel="Escolha um Status" />
-					<f:selectItems value="#{agendaBean.statusAgendas}" var="status"
+				styleClass="ui-g-12 ui-md-6 ui-lg-2">
+				<h:selectOneMenu value="#{veiculoBean.veiculoTipo}" id="statusAgenda"
+					styleClass="ui-g-12">
+					<f:selectItem itemValue="" itemLabel="Situação do Agendamento" />
+					<f:selectItems value="#{agendaBean.statusAgenda}" var="status"
 						itemLabel="#{status.label}" itemValue="#{status}" />
-					<f:ajax execute="@form" render="@form :tabelaAgenda" />
+					<f:ajax execute="@form" render="@form :tabelaAgendamentos" />
 				</h:selectOneMenu>
 			</h:outputLabel>
 
 			<h:outputLabel styleClass="ui-g-1">
 				<h:commandButton value="Buscar" action="#{agendaBean.listar}"
-					styleClass="ui-g-12 botao">
-					<f:ajax render="@form :tabelaAgenda" execute="@form" />
+					styleClass="ui-g-12 botoes">
+					<f:ajax render="@form :tabelaAgendamentos" execute="@form" />
 				</h:commandButton>
 			</h:outputLabel>
+			<h:outputLabel styleClass="ui-g-1">
+				<h:commandButton value="Novo" action="#{agendaBean.novo}"
+					styleClass="ui-g-12 botoes" />
+			</h:outputLabel>
 		</h:form>
+
 
 		<h:form id="tabelaAgendamentos">
 			<p:dataTable var="agenda" value="#{agendaBean.agendas}"
@@ -112,12 +105,10 @@
 				</p:column>
 
 				<p:column headerText="Status do Agendamento">
-					<h:link value="#{agenda.statusAgenda.label}"
-						outcome="#{agendaBean.agendaControle(agenda)}"
-						rendered="#{agenda.statusAgenda == 'EM_ABERTO'}" />
+						<h:link value="#{agenda.statusAgenda.label}" outcome="#{agendaBean.agendaControle(agenda)}" rendered="#{agenda.statusAgenda == 'EM_ABERTO'}"/>
 					<h:outputText value="#{agenda.statusAgenda.label}"
 						rendered="#{agenda.statusAgenda == 'ENCERRADO'}" />
-					<h:outputText value="#{agenda.statusAgenda.label}"
+						<h:outputText value="#{agenda.statusAgenda.label}"
 						rendered="#{agenda.statusAgenda == 'CANCELADO'}" />
 				</p:column>
 

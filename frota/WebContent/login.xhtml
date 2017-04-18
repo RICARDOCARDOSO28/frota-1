@@ -13,168 +13,167 @@
 
 	<ui:define name="content">
 
-		<div id="contentLogin" style="display: flex; flex-direction: column; align-items: center;">
-			<div class="container-center .flex-column text-center">
-				<p:messages id="messages" globalOnly="true" />
 
-				<h:form id="formLogin" styleClass="ui-g-12 ui-md-6 ui-lg-4">
-					<p:fieldset>
-						<div id="panelLogin" style="text-align: center;">
-							<h2>login</h2>
-
-							<h:panelGrid columns="3" id="tabelaLogin">
-								<h:outputLabel value="CPF: " for="cpf" />
-								<h:inputText id="cpf" value="#{loginBean.usuario.cpf}"
-									required="true" requiredMessage="CPF Invalido"
-									validatorMessage="CPF deve conter 11 caracteres" maxlength="11">
-									<f:validateLength minimum="11" />
-									<f:ajax event="blur" render="cpfMessage" />
-								</h:inputText>
-								<p:message for="cpf" id="cpfMessage" />
-
-								<h:outputLabel value="Senha: " for="senha" />
-								<h:inputSecret id="senha" value="#{loginBean.usuario.senha}"
-									required="true" requiredMessage="Senha obrigatória"
-									validatorMessage="Senha deve conter no minimo 6 caracteres">
-									<f:validateLength minimum="6" />
-									<f:ajax event="blur" render="senhaMessage" />
-								</h:inputSecret>
-								<p:message for="senha" id="senhaMessage" />
-							</h:panelGrid>
-
-							<h:commandButton value="EFETUAR LOGIN"
-								action="#{loginBean.efetuarLogin}" styleClass="ui-button">
-								<!-- 					<f:ajax execute="@form" render="@form" /> -->
-							</h:commandButton>
-							<br />
-
-							<h:commandLink value="Esqueci a Senha!"
-								action="index?faces-redirect=true" immediate="true"
-								styleClass="submeter" />
-							<br />
-
-							<h:commandLink value="Cadastrar novo Sistema"
-								action="index?faces-redirect=true" immediate="true"
-								styleClass="submeter" />
-						</div>
-					</p:fieldset>
-				</h:form>
-			</div>
+		<p:messages id="messages" globalOnly="true" />
 
 
-			<div class="container-center flex-column">
-				<h:form id="formAdmin">
-					<p:fieldset legend="Dados Pessoais">
-						<h:panelGrid columns="3">
-							<h:outputLabel value="Nome:" for="nome" />
-							<h:inputText id="nome" value="#{administradorBean.usuario.nome}"
-								required="true"
-								requiredMessage="Nome completo do Usuario obrigatório"
-								validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres">
-								<f:validateLength maximum="80" minimum="2" />
-								<f:ajax event="blur" render="messages" />
-							</h:inputText>
-							<p:message for="nome" />
+		<h:form id="formLogin" styleClass="ui-g-6 ui-md-4 ui-lg-4"
+			style="align-self: center;text-align:center;"
+			rendered="#{utilBean.valor == 0}">
+			<p:fieldset>
+				<h2 class="ui-g-12">login</h2>
 
-							<h:outputLabel value="CPF:" for="cpf" />
-							<h:inputText id="cpf" value="#{administradorBean.usuario.cpf}"
-								validatorMessage="CPF deve ter 11 caracteres" maxlength="11">
-								<f:validateLength minimum="11" />
-								<f:ajax event="blur" render="messages" />
-							</h:inputText>
-							<p:message for="cpf" />
+				<h:panelGrid columns="1" id="tabelaLogin" styleClass="ui-g-12">
 
-							<h:outputLabel value="Sexo:" for="sexo" />
-							<h:selectOneRadio value="#{administradorBean.usuario.sexo}"
-								id="sexo" required="true"
-								requiredMessage="Selecione uma opção de sexo">
-								<f:selectItems value="#{usuarioBean.tipoSexo}" var="sexo"
-									itemValue="#{sexo}" itemLabel="#{sexo.label}" />
-								<f:ajax event="blur" render="messages" />
-							</h:selectOneRadio>
-							<p:message for="sexo" />
+						<h:outputLabel value="CPF: " for="cpf" styleClass="ui-g-12 linha" style="justify-content: space-between;">
+						<h:inputText id="cpf" value="#{loginBean.usuario.cpf}"
+							required="true" requiredMessage="CPF Invalido"
+							validatorMessage="CPF deve conter 11 caracteres" maxlength="11" styleClass="ui-g-10">
+							<f:validateLength minimum="11" />
+							<f:ajax event="blur" render="cpfMessage" />
+						</h:inputText></h:outputLabel>
+					<p:message for="cpf" id="cpfMessage" styleClass="ui-g-12" />
 
-							<h:outputLabel value="Telefone:" for="fone" />
-							<h:inputText id="fone" value="#{administradorBean.usuario.fone}"
-								validatorMessage="Telefone deve ter no maximo 11 caracteres">
-								<f:validateLength maximum="11" minimum="8" />
-								<f:ajax event="blur" render="messages" />
-							</h:inputText>
-							<p:message for="fone" />
+						<h:outputLabel value="Senha: " for="senha" styleClass="ui-g-12 linha" style="justify-content: space-between;">
+						<h:inputSecret id="senha" value="#{loginBean.usuario.senha}"
+							required="true" requiredMessage="Senha obrigatória"
+							validatorMessage="Senha deve conter no minimo 6 caracteres" styleClass="ui-g-10">
+							<f:validateLength minimum="6" />
+							<f:ajax event="blur" render="senhaMessage" />
+						</h:inputSecret></h:outputLabel>
+					<p:message for="senha" id="senhaMessage" styleClass="ui-g-12" />
+				</h:panelGrid>
 
-							<h:outputLabel value="Email:" for="email" />
-							<h:inputText id="email"
-								value="#{administradorBean.usuario.email}"
-								validatorMessage="insira um endereço de email válido"
-								maxlength="80">
-								<f:validateLength minimum="7" />
-								<f:ajax event="blur" render="emailMessage" />
-							</h:inputText>
-							<p:message for="email" id="emailMessage" />
+				<h:commandButton value="EFETUAR LOGIN"
+					style="justify-content: center;margin: auto;float: inherit;"
+					action="#{loginBean.efetuarLogin}" styleClass="ui-button ui-g-6">
+				</h:commandButton>
+				<br />
 
-						</h:panelGrid>
-					</p:fieldset>
-					<br />
+				<h:commandLink value="Esqueci a Senha!"
+					action="index?faces-redirect=true" immediate="true"
+					styleClass="submeter ui-g-12" />
+				<br />
+
+				<h:commandLink value="Cadastrar novo Usuario"
+					action="#{utilBean.exibirDiv}" immediate="true"
+					styleClass="submeter ui-g-12" />
+			</p:fieldset>
+		</h:form>
 
 
-					<p:fieldset legend="Dados do Setor">
-						<h:panelGrid columns="3">
-							<h:outputLabel value="Nome do Setor: " for="nomeSetor" />
-							<h:inputText id="nomeSetor"
-								value="#{administradorBean.setor.nome}" required="true"
-								requiredMessage="Nome do Setor ou Departamento obrigatório"
-								validatorMessage="Nome do Setor deve ter entre 2 e 80 caracteres"
-								maxlength="80">
-								<f:validateLength minimum="2" />
-								<f:ajax event="blur" render="nomeSetorMessage" />
-							</h:inputText>
-							<p:message for="nomeSetor" id="nomeSetorMessage" />
+		<h:form id="formAdmin" styleClass="container-center flex-column"
+			rendered="#{utilBean.valor == 1}">
+			<p:fieldset legend="Dados Pessoais">
+				<h:panelGrid columns="3">
+					<h:outputLabel value="Nome:" for="nome" />
+					<h:inputText id="nome" value="#{administradorBean.usuario.nome}"
+						required="true"
+						requiredMessage="Nome completo do Usuario obrigatório"
+						validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres">
+						<f:validateLength maximum="80" minimum="2" />
+						<f:ajax event="blur" render="messages" />
+					</h:inputText>
+					<p:message for="nome" />
 
-							<h:outputLabel value="Fone do Setor: " for="foneSetor" />
-							<h:inputText id="foneSetor"
-								value="#{administradorBean.setor.fone}" required="true"
-								requiredMessage="Telefone de contato do Setor obrigatório"
-								validatorMessage="Tefefone de contato deve ter entre 8 até 10 caracteres"
-								maxlength="10">
-								<f:validateLength minimum="8" />
-								<f:ajax event="blur" render="foneSetorMessage" />
-							</h:inputText>
-							<p:message for="foneSetor" id="foneSetorMessage" />
+					<h:outputLabel value="CPF:" for="cpf" />
+					<h:inputText id="cpf" value="#{administradorBean.usuario.cpf}"
+						validatorMessage="CPF deve ter 11 caracteres" maxlength="11">
+						<f:validateLength minimum="11" />
+						<f:ajax event="blur" render="messages" />
+					</h:inputText>
+					<p:message for="cpf" />
 
-							<h:outputLabel value="Email do Setor: " for="emailSetor" />
-							<h:inputText id="emailSetor"
-								value="#{administradorBean.setor.email}"
-								validatorMessage="insira um endereço de email válido"
-								maxlength="80">
-								<f:validateLength minimum="5" />
-								<f:ajax event="blur" render="emailSetorMessage" />
-							</h:inputText>
-							<p:message for="emailSetor" id="emailSetorMessage" />
-						</h:panelGrid>
-					</p:fieldset>
-					<br />
+					<h:outputLabel value="Sexo:" for="sexo" />
+					<h:selectOneRadio value="#{administradorBean.usuario.sexo}"
+						id="sexo" required="true"
+						requiredMessage="Selecione uma opção de sexo">
+						<f:selectItems value="#{usuarioBean.tipoSexo}" var="sexo"
+							itemValue="#{sexo}" itemLabel="#{sexo.label}" />
+						<f:ajax event="blur" render="messages" />
+					</h:selectOneRadio>
+					<p:message for="sexo" />
 
-					<p:fieldset legend="Senha">
-						<h:panelGrid columns="3">
-							<h:outputLabel value="Entre com Senha:" for="senha1" />
-							<h:inputSecret id="senha1"
-								value="#{administradorBean.usuario.senha}"
-								validatorMessage="A senha deve ter no minimo 4 Caracteres"
-								maxlength="16">
-								<f:validateLength minimum="4" />
-								<f:ajax event="blur" render="senha1Message" />
-							</h:inputSecret>
-							<p:message for="senha1" id="senha1Message" />
-						</h:panelGrid>
-					</p:fieldset>
-					<br />
+					<h:outputLabel value="Telefone:" for="fone" />
+					<h:inputText id="fone" value="#{administradorBean.usuario.fone}"
+						validatorMessage="Telefone deve ter no maximo 11 caracteres">
+						<f:validateLength maximum="11" minimum="8" />
+						<f:ajax event="blur" render="messages" />
+					</h:inputText>
+					<p:message for="fone" />
 
-					<h:commandButton id="gravarAdministrador" value="Gravar"
-						action="#{administradorBean.salvar}">
-					</h:commandButton>
-				</h:form>
-			</div>
-		</div>
+					<h:outputLabel value="Email:" for="email" />
+					<h:inputText id="email" value="#{administradorBean.usuario.email}"
+						validatorMessage="insira um endereço de email válido"
+						maxlength="80">
+						<f:validateLength minimum="7" />
+						<f:ajax event="blur" render="emailMessage" />
+					</h:inputText>
+					<p:message for="email" id="emailMessage" />
+
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+
+
+			<p:fieldset legend="Dados do Setor">
+				<h:panelGrid columns="3">
+					<h:outputLabel value="Nome do Setor: " for="nomeSetor" />
+					<h:inputText id="nomeSetor" value="#{administradorBean.setor.nome}"
+						required="true"
+						requiredMessage="Nome do Setor ou Departamento obrigatório"
+						validatorMessage="Nome do Setor deve ter entre 2 e 80 caracteres"
+						maxlength="80">
+						<f:validateLength minimum="2" />
+						<f:ajax event="blur" render="nomeSetorMessage" />
+					</h:inputText>
+					<p:message for="nomeSetor" id="nomeSetorMessage" />
+
+					<h:outputLabel value="Fone do Setor: " for="foneSetor" />
+					<h:inputText id="foneSetor" value="#{administradorBean.setor.fone}"
+						required="true"
+						requiredMessage="Telefone de contato do Setor obrigatório"
+						validatorMessage="Tefefone de contato deve ter entre 8 até 10 caracteres"
+						maxlength="10">
+						<f:validateLength minimum="8" />
+						<f:ajax event="blur" render="foneSetorMessage" />
+					</h:inputText>
+					<p:message for="foneSetor" id="foneSetorMessage" />
+
+					<h:outputLabel value="Email do Setor: " for="emailSetor" />
+					<h:inputText id="emailSetor"
+						value="#{administradorBean.setor.email}"
+						validatorMessage="insira um endereço de email válido"
+						maxlength="80">
+						<f:validateLength minimum="5" />
+						<f:ajax event="blur" render="emailSetorMessage" />
+					</h:inputText>
+					<p:message for="emailSetor" id="emailSetorMessage" />
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+
+			<p:fieldset legend="Senha">
+				<h:panelGrid columns="3">
+					<h:outputLabel value="Entre com Senha:" for="senha1" />
+					<h:inputSecret id="senha1"
+						value="#{administradorBean.usuario.senha}"
+						validatorMessage="A senha deve ter no minimo 4 Caracteres"
+						maxlength="16">
+						<f:validateLength minimum="4" />
+						<f:ajax event="blur" render="senha1Message" />
+					</h:inputSecret>
+					<p:message for="senha1" id="senha1Message" />
+				</h:panelGrid>
+			</p:fieldset>
+			<br />
+
+			<h:commandButton id="gravarAdministrador" value="Gravar"
+				action="#{administradorBean.salvar}"
+				actionListener="#{utilBean.exibirDiv}">
+			</h:commandButton>
+		</h:form>
+
 	</ui:define>
 </ui:composition>
 </html>

@@ -2,48 +2,55 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 <nav>
 	<h:form styleClass="ui-g-12 ui-corner-all ui-widget-content">
 
-		<p:commandLink id="dynCadastro" value="Cadastros" type="button"
-			icon="ui-icon-extlink" styleClass="dynButton" />
-		<p:menu overlay="true" trigger="dynCadastro" my="left top"
-			at="left bottom">
-			<p:menuitem value="Setores" action="setor?faces-redirect=true"
-				icon="ui-icon-disk" />
-			<p:menuitem value="Usuarios" action="usuario?faces-redirect=true"
-				icon="ui-icon-disk" />
-			<p:menuitem value="Veiculos" action="veiculo?faces-redirect=true"
-				icon="ui-icon-disk" />
-			<p:menuitem value="Abastecimento"
-				action="abastecimento?faces-redirect=true"
-				icon="ui-icon-arrowrefresh-1-w" />
-			<p:menuitem value="Agendas" action="agenda?faces-redirect=true"
-				icon="ui-icon-disk" />
-		</p:menu>
+				<p:commandLink id="dynCadastro" value="Cadastros" type="button"
+					icon="ui-icon-extlink" styleClass="dynButton" />
+				<p:menu overlay="true" trigger="dynCadastro" my="left top"
+					at="left bottom">
+					<p:menuitem value="Setores" action="setor?faces-redirect=true"
+						icon="ui-icon-disk" />
+					<p:menuitem value="Usuarios" action="usuario?faces-redirect=true"
+						icon="ui-icon-disk" />
+					<p:menuitem value="Veiculos" action="veiculo?faces-redirect=true"
+						icon="ui-icon-disk" />
+					<p:menuitem value="Abastecimento"
+						action="abastecimento?faces-redirect=true"
+						icon="ui-icon-arrowrefresh-1-w" />
+					<p:menuitem value="Agendas" action="agenda?faces-redirect=true"
+						icon="ui-icon-disk" />
+				</p:menu>
 
-		<p:commandLink id="dynConsulta" value="Consulta" type="button"
-			icon="ui-icon-extlink" styleClass="dynButton" />
-		<p:menu overlay="true" trigger="dynConsulta" my="left top"
-			at="left bottom">
-			<p:menuitem value="Setores"
-				action="consultarsetor?faces-redirect=true" icon="ui-icon-disk" />
-			<p:menuitem value="Usuarios"
-				action="consultarusuario?faces-redirect=true" icon="ui-icon-disk" />
-			<p:menuitem value="Veiculos"
-				action="consultarveiculo?faces-redirect=true" icon="ui-icon-disk" />
-			<p:menuitem value="Abastecimento"
-				action="consultarabastecimento?faces-redirect=true"
-				icon="ui-icon-arrowrefresh-1-w" />
-			<p:menuitem value="Agendas"
-				action="consultaragenda?faces-redirect=true" icon="ui-icon-disk" />
-			<p:menuitem value="Controle"
-				action="consultarcontrole?faces-redirect=true"
-				icon="ui-icon-arrowrefresh-1-w" />
-		</p:menu>
+				<p:commandLink id="dynConsulta" value="Consulta" type="button"
+					icon="ui-icon-extlink" styleClass="dynButton" />
+				<p:menu overlay="true" trigger="dynConsulta" my="left top"
+					at="left bottom">
+					<p:menuitem value="Setores"
+						action="consultarsetor?faces-redirect=true" icon="ui-icon-disk" />
+					<p:menuitem value="Usuarios"
+						action="consultarusuario?faces-redirect=true" icon="ui-icon-disk" />
+					<p:menuitem value="Veiculos"
+						action="consultarveiculo?faces-redirect=true" icon="ui-icon-disk" />
+					<p:menuitem value="Abastecimento"
+						action="consultarabastecimento?faces-redirect=true"
+						icon="ui-icon-arrowrefresh-1-w" />
+					<p:menuitem value="Agendas"
+						action="consultaragenda?faces-redirect=true" icon="ui-icon-disk" />
+					<p:menuitem value="Controle"
+						action="consultarcontrole?faces-redirect=true"
+						icon="ui-icon-arrowrefresh-1-w" />
+				</p:menu>
 
+				<h:commandLink value="Relatorios"
+					action="relatorios?faces-redirect=true" styleClass="dynButton" />
+
+		<h:commandLink value="Sobre"
+			action="sobre?faces-redirect=true" styleClass="dynButton" />
+			
 		<p:commandButton value="Logout" icon="ui-icon-extlink"
 			action="#{loginBean.logout}" style="float: right;" />
 	</h:form>
