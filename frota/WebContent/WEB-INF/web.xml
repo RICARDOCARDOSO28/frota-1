@@ -17,16 +17,45 @@
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
 
+	<context-param>
+		<param-name>primefaces.CLIENT_SIDE_VALIDATION</param-name>
+		<param-value>true</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>pepper-grinder</param-value>
+		<param-value>casablanca</param-value>
 	</context-param>
 
 	<context-param>
 		<param-name>primefaces.FONT_AWESOME</param-name>
 		<param-value>true</param-value>
 	</context-param>
+
+	<mime-mapping>
+		<extension>eot</extension>
+		<mime-type>application/vnd.ms-fontobject</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>otf</extension>
+		<mime-type>font/opentype</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>svg</extension>
+		<mime-type>image/svg+xml</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>ttf</extension>
+		<mime-type>application/x-font-ttf</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>woff</extension>
+		<mime-type>application/x-font-woff</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>woff2</extension>
+		<mime-type>application/x-font-woff2</mime-type>
+	</mime-mapping>
 
 
 	<!-- <context-param> -->
@@ -41,7 +70,7 @@
 
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Production</param-value>
+		<param-value>Development</param-value>
 	</context-param>
 
 

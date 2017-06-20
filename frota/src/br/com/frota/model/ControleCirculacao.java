@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -158,6 +160,13 @@ public class ControleCirculacao {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	
+	@PrePersist
+	@PreUpdate
+	public void calcularKmPercorridos(){
+		Double km = this.odometroSaida - this.odometroChegada;
+		this.setKmRodados(km);
 	}
 
 	@Override

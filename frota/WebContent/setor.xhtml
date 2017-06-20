@@ -8,7 +8,6 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/template/main.xhtml">
-
 	<f:metadata>
 		<f:viewParam name="setorId" value="#{setorBean.setorId}" />
 		<f:viewAction action="#{setorBean.recuperarSetorPorId}"
@@ -16,59 +15,91 @@
 	</f:metadata>
 
 	<ui:define name="content">
-		<h1>Setor</h1>
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>
+					<h:outputText rendered="#{setorBean.setorId == null}"
+						value="Cadastro de Setor" />
+					<h:outputText rendered="#{setorBean.setorId != null}"
+						value="Edição de Setor" />
+				</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-coffee" style="margin-right: 5px;" /> <p:link
+						value="Consultar Setores" outcome="consultarsetor" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
-		<p:messages id="messages" globalOnly="true" />
+		<p:messages id="messages" globalOnly="true" closable="true">
+			<p:effect type="pulsate" event="load" delay="500" />
+		</p:messages>
 
-		<h:form id="formSetor" styleClass="ui-g-12">
-			<p:fieldset legend="Cadastro de Setor">
+		<h:form id="formSetor">
+			<p:focus context="formSetor" />
+			<p:fieldset legend="Dados do Setor">
+				<p:panelGrid styleClass="tab-formulario">
+					<p:row>
+						<p:column style="width: 8ch;">
+							<p:outputLabel value="Nome:" for="nome" />
+						</p:column>
+						<p:column>
+							<p:inputText id="nome" value="#{setorBean.setor.nome}"
+								styleClass="form-normal" required="true"
+								requiredMessage="Nome do Setor ou Departamento obrigatório"
+								validatorMessage="Nome do Setor deve ter no minimo 80 caracteres"
+								maxlength="80">
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column style="width: 60%;">
+							<p:message for="nome" id="nomeMessage" />
+						</p:column>
+					</p:row>
 
-				<h:panelGrid columns="3">
-					<h:outputLabel value="Nome:" for="nome" />
-					<h:inputText styleClass="inputs" id="nome"
-						value="#{setorBean.setor.nome}" required="true"
-						requiredMessage="Nome do Setor ou Departamento obrigatório"
-						validatorMessage="Nome do Setor deve ter entre 2 e 80 caracteres"
-						maxlength="80">
-						<f:validateLength minimum="2" />
-						<f:ajax event="blur" render="nomeMessage" />
-					</h:inputText>
-					<p:message for="nome" id="nomeMessage" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Fone:" for="fone" />
+						</p:column>
+						<p:column>
+							<p:inputText id="fone" value="#{setorBean.setor.fone}"
+								styleClass="form-normal" required="true"
+								requiredMessage="Telefone de contato do Setor obrigatório"
+								validatorMessage="Telefone de contato deve ter entre 8 até 10 caracteres"
+								maxlength="10">
+								<p:clientValidator event="blur" />
+								<f:validateLength minimum="8" />
+							</p:inputText>
+						</p:column>
+						<p:column>
+							<p:message for="fone" id="foneMessage" />
+						</p:column>
+					</p:row>
 
-
-					<h:outputLabel value="Fone:" for="fone" />
-					<h:inputText styleClass="inputs" id="fone"
-						value="#{setorBean.setor.fone}" required="true"
-						requiredMessage="Telefone de contato do Setor obrigatório"
-						validatorMessage="Tefefone de contato deve ter entre 8 até 10 caracteres"
-						maxlength="10">
-						<f:validateLength minimum="8" />
-						<f:ajax event="blur" render="foneMessage" />
-					</h:inputText>
-					<p:message for="fone" id="foneMessage" />
-
-
-					<h:outputLabel value="Email:" for="email" />
-					<h:inputText styleClass="inputs" id="email"
-						value="#{setorBean.setor.email}"
-						validatorMessage="insira um endereço de email válido"
-						maxlength="80">
-						<f:validateRegex pattern=".+@.+" />
-						<f:validateLength minimum="5" />
-						<f:ajax event="blur" render="emailMessage" />
-					</h:inputText>
-					<p:message for="email" id="emailMessage" />
-				</h:panelGrid>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Email:" for="email" />
+						</p:column>
+						<p:column>
+							<p:inputText id="email" value="#{setorBean.setor.email}"
+								styleClass="form-normal" maxlength="80">
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column>
+							<p:message for="email" id="emailMessage" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
 			</p:fieldset>
 
-			<div class="linha">
-				<h:commandButton id="gravarSetor" value="Gravar"
-					action="#{setorBean.gravar}" class="ui-g-1 botao">
-					<f:ajax execute="@form" render="@form :messages" />
-				</h:commandButton>
-				<h:commandButton value="Limpar" type="reset" class="ui-g-1 botao" />
-				<h:commandButton value="Voltar" action="index?faces-redirect=true"
-					immediate="true" class="ui-g-1 botao" />
+			<div class="td-botao-consulta">
+				<p:commandButton id="gravarSetor" value="Gravar"
+					action="#{setorBean.gravar}" process="@this @form"
+					update="@form :messages" icon="fa fa-fw fa-save" />
+				<p:commandButton value="Limpar" type="reset"
+					icon="fa fa-fw fa-eraser" update="@form" />
 			</div>
 		</h:form>
 	</ui:define>

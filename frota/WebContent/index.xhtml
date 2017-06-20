@@ -15,65 +15,60 @@
 		<h:dataTable id="agenda" var="agenda" value="#{agendaBean.agendas}"
 			style="width: 100%;">
 			<h:column>
-				<h:outputLabel
-					styleClass="#{utilBean.statusColor(agenda.statusAgenda)} informacao">
-					<div class="linha">
-						<h:outputLabel value="Nome:" />
-						<h:outputText value="#{agenda.usuario.nome}" styleClass="txt-info" />
+				<div class="#{utilBean.statusColor(agenda.statusAgenda)} informacao">
+					<h:outputLabel value="Nome:" />
+					<h:outputText value="#{agenda.usuario.nome}" styleClass="txt-info" />
 
-						<h:outputLabel value="Setor:" />
-						<h:outputText value="#{agenda.usuario.setor.nome}"
-							styleClass="txt-info" />
-					</div>
+					<h:outputLabel value="Setor:" />
+					<h:outputText value="#{agenda.usuario.setor.nome}"
+						styleClass="txt-info" />
+					<br />
 
-					<div class="linha">
-						<h:outputLabel value="Destino:" />
-						<h:outputText value="#{agenda.destino}" styleClass="txt-info" />
-					</div>
-					<div class="linha">
-						<h:outputLabel value="Descrição:" />
-						<h:outputText value="#{agenda.descricao}" styleClass="txt-info" />
-					</div>
+					<h:outputLabel value="Destino:" />
+					<h:outputText value="#{agenda.destino}" styleClass="txt-info" />
+					<br />
 
-					<div class="linha">
-						<h:outputLabel value="Horario de Saida:" />
-						<h:outputText value="#{agenda.dataSaida.time}"
-							styleClass="txt-info">
-							<f:convertDateTime pattern="dd/MM/yyyy"
-								timeZone="America/Sao_Paulo" />
-						</h:outputText>
-						<h:outputLabel value="as  " />
-						<h:outputText value="#{agenda.horaSaida}" styleClass="txt-info" />
-					</div>
+					<h:outputLabel value="Descrição:" />
+					<h:outputText value="#{agenda.descricao}" styleClass="txt-info" />
+					<br />
 
-					<div class="linha">
-						<h:outputLabel value="Horario de Retorno:" />
-						<h:outputText value="#{agenda.dataChegada.time}"
-							styleClass="txt-info">
-							<f:convertDateTime pattern="dd/MM/yyyy"
-								timeZone="America/Sao_Paulo" />
-						</h:outputText>
-						<h:outputLabel value="as  " />
-						<h:outputText value="#{agenda.horaChegada}" styleClass="txt-info" />
-					</div>
+					<h:outputLabel value="Horario de Saida:" />
+					<h:outputText value="#{agenda.dataSaida.time}"
+						styleClass="txt-info">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputLabel value="as  " />
+					<h:outputText value="#{agenda.horaSaida}" styleClass="txt-info" />
+					<br />
 
-					<div class="linha">
-						<h:outputLabel value="Tipo de Veiculo: " />
-						<h:outputText value="#{agenda.tipoVeiculo.label}"
-							styleClass="txt-info" />
-					</div>
+					<h:outputLabel value="Horario de Retorno:" />
+					<h:outputText value="#{agenda.dataChegada.time}"
+						styleClass="txt-info">
+						<f:convertDateTime pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo" />
+					</h:outputText>
+					<h:outputLabel value="as  " />
+					<h:outputText value="#{agenda.horaChegada}" styleClass="txt-info" />
+					<br />
+
+					<h:outputLabel value="Tipo de Veiculo: " />
+					<h:outputText value="#{agenda.tipoVeiculo.label}"
+						styleClass="txt-info" />
+					<br />
 
 					<h:outputText value="Agendamento #{agenda.statusAgenda.label}"
 						styleClass="status-info status-info-rigth"
 						rendered="#{agenda.statusAgenda != 'EM_ABERTO'}" />
-				</h:outputLabel>
+				</div>
 
-				<h:link value="Agendamento #{agenda.statusAgenda.label}" style="position: relative;bottom: 3em;right: 1em;"
-					outcome="#{agendaBean.agendaControle(agenda)}" styleClass="status-info status-info-rigth green"
+				<h:link value="Agendamento #{agenda.statusAgenda.label}"
+					style="position: relative;bottom: 3em;right: 1em;"
+					outcome="#{agendaBean.agendaControle(agenda)}"
+					styleClass="status-info status-info-rigth green"
 					rendered="#{agenda.statusAgenda == 'EM_ABERTO'}" />
 			</h:column>
 		</h:dataTable>
-
 
 	</ui:define>
 </ui:composition>

@@ -49,7 +49,7 @@ public class Agenda {
 	@Column(name = "tipo_veiculo", nullable = false, length = 30)
 	@Enumerated(EnumType.STRING)
 	private TipoVeiculo tipoVeiculo;
-	
+
 	@Column(name = "status_agenda", nullable = false, length = 30)
 	@Enumerated(EnumType.STRING)
 	private StatusAgenda statusAgenda;
@@ -110,7 +110,7 @@ public class Agenda {
 	public void setTipoVeiculo(TipoVeiculo tipoVeiculo) {
 		this.tipoVeiculo = tipoVeiculo;
 	}
-	
+
 	public StatusAgenda getStatusAgenda() {
 		return statusAgenda;
 	}
@@ -146,24 +146,31 @@ public class Agenda {
 	public Integer getId() {
 		return id;
 	}
-	
-	public void adicionarControle(ControleCirculacao c){
+
+	public void adicionarControle(ControleCirculacao c) {
 		c.setAgenda(this);
 		getControlesCirculacao().add(c);
 	}
-	
-	public void removerControle(ControleCirculacao c){
+
+	public void removerControle(ControleCirculacao c) {
 		c.setAgenda(null);
 		getControlesCirculacao().remove(c);
 	}
 
-
 	@Override
 	public String toString() {
-		return "Agenda[id:" + getId() + ", dataSaida:" + getDataSaida().getTime() + ", dataChegada:" + getDataChegada().getTime()
-				+ ", horaSaida:" + getHoraSaida() + ", horaChegada:" + getHoraChegada() + ", tipoVeiculo:"
-				+ getTipoVeiculo() + ", destino:" + getDestino() + ", descricao:" + getDescricao() + "]\n"
-				+ getUsuario().toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("Agenda [");
+		builder.append("\n\tid :" + getId());
+		builder.append("\n\tdataSaida:" + getDataSaida().getTime());
+		builder.append("\n\tdataChegada:" + getDataChegada().getTime());
+		builder.append("\n\thoraSaida:" + getHoraSaida());
+		builder.append("\n\thoraChegada:" + getHoraChegada());
+		builder.append("\n\ttipoVeiculo:" + getTipoVeiculo());
+		builder.append("\n\tdestino:" + getDestino());
+		builder.append("\n\tdescricao:" + getDescricao());
+		builder.append("\n]");
+		return builder.toString();
 	}
 
 	@Override

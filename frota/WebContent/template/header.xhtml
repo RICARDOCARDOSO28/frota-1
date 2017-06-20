@@ -4,15 +4,32 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<header>
-	<h:link outcome="index?faces-redirect=true"
-		alt="SISTEMA GERENCIADOR DE FROTA E AGENDAMENTO" id="img-logo">
-		<h:graphicImage library="img" name="logo_120.png" />
+<h:link outcome="index?faces-redirect=true" id="img-logo">
+	<h:graphicImage library="img"
+		alt="Sistema de Agendamentos e Gerenciador de Frota Veicular VOLANTIS"
+		name="volantis.png" width="60" height="60" />
+</h:link>
+<h:link outcome="index?faces-redirect=true"
+	title="Sistema de Agendamentos e Gerenciador de Frota Veicular VOLANTIS"
+	id="title-logo">
+	<H1>VOLANTIS</H1>
+</h:link>
+
+<h:panelGroup id="simple-menu" rendered="#{loginBean.userlogado != null}">
+	<h:link value="Cadastros" outcome="cadastro?faces-redirect=true"/>
+	<h:link value="Consultas" outcome="consulta?faces-redirect=true"/>
+	<h:link value="Relatórios" outcome="relatorios?faces-redirect=true"/>
+	<h:link value="Configurações" outcome="sobre?faces-redirect=true"/>
+</h:panelGroup>
+
+<h:form id="userlogado">
+	<h:outputText value="Logado como"
+		rendered="#{loginBean.userlogado != null}" />
+	<br />
+	<h:link outcome="perfil?faces-redirect=true"
+		rendered="#{loginBean.userlogado != null}">
+		<f:param name="usuarioId" value="#{loginBean.userlogado.id}" />
+		<h:outputText value=" #{loginBean.userlogado.nome}" />
 	</h:link>
-	<h:link styleClass="ui-g-12 ui-md-10 ui-lg-8"
-		outcome="index?faces-redirect=true"
-		alt="SISTEMA GERENCIADOR DE FROTA E AGENDAMENTO" id="title-logo">
-		<H1>SISTEMA GERENCIADOR DE FROTA E AGENDAMENTO</H1>
-	</h:link>
-</header>
+</h:form>
 </html>

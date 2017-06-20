@@ -1,21 +1,30 @@
 package br.com.frota.bean;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import br.com.frota.dao.UsuarioDAO;
 import br.com.frota.model.Usuario;
 
 @ManagedBean
-@ViewScoped
-public class LoginBean {
+@SessionScoped
+public class LoginBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private Usuario usuario = new Usuario();
-	
+
+	private Usuario userlogado;
+
 	public Usuario getUsuario() {
 		return usuario;
+	}
+
+	public Usuario getUserlogado() {
+		return userlogado;
 	}
 
 	public String efetuarLogin() {
@@ -23,11 +32,13 @@ public class LoginBean {
 
 		FacesContext context = FacesContext.getCurrentInstance();
 
-		boolean usuarioExiste = new UsuarioDAO().usuarioExiste(usuario);
+		// boolean usuarioExiste = new UsuarioDAO().usuarioExiste(usuario);
+		Usuario user = new UsuarioDAO().usuarioExiste(usuario);
 
-		// Se usuario existir loga no sitema
-		if (usuarioExiste) {
+		// Se usuario existir loga no sistema
+		if (user != null) {
 			context.getExternalContext().getSessionMap().put("usuariologado", usuario);
+			this.userlogado = user;
 			return "index?faces-redirect=true";
 		}
 
@@ -40,7 +51,7 @@ public class LoginBean {
 	public String logout() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getExternalContext().getSessionMap().remove("usuariologado");
-		return "login?faces-redirect=true";
-	}	
-	
+		this.userlogado = null;
+		return "login";
+	}
 }

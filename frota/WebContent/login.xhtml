@@ -10,55 +10,62 @@
 
 
 <ui:composition template="/template/main.xhtml">
-
 	<ui:define name="content">
-
-
 		<p:messages id="messages" globalOnly="true" />
 
-
-		<h:form id="formLogin" styleClass="ui-g-6 ui-md-4 ui-lg-4"
-			style="align-self: center;text-align:center;"
-			rendered="#{utilBean.valor == 0}">
-			<p:fieldset>
-				<h2 class="ui-g-12">login</h2>
-
-				<h:panelGrid columns="1" id="tabelaLogin" styleClass="ui-g-12">
-
-						<h:outputLabel value="CPF: " for="cpf" styleClass="ui-g-12 linha" style="justify-content: space-between;">
-						<h:inputText id="cpf" value="#{loginBean.usuario.cpf}"
-							required="true" requiredMessage="CPF Invalido"
-							validatorMessage="CPF deve conter 11 caracteres" maxlength="11" styleClass="ui-g-10">
+		<h:form id="formLogin" rendered="#{utilBean.valor == 0}">
+			<h2>LOGIN</h2>
+			<br />
+			<p:panelGrid id="tabelaLogin">
+				<p:row>
+					<p:column style="width: 6ch;">
+						<h:outputLabel value="CPF:" for="cpf" />
+					</p:column>
+					<p:column>
+						<p:inputText label="CPF" id="cpf" value="#{loginBean.usuario.cpf}"
+							styleClass="form-normal" required="true"
+							requiredMessage="CPF Invalido"
+							validatorMessage="CPF deve conter 11 caracteres" maxlength="11">
 							<f:validateLength minimum="11" />
 							<f:ajax event="blur" render="cpfMessage" />
-						</h:inputText></h:outputLabel>
-					<p:message for="cpf" id="cpfMessage" styleClass="ui-g-12" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+						<p:message for="cpf" id="cpfMessage" />
+					</p:column>
+				</p:row>
 
-						<h:outputLabel value="Senha: " for="senha" styleClass="ui-g-12 linha" style="justify-content: space-between;">
-						<h:inputSecret id="senha" value="#{loginBean.usuario.senha}"
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Senha:" for="senha" />
+					</p:column>
+					<p:column>
+						<p:password label="Senha" id="senha"
+							value="#{loginBean.usuario.senha}" styleClass="form-normal"
 							required="true" requiredMessage="Senha obrigatória"
-							validatorMessage="Senha deve conter no minimo 6 caracteres" styleClass="ui-g-10">
+							validatorMessage="Senha deve conter no minimo 6 caracteres">
 							<f:validateLength minimum="6" />
 							<f:ajax event="blur" render="senhaMessage" />
-						</h:inputSecret></h:outputLabel>
-					<p:message for="senha" id="senhaMessage" styleClass="ui-g-12" />
-				</h:panelGrid>
-
-				<h:commandButton value="EFETUAR LOGIN"
-					style="justify-content: center;margin: auto;float: inherit;"
-					action="#{loginBean.efetuarLogin}" styleClass="ui-button ui-g-6">
-				</h:commandButton>
-				<br />
-
-				<h:commandLink value="Esqueci a Senha!"
-					action="index?faces-redirect=true" immediate="true"
-					styleClass="submeter ui-g-12" />
-				<br />
-
-				<h:commandLink value="Cadastrar novo Usuario"
-					action="#{utilBean.exibirDiv}" immediate="true"
-					styleClass="submeter ui-g-12" />
-			</p:fieldset>
+						</p:password>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+						<p:message for="senha" id="senhaMessage" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			<br />
+			<p:commandButton value="EFETUAR LOGIN"
+				action="#{loginBean.efetuarLogin}" />
+			<br />
+			<br />
+			<h:link value="Esqueci a Senha!" outcome="index?faces-redirect=true" />
+			<br />
+			<h:commandLink value="Cadastrar novo Usuario"
+				actionListener="#{utilBean.exibirDiv}" immediate="true" />
 		</h:form>
 
 

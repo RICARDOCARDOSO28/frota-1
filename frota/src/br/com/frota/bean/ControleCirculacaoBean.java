@@ -1,9 +1,14 @@
 package br.com.frota.bean;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -13,13 +18,16 @@ import br.com.frota.util.Paginas;
 
 @ManagedBean
 @ViewScoped
-public class ControleCirculacaoBean {
+public class ControleCirculacaoBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private ControleCirculacaoDAO controleDAO;
 
 	private ControleCirculacao controle = new ControleCirculacao();
 	private Integer controleId;
+
 	private List<ControleCirculacao> controles;
+	private List<ControleCirculacao> lista = new ArrayList<>();
 
 	private Integer motoristaId;
 	private Integer agendaId;
@@ -44,16 +52,6 @@ public class ControleCirculacaoBean {
 
 	public void setControle(ControleCirculacao controle) {
 		this.controle = controle;
-	}
-
-	public List<ControleCirculacao> getControles() {
-		controles = controleDAO.listarControle(usuario, veiculoId, motoristaId, veiculo, destino, motorista,
-				dataInicial, dataFinal);
-		return controles;
-	}
-
-	public void setControles(List<ControleCirculacao> controles) {
-		this.controles = controles;
 	}
 
 	public Integer getControleId() {
@@ -136,16 +134,95 @@ public class ControleCirculacaoBean {
 		this.dataFinal = dataFinal;
 	}
 
+	public List<ControleCirculacao> getControles() {
+		return controles;
+	}
+
+	public List<ControleCirculacao> getLista() {
+		return lista;
+	}
+
+	public Integer getTotalControles() {
+		return controles.size();
+	}
+
+	public Integer getTotalLista() {
+		return lista.size();
+	}
+
+	@PostConstruct
+	public void createControles() {
+		if (this.controles == null) {
+			lista = controleDAO.listarControle(usuario, veiculoId, motoristaId, veiculo, destino, motorista,
+					dataInicial, dataFinal);
+			controles = new ArrayList<>(lista);
+		}
+		createLista();
+	}
+
+	public void createLista() {
+		Stream<ControleCirculacao> consulta = lista.stream();
+
+		if (usuario != null)
+			consulta = consulta
+					.filter(c -> c.getAgenda().getUsuario().getNome().toLowerCase().contains(usuario.toLowerCase()));
+
+		if (motorista != null)
+			consulta = consulta.filter(c -> c.getMotorista().getNome().toLowerCase().contains(motorista.toLowerCase()));
+
+		if (destino != null)
+			consulta = consulta.filter(c -> c.getDestino().toLowerCase().contains(destino.toLowerCase()));
+
+		Calendar datanova = Calendar.getInstance();
+		if (dataInicial != null) {
+			datanova.setTime(dataInicial);
+			datanova.add(Calendar.DATE, -1);
+			Date time = datanova.getTime();
+			consulta = consulta.filter(c -> (c.getDataSaida().getTime().after(time)));
+		}
+
+		if (dataFinal != null) {
+			datanova.setTime(dataFinal);
+			datanova.add(Calendar.DATE, 1);
+			Date time = datanova.getTime();
+			consulta = consulta.filter(c -> (c.getDataChegada().getTime().before(time)));
+		}
+
+		if (veiculo != null) {
+			consulta = consulta
+					.filter(c -> (c.getVeiculo().getPlaca().toLowerCase().contains(veiculo.toLowerCase()))
+							|| c.getVeiculo().getMarca().toLowerCase().contains(veiculo.toLowerCase())
+							|| c.getVeiculo().getModelo().toLowerCase().contains(veiculo.toLowerCase()));
+		}
+
+		if (motoristaId != null)
+			consulta = consulta.filter(c -> (c.getMotorista().getId().equals(motoristaId)));
+
+		controles = consulta.collect(Collectors.toList());
+	}
+
 	/**
 	 * Finalizados GET e SET - Iniciando MÉTODOS
 	 */
 
 	public String listar() {
+		createControles();
 		return null;
+	}
+
+	public String limpar() {
+		usuario = "";
+		motorista = "";
+		veiculo = "";
+		destino = "";
+		dataInicial = null;
+		dataFinal = Calendar.getInstance().getTime();
+		return listar();
 	}
 
 	public void gravar() {
 		controleDAO.gravar(controle, agendaId, veiculoId, motoristaId);
+		System.out.println(controle);
 		controle = new ControleCirculacao();
 	}
 
@@ -154,16 +231,23 @@ public class ControleCirculacaoBean {
 	}
 
 	public void remover(ControleCirculacao controle) {
-		controleDAO.remover(controle);
+		this.controle = controle;
+		remover();
 	}
 
 	public void remover() {
 		controleDAO.remover(controle);
+		controles = null;
+		createControles();
 		controle = null;
 	}
 
 	public String editar(ControleCirculacao controle) {
 		this.controle = controle;
+		return editar();
+	}
+
+	public String editar() {
 		controleId = controle.getId();
 		return "controle?controleId=" + controleId;
 	}

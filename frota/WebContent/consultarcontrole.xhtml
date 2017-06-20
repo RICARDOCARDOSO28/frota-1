@@ -10,97 +10,144 @@
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
-		<h1>Consultar Agendamentos</h1>
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>Consultar Agendamentos</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-calendar-plus-o" style="margin-right: 5px;" /> <p:commandLink
+						value="Cadastrar Novo Agendamento" action="#{agendaBean.novo}" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
 		<h:form id="formControleConsulta">
-		<div class="ui-g-12 linha">
-			<h:outputLabel value="Nome do Usuario: " for="usuarioNome"
-				styleClass="ui-g-3">
-				<h:inputText value="#{controleCirculacaoBean.usuario}" id="usuarioNome"
-					styleClass="ui-g-12" />
-			</h:outputLabel>
+			<p:panelGrid styleClass="tab-formulario">
+				<p:row>
+					<p:column colspan="2">
+						<p:outputLabel value="Nome do Usuario: " for="usuarioNome" />
+						<p:inputText label="Nome do Usuario"
+							value="#{controleCirculacaoBean.usuario}" id="usuarioNome"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{controleCirculacaoBean.listar}"
+								process="@form" update="@form :tabelaControle" />
+						</p:inputText>
+					</p:column>
 
-			<h:outputLabel value="Data Inicial:" for="dataInicial"
-				styleClass="ui-g-2">
-				<h:inputText id="dataInicial" value="#{controleCirculacaoBean.dataInicial}"
-					maxlength="10" styleClass="ui-g-12">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:inputText>
-			</h:outputLabel>
+					<p:column styleClass="td-data-botao" style="width: 18ch;">
+						<p:outputLabel value="Data Inicial:" for="dataInicial" />
+						<p:calendar label="Data Inicial" id="dataInicial"
+							value="#{controleCirculacaoBean.dataInicial}" showOn="button"
+							locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+							maxlength="10" mindate="01/01/2000" maxdate="31/12/17"
+							mask="true">
+							<p:ajax event="keyup" listener="#{controleCirculacaoBean.listar}"
+								process="@form" update="@form :tabelaControle" />
+						</p:calendar>
+					</p:column>
 
-			<h:outputLabel value="Data Final:" for="dataFinal"
-				styleClass="ui-g-2">
-				<h:inputText id="dataFinal" value="#{controleCirculacaoBean.dataFinal}"
-					maxlength="10" styleClass="ui-g-12">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:inputText>
-			</h:outputLabel>
-			<h:outputLabel />
-			</div>
-			
-			<div class="ui-g-12 linha">
-			<h:outputLabel value="Destino: " for="destino"
-				styleClass="ui-g-3">
-				<h:inputText value="#{controleCirculacaoBean.destino}" id="destino"
-					styleClass="ui-g-12" />
-			</h:outputLabel>
-			
-			<h:outputLabel value="Motorista: " for="motorista"
-				styleClass="ui-g-3">
-				<h:inputText value="#{controleCirculacaoBean.motorista}" id="motorista"
-					styleClass="ui-g-12" />
-			</h:outputLabel>
-			
-			<h:outputLabel value="Veiculo: " for="veiculo"
-				styleClass="ui-g-3">
-				<h:inputText value="#{controleCirculacaoBean.veiculo}" id="veiculo"
-					styleClass="ui-g-12" />
-			</h:outputLabel>
+					<p:column styleClass="td-data-botao" style="width: 18ch;">
+						<p:outputLabel value="Data Final:" for="dataFinal" />
+						<p:calendar label="Data Final" id="dataFinal"
+							value="#{controleCirculacaoBean.dataFinal}" showOn="button"
+							locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+							maxlength="10" mindate="01/01/2000" maxdate="31/12/17"
+							mask="true">
+							<p:ajax event="keyup" listener="#{controleCirculacaoBean.listar}"
+								process="@form" update="@form :tabelaControle" />
+						</p:calendar>
+					</p:column>
 
-			<h:outputLabel styleClass="ui-g-1">
-				<h:commandButton value="Buscar" action="#{controleCirculacaoBean.listar}"
-					styleClass="ui-g-12 botoes">
-					<f:ajax render="@form :tabelaControle" execute="@form" />
-				</h:commandButton>
-			</h:outputLabel>
-			<h:outputLabel styleClass="ui-g-1">
-				<h:commandButton value="Novo" action="#{controleCirculacaoBean.novo}"
-					styleClass="ui-g-12 botoes" />
-			</h:outputLabel>
-			</div>
+					<p:column colspan="2">
+						<p:outputLabel value="Destino: " for="destino" />
+						<p:inputText label="Destino"
+							value="#{controleCirculacaoBean.destino}" id="destino"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{controleCirculacaoBean.listar}"
+								process="@form" update="@form :tabelaControle" />
+						</p:inputText>
+					</p:column>
+
+					<p:column colspan="2" styleClass="td-botao-consulta">
+						<p:commandButton value="Filtrar"
+							action="#{controleCirculacaoBean.listar}"
+							icon="fa fa-fw fa-filter" process="@this @form"
+							update="@form :tabelaControle" />
+						<p:commandButton value="Limpar"
+							action="#{controleCirculacaoBean.limpar}"
+							icon="fa fa-fw fa-eraser" update="@form :tabelaControle" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column colspan="2">
+						<p:outputLabel value="Motorista: " for="motorista" />
+						<p:inputText label="Motorista"
+							value="#{controleCirculacaoBean.motorista}" id="motorista"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{controleCirculacaoBean.listar}"
+								process="@form" update="@form :tabelaControle" />
+						</p:inputText>
+					</p:column>
+
+					<p:column colspan="2">
+						<p:outputLabel value="Veiculo: " for="veiculo" />
+						<p:inputText label="Veiculo"
+							value="#{controleCirculacaoBean.veiculo}" id="veiculo"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{controleCirculacaoBean.listar}"
+								process="@form" update="@form :tabelaControle" />
+						</p:inputText>
+					</p:column>
+
+					<p:column colspan="2" />
+				</p:row>
+			</p:panelGrid>
 		</h:form>
 
-
 		<h:form id="tabelaControle">
-			<p:dataTable var="controle" value="#{controleCirculacaoBean.controles}"
-				styleClass="tabela">
+			<p:dataTable id="controle" var="controle"
+				value="#{controleCirculacaoBean.controles}" reflow="true" rows="10"
+				paginator="true"
+				emptyMessage="Nenhum Controle de Circulação Encontrado!"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,25,50" draggableColumns="true"
+				rowKey="#{controle.id}"
+				selection="#{controleCirculacaoBean.controle}"
+				selectionMode="single" styleClass="tabela">
+
 				<f:facet name="header">
-            Listagem de Controle de Circulação
-        </f:facet>
-				<p:column headerText="Usuario">
+            		Listagem de Controle de Circulação
+        		</f:facet>
+
+				<p:column headerText="Usuario"
+					sortBy="#{controle.agenda.usuario.nome}">
 					<h:outputText value="#{controle.agenda.usuario.nome}" />
 					<br />
 					<h:outputText value="#{controle.agenda.usuario.setor.nome}" />
 				</p:column>
 
-				<p:column headerText="Destino">
+				<p:column headerText="Destino" sortBy="#{controle.destino}">
 					<h:outputText value="#{controle.destino}" />
 				</p:column>
 
-				<p:column headerText="Motorista">
+				<p:column headerText="Motorista" sortBy="#{controle.motorista.nome}">
 					<h:outputText value="#{controle.motorista.nome}" />
 				</p:column>
 
-				<p:column headerText="Veiculo" style="text-align: center;">
-					<h:outputText value="#{controle.veiculo.placa}" /><br/>
-					<h:outputText value="#{controle.veiculo.marca} - #{controle.veiculo.modelo}" />
+				<p:column headerText="Veiculo" style="text-align: center;"
+					sortBy="#{controle.veiculo.placa}">
+					<h:outputText value="#{controle.veiculo.placa}" />
+					<br />
+					<h:outputText
+						value="#{controle.veiculo.marca} - #{controle.veiculo.modelo}" />
 				</p:column>
 
-				<p:column headerText="Horario de Saida" styleClass="txt-center">
+				<p:column headerText="Horario de Saida" styleClass="txt-center"
+					sortBy="#{controle.dataSaida.time}">
 					<h:outputText value="#{controle.dataSaida.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy"
 							timeZone="America/Sao_Paulo" />
@@ -108,27 +155,35 @@
 					<h:outputText value=" as #{controle.horaSaida}" />
 				</p:column>
 
-				<p:column headerText="Horario de Chegada" styleClass="txt-center">
+				<p:column headerText="Horario de Chegada" styleClass="txt-center"
+					sortBy="#{controle.dataChegada.time}">
 					<h:outputText value="#{controle.dataChegada.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy"
 							timeZone="America/Sao_Paulo" />
 					</h:outputText>
 					<h:outputText value=" as #{controle.horaChegada}" />
 				</p:column>
-				
-				<p:column headerText="KM Rodados" style="text-align: center;">
+
+				<p:column headerText="KM Rodados" style="text-align: center;"
+					sortBy="#{controle.kmRodados}">
 					<h:outputText value="#{controle.kmRodados}" />
 				</p:column>
 
-				<p:column headerText="Editar">
+				<p:column headerText="Editar" style="width: 7ch;" priority="6">
 					<h:commandLink styleClass="ui-icon  ui-icon-pencil" value="Editar"
 						action="#{controleCirculacaoBean.editar(controle)}" />
 				</p:column>
 
-				<p:column headerText="Excluir">
+				<p:column headerText="Excluir" style="width: 7ch;" priority="6">
 					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
 						action="#{controleCirculacaoBean.remover(controle)}" />
 				</p:column>
+
+				<f:facet name="footer">
+					Número de Consultas retornadas: 
+					<h:outputText
+						value=" #{controleCirculacaoBean.totalControles} de #{controleCirculacaoBean.totalLista}" />
+				</f:facet>
 			</p:dataTable>
 		</h:form>
 

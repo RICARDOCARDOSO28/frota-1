@@ -1,14 +1,20 @@
 package br.com.frota.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import br.com.frota.dao.UsuarioDAO;
 import br.com.frota.model.Usuario;
-import br.com.frota.util.FacesContextUtil;
 import br.com.frota.util.Paginas;
 import br.com.frota.util.TipoSexo;
 import br.com.frota.util.TipoUsuario;
@@ -21,13 +27,20 @@ public class UsuarioBean implements Serializable {
 	private Usuario usuario = new Usuario();
 
 	private Integer usuarioId;
-	private String usuarioNome;
+
+	// Atributos para Consulta
+	private String usuarioNome = "";
+	private Integer setorId;
 	private TipoUsuario tipoUsuario;
+
+	// Listas de Consulta
 	private List<Usuario> usuarios;
+	private List<Usuario> usuariosConsulta = new ArrayList<>();
+
+	// decidir se removo ou não
 	private List<Usuario> motoristas;
 
-	private Integer setorId;
-
+	// Dao
 	private UsuarioDAO usuarioDAO;
 
 	public UsuarioBean() {
@@ -36,6 +49,10 @@ public class UsuarioBean implements Serializable {
 
 	public Usuario getUsuario() {
 		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 	public Integer getUsuarioId() {
@@ -71,7 +88,6 @@ public class UsuarioBean implements Serializable {
 	}
 
 	public List<Usuario> getUsuarios() {
-		usuarios = usuarioDAO.listarUsuariosPorNome(usuarioNome, setorId, tipoUsuario);
 		return usuarios;
 	}
 
@@ -95,42 +111,99 @@ public class UsuarioBean implements Serializable {
 	public TipoSexo[] getTipoSexo() {
 		return TipoSexo.values();
 	}
-	
+
 	public TipoUsuario[] getTipoUsuarios() {
 		return TipoUsuario.values();
 	}
-	
+
+	public List<Usuario> getUsuariosConsulta() {
+		return Collections.unmodifiableList(usuariosConsulta);
+	}
+
+	@PostConstruct
+	public void createUsuarios() {
+		if (this.usuarios == null) {
+			usuariosConsulta.clear();
+			usuarios = usuarioDAO.listarUsuariosPorNome(usuarioNome, setorId, tipoUsuario);
+			usuariosConsulta.addAll(usuarios);
+		}
+		createUsuariosConsulta();
+	}
+
+	public void createUsuariosConsulta() {
+		Stream<Usuario> consulta = usuariosConsulta.stream();
+
+		if (usuarioNome != null)
+			consulta = consulta.filter(u -> u.getNome().toLowerCase().contains(usuarioNome.toLowerCase()));
+
+		if (setorId != null)
+			consulta = consulta.filter(u -> (u.getSetor().getId().equals(setorId)));
+
+		if (tipoUsuario != null)
+			consulta = consulta.filter(u -> (u.getTipoUsuario().equals(tipoUsuario)));
+
+		usuarios = consulta.collect(Collectors.toList());
+	}
+
+	public Integer getTotalUsuarios() {
+		return usuarios.size();
+	}
+
+	public Integer getTotalUsuariosConsulta() {
+		return usuariosConsulta.size();
+	}
 
 	/**
 	 * Finalizados GET e SET - Iniciando MÉTODOS
 	 */
 
 	public String listar() {
+		createUsuarios();
 		return null;
 	}
 
-	public void gravar() {
-		System.out.println("Usuario [id:" + usuario.getId() + ", nome:" + usuario.getNome() + "]");
-		System.out.println("Setor [setorId:" + setorId);
+	public String limpar() {
+		this.usuarioNome = "";
+		this.tipoUsuario = null;
+		this.setorId = null;
+		createUsuarios();
+		return null;
+	}
+
+	public String gravar() {
+		validarCNH();
 		if (usuario.getId() == null) {
 			usuario.setTipoUsuario(TipoUsuario.USUARIO);
 			usuarioDAO.adicionar(usuario, setorId);
-			new FacesContextUtil().info(null, "Usuario Salvo com Sucesso");
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario Salvo com Sucesso", null));
 		} else {
 			usuarioDAO.atualizar(usuario, setorId);
-			new FacesContextUtil().info(null, "Usuario Atualizado com Sucesso");
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario Atualizado com Sucesso", null));
 		}
+		System.out.println(usuario.toString());
 		usuario = new Usuario();
-		return;
+		return null;
+	}
+
+	private void validarCNH() {
+		if (usuario.getCnhId().length() < 11) {
+			usuario.setCnhId(null);
+			usuario.setCnhValidade(null);
+		}
 	}
 
 	public void remover() {
 		usuarioDAO.remover(usuario);
+		usuarios = null;
+		createUsuarios();
 		usuario = null;
 	}
 
 	public void remover(Usuario usuario) {
-		usuarioDAO.remover(usuario);
+		this.usuario = usuario;
+		remover();
 	}
 
 	public void recuperarUsuarioPorId() {
@@ -139,8 +212,11 @@ public class UsuarioBean implements Serializable {
 
 	public String editar(Usuario usuario) {
 		this.usuario = usuario;
+		return editar();
+	}
+
+	public String editar() {
 		usuarioId = usuario.getId();
-		setorId = usuario.getSetor().getId();
 		return "usuario?usuarioId=" + usuarioId;
 	}
 

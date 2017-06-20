@@ -1,14 +1,369 @@
 /* tamanho da fonte dos componentes do primefaces */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
 html {
-	font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
+	height: 100%;
+	background: rgba(79, 93, 115, 1);
 }
 
-.ui-widget {
+body {
+	margin: 0 5em;
+	border-right: 1px solid rgba(79, 93, 115, 1);
+	border-left: 1px solid rgba(79, 93, 115, 1);
+	background: #fff;
+}
+
+html, body, .ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea,
+	.ui-widget button {
 	font-size: 14px !important;
+	font-family: 'Montserrat', 'Lato', 'Varela Round', 'Play',
+		'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif;
 }
 
-input[type="button" i], input[type="submit" i], input[type="reset" i],
-	input[type="file" i]::-webkit-file-upload-button, button {
-	padding: 5px 20px;
-	margin: 5px 25px 5px 0;
+#body, #content, .container {
+	display: flex;
+	flex-direction: column;
+}
+
+/* --------------------- Elementos do Content --------------------- */
+#content {
+	padding: 1rem 2rem;
+	min-height: 78vh;
+}
+
+#content form {
+	margin-bottom: 1em;
+	padding: 0;
+}
+
+h1, legend {
+	text-transform: uppercase;
+}
+
+.botao {
+	border: 1px solid #cbc7bd;
+	cursor: pointer;
+	background-color: #f5f5f5;
+	color: #000;
+	margin-right: 20px;
+	cursor: pointer;
+	border-radius: 4px;
+	align-self: flex-end;
+}
+
+.botao:hover {
+	background: #dadada /* #e6e6e6 */          
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		url("/frota/javax.faces.resource/images/hover.png.xhtml?ln=primefaces-casablanca")
+		50% 50% repeat-x;
+	color: #000000;
+}
+
+/* --------------------- Box de Login --------------------- */
+#content #formLogin {
+	text-align: center;
+	padding: 2em;
+	background: rgba(79, 93, 115, 1);
+	margin: auto;
+	width: 450px;
+	font-size: 1.1em;
+}
+
+#formLogin h2 {
+	font-size: 3em;
+	color: #fff;
+}
+
+#formLogin a {
+	color: #fff;
+	text-decoration: none;
+}
+
+#formLogin a:hover {
+	text-decoration: underline;
+}
+
+#formLogin table tr, #formLogin table tr td {
+	background: transparent;
+	color: #fff;
+	border: 1px solid transparent !important;
+	font-size: 1.2em;
+}
+
+/* --------------------- Elementos das Tabelas --------------------- */
+#content table {
+	border-collapse: collapse;
+	background: transparent;
+	table-layout: auto;
+}
+
+/* Sobrecarga sobre o modelo do Primefaces */
+.ui-datatable-tablewrapper {
+	overflow: hidden !important;
+	width: 100% !important;
+}
+
+.tab-formulario {
+	width: 100%;
+}
+
+#content table tr {
+	background: transparent;
+}
+
+/* #content table tr td { min-width: 5rem; } */
+#content .td-data-botao {
+	width: 18ch;
+}
+
+#content .td-data-botao input[type="text"] {
+	width: calc(100% - 38px);
+	margin-right: 2px;
+}
+
+.ui-panelgrid .ui-panelgrid-cell {
+	border: 1px solid transparent !important;
+	/* 	border: 1px solid #fc9 !important; */
+	/* 	padding: 0 !important; */
+	background: transparent !important;
+}
+
+.ui-datatable-header {
+	font-size: 1.5em;
+}
+
+.ui-datatable-footer {
+	text-align: left !important;
+}
+
+#content .tab-consulta {
+	border: 1px solid #fc9;
+}
+
+/* #content .tab-consulta tr:hover { */
+/* 	background: #654b24 */
+/* 		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_65_654b24_60x60.png.xhtml?ln=primefaces-pepper-grinder) */
+/* 		50% 50% repeat; */
+/* 	color: #ffffff; */
+/* 	margin-bottom: 20px */
+/* } */
+.txt-center {
+	text-align: center;
+}
+
+.tab-interna {
+	margin-left: 2em;
+	width: calc(100% - 2em);
+	padding: 4px 0;
+}
+/* --------------------- Elementos dos Formularios --------------------- */
+#content fieldset {
+	margin: 1em 0 1em 0;
+}
+
+.form-data {
+	max-width: 12ch;
+}
+
+.form-hora {
+	max-width: 8ch;
+}
+
+.form-normal {
+	width: 100%;
+}
+
+.form-td {
+	background: #fcc;
+}
+
+#content input[type="button" i], #content input[type="submit" i], input[type="reset"
+	i], input[type="file" i]::-webkit-file-upload-button {
+	padding: .3em 1em;
+	margin-right: 1em;
+	display: inline-block;
+	cursor: pointer;
+	border: 1px solid #cbc3be;
+	/* 	margin: .5em 1em; */
+}
+
+input[type="radio"] {
+	margin: .5em;
+}
+
+#content select {
+	border-radius: 4px;
+	box-shadow: inset 0 2px 2px #8f8f8f;
+	background: #fff;
+	padding: 4px;
+}
+
+#content select:focus {
+	box-shadow: 0px 0px 5px #b409a0, inset 0 2px 2px #8f8f8f;
+}
+
+.td-botao-consulta {
+	min-width: 250px;
+	vertical-align: bottom;
+}
+
+.td-botao-consulta button {
+	margin: auto 10px;
+}
+
+/* --------------------- Elementos do Header --------------------- */
+#header {
+	padding: 0 .5em;
+	display: flex;
+	align-items: center;
+}
+
+a#title-logo {
+	text-decoration: none
+}
+
+#title-logo h1 {
+	color: #4F5D73;
+	font-size: 4em;
+	margin: 0 .1em;
+	text-shadow: 4px 0px 0px #000;
+	transition: all 1s linear;
+	transform: skewX(-10deg);
+	font-weight: 700;
+}
+
+#img-logo {
+	transition: all 1s linear;
+	transform: rotate(30deg) scale(1);
+}
+
+/* #img-logo:hover {transition: all 1s ease;transform: rotate(-45deg) scale(1);} */
+/* #img-logo:hover+#title-logo h1 {transition: all 1s ease;text-shadow: -5px 0px 0px #000;} */
+#simple-menu {
+	margin: auto auto .5em;
+}
+
+#simple-menu a {
+	margin: 0 .8em;
+}
+
+#userlogado {
+	margin: auto .5em .5em auto;
+	text-align: right;
+}
+/* --------------------- Elementos da Nav --------------------- */
+#navbar {
+	margin: 0 .5em;
+}
+
+#navbar>div {
+	border-radius: 0;
+	margin: 0 .5em;
+	border-right: 0;
+	border-left: 0;
+}
+
+#navbar .nav-item-menu, #navbar .nav-item-menu a {
+	box-sizing: content-box;
+}
+/* --------------------- Elementos do Footer --------------------- */
+#footer {
+	text-align: center;
+}
+
+#footer footer {
+	border-top: 1px solid #bbb1aa;
+	padding: .5em;
+	margin: 0 1em;
+}
+
+/* --------------------- Elementos do Main --------------------- */
+.informacao {
+	padding: 1em;
+	border-radius: 6px;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.txt-info {
+	font-weight: 700;
+	margin: 0 30px 0 5px;;
+}
+
+.status-info {
+	color: red;
+	font-size: 1.2em;
+	font-weight: 900;
+}
+
+.status-info-center {
+	text-align: center;
+	display: block;
+	padding: .5em 0;
+}
+
+.status-info-rigth {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.green {
+	color: #006e51;
+}
+
+.blue {
+	color: #034f84;
+}
+
+.bg-green {
+	background: #29ffcd;
+}
+
+.bg-yellow, .bg-red, .bg-blue, .bg-green {
+	display: block;
+}
+
+.bg-yellow {
+	background: #fced8b;
+}
+
+.bg-red {
+	background: #db847d;
+}
+
+.bg-blue {
+	background: #21a0fa;
+}
+
+.show-div {
+	display: block;
+	visibility: visible;
+}
+
+.hidden-div {
+	display: none;
+	visibility: hidden;
+}
+
+/* --------------------- Personalizar Messages --------------------- */
+/* .errorStyle {} */
+/* .infoStyle {} */
+/* .warnStyle {} */
+/* .fatalStyle {} */
+
+/* --------------------- Personalizar Charts  --------------------- */
+.jqplot-highlighter-tooltip, .jqplot-canvasOverlay-tooltip {
+	font-size: 1em !important;
 }

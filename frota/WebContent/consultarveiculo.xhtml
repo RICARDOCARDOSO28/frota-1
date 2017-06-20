@@ -11,100 +11,139 @@
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
-		<h1>Consultar Veiculo</h1>
+
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>Consultar Veículo</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-car" style="margin-right: 5px;" /> <p:commandLink
+						value="Cadastrar Novo Veículo" action="#{veiculoBean.novo}" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formVeiculoConsulta" styleClass="ui-g-12 linha">
+		<h:form id="formVeiculoConsulta">
+			<p:panelGrid styleClass="tab-formulario">
+				<p:row>
 
-			<h:outputLabel value="Nome do Veiculo: " for="veiculoPlaca"
-				styleClass="ui-g-12 ui-md-6 ui-lg-3">
-				<h:inputText value="#{veiculoBean.veiculoPlaca}" id="veiculoPlaca"
-					styleClass="ui-g-12" />
-			</h:outputLabel>
+					<p:column colspan="2">
+						<p:outputLabel value="Nome do Veiculo: " for="veiculoPlaca" />
+						<p:inputText value="#{veiculoBean.veiculoPlaca}" id="veiculoPlaca"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{veiculoBean.listar}"
+								process="@form" update="@form :tabelaVeiculos" />
+						</p:inputText>
+					</p:column>
 
-			<h:outputLabel value="Ano:" for="veiculoAno"
-				styleClass="ui-g-6 ui-md-2 ui-lg-1">
-				<h:inputText id="veiculoAno" value="#{veiculoBean.veiculoAno}"
-					validatorMessage="Ano do Veiculo deve possuir 4 caracteres"
-					maxlength="4" styleClass="ui-g-12">
-					<f:validateLength minimum="4" />
-					<f:ajax event="blur" render="messages" />
-				</h:inputText>
-			</h:outputLabel>
+					<p:column style="width: 8ch;">
+						<p:outputLabel value="Ano: " for="veiculoAno" />
+						<p:inputText label="Ano do Veículo" id="veiculoAno"
+							value="#{veiculoBean.veiculoAno}" 
+							maxlength="4" styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{veiculoBean.listar}"
+								process="@form" update="@form :tabelaVeiculos" />
+						</p:inputText>
+					</p:column>
 
-			<h:outputLabel value="Tipo do Veiculo: " for="veiculoTipo"
-				styleClass="ui-g-12 ui-md-6 ui-lg-3">
-				<h:selectOneMenu value="#{veiculoBean.veiculoTipo}" id="veiculoTipo"
-					styleClass="ui-g-12">
-					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
-					<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
-						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-					<f:ajax execute="@form" render="@form :tabelaVeiculos" />
-				</h:selectOneMenu>
-			</h:outputLabel>
+					<p:column colspan="2">
+						<p:outputLabel value="Tipo do Veiculo: " for="veiculoTipo" />
+						<h:selectOneMenu label="Tipo do Veículo"
+							value="#{veiculoBean.veiculoTipo}" id="veiculoTipo"
+							styleClass="form-normal">
+							<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
+							<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+								itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+							<p:ajax event="blur" listener="#{veiculoBean.listar}"
+								process="@form" update="@form :tabelaVeiculos" />
+						</h:selectOneMenu>
+					</p:column>
 
-			<h:outputLabel styleClass="ui-g-6 ui-md-2 ui-lg-1">
-				<h:commandButton value="Buscar" action="#{veiculoBean.listar}"
-					styleClass="ui-g-12 botao">
-					<f:ajax render="@form :tabelaVeiculos" execute="@form" />
-				</h:commandButton>
-			</h:outputLabel>
+					<p:column colspan="2" styleClass="td-botao-consulta">
+						<p:commandButton value="Filtrar" action="#{veiculoBean.listar}"
+							icon="fa fa-fw fa-filter" process="@this @form"
+							update="@form :tabelaVeiculos" />
+						<p:commandButton value="Limpar" action="#{veiculoBean.limpar}"
+							process="@form" icon="fa fa-fw fa-eraser"
+							update="@form :tabelaVeiculos" />
+					</p:column>
 
-			<h:outputLabel styleClass="ui-g-6 ui-md-2 ui-lg-1">
-				<h:commandButton value="Novo" action="#{veiculoBean.novo}"
-					styleClass="ui-g-12 botao" />
-			</h:outputLabel>
-
+				</p:row>
+			</p:panelGrid>
 		</h:form>
 
-
 		<h:form id="tabelaVeiculos">
-			<p:dataTable var="veiculo" value="#{veiculoBean.veiculos}"
-				styleClass="tabela">
+			<p:dataTable id="veiculo" var="veiculo"
+				value="#{veiculoBean.veiculos}" reflow="true" rows="10"
+				paginator="true" emptyMessage="Nenhum Veículo Encontrado!"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="3,10,25,50" draggableColumns="true"
+				rowKey="#{veiculo.id}" selection="#{veiculoBean.veiculo}"
+				selectionMode="single" styleClass="tabela">
+
 				<f:facet name="header">
-            Lista de Veiculos Veiculos
-        </f:facet>
-				<p:column headerText="Placa">
+            		Lista de Veiculos Veiculos
+        		</f:facet>
+
+				<p:column headerText="Placa" sortBy="#{veiculo.placa}">
 					<h:outputText value="#{veiculo.placa}" />
 				</p:column>
-				<p:column headerText="Marca">
+
+				<p:column headerText="Marca" sortBy="#{veiculo.marca}">
 					<h:outputText value="#{veiculo.marca}" />
 				</p:column>
 
-				<p:column headerText="Modelo">
+				<p:column headerText="Modelo" sortBy="#{veiculo.modelo}">
 					<h:outputText value="#{veiculo.modelo}" />
 				</p:column>
 
-				<p:column headerText="Ano">
+				<p:column headerText="Ano" sortBy="#{veiculo.ano}" priority="5">
 					<h:outputText value="#{veiculo.ano}" />
 				</p:column>
 
-				<p:column headerText="Tipo de Veiculo">
+				<p:column headerText="Tipo de Veiculo"
+					sortBy="#{veiculo.tipoVeiculo.label}" priority="4">
 					<h:outputText value="#{veiculo.tipoVeiculo.label}" />
 				</p:column>
 
-				<p:column headerText="Tipo de Combustivel">
+				<p:column headerText="Tipo de Combustivel"
+					sortBy="#{veiculo.tipoCombustivel.label}" priority="3">
 					<h:outputText value="#{veiculo.tipoCombustivel.label}" />
 				</p:column>
+				
+				<p:column headerText="Kilometros Percorridos">
+					<h:outputText value="falta Implementar" />
+				</p:column>
 
-				<p:column headerText="Número de Abastecimentos">
+				<p:column headerText="Nº de Abastecimentos"
+					sortBy="#{veiculo.abastecimentos.size()}" >
 					<h:outputText value="#{veiculo.abastecimentos.size()}" />
 				</p:column>
 
-				<p:column headerText="Número de viagens realizadas">
+				<p:column headerText="Nº de viagens realizadas"
+					sortBy="#{veiculo.controlesCirculacao.size()}">
 					<h:outputText value="#{veiculo.controlesCirculacao.size()}" />
 				</p:column>
 
-				<p:column headerText="Editar">
+				<p:column headerText="Editar" style="width: 7ch;" priority="6">
 					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
 						outcome="#{veiculoBean.editar(veiculo)}" />
 				</p:column>
 
-				<p:column headerText="Excluir">
+				<p:column headerText="Excluir" style="width: 7ch;" priority="6">
 					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
 						action="#{veiculoBean.remover(veiculo)}" />
 				</p:column>
+
+				<!-- /*	summaryRow aqui */ -->
+
+				<f:facet name="footer">
+					Número de Consultas retornadas: 
+					<h:outputText value=" #{veiculoBean.totalVeiculos} de #{veiculoBean.totalVeiculosConsulta}"/>
+        		</f:facet>
 			</p:dataTable>
 		</h:form>
 

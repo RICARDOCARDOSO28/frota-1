@@ -5,54 +5,61 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<nav>
-	<h:form styleClass="ui-g-12 ui-corner-all ui-widget-content">
+<h:form id="navbar" rendered="#{loginBean.userlogado != null}">
+	<p:menubar>
+		<p:submenu label="Novo" icon="ui-icon-document">
+			<p:submenu label="New" icon="ui-icon-contact"
+				styleClass="nav-item-menu">
+				<p:menuitem value="Project" url="#" styleClass="nav-item-menu" />
+				<p:menuitem value="Other" url="#" styleClass="nav-item-menu" />
+			</p:submenu>
+			<p:menuitem value="Setor" url="setor.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Usuário" url="usuario.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Veiculo" url="veiculo.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Abastecimentos" url="abastecimento.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Agendas" url="agenda.xhtml"
+				styleClass="nav-item-menu" />
+			<p:separator />
+			<p:menuitem value="Sair" action="#{loginBean.logout}"
+				styleClass="nav-item-menu" />
+		</p:submenu>
 
-				<p:commandLink id="dynCadastro" value="Cadastros" type="button"
-					icon="ui-icon-extlink" styleClass="dynButton" />
-				<p:menu overlay="true" trigger="dynCadastro" my="left top"
-					at="left bottom">
-					<p:menuitem value="Setores" action="setor?faces-redirect=true"
-						icon="ui-icon-disk" />
-					<p:menuitem value="Usuarios" action="usuario?faces-redirect=true"
-						icon="ui-icon-disk" />
-					<p:menuitem value="Veiculos" action="veiculo?faces-redirect=true"
-						icon="ui-icon-disk" />
-					<p:menuitem value="Abastecimento"
-						action="abastecimento?faces-redirect=true"
-						icon="ui-icon-arrowrefresh-1-w" />
-					<p:menuitem value="Agendas" action="agenda?faces-redirect=true"
-						icon="ui-icon-disk" />
-				</p:menu>
+		<p:submenu label="Consultar" icon="ui-icon-search">
+			<p:menuitem value="Setor" url="consultarsetor.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Usuário" url="consultarusuario.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Veiculo" url="consultarveiculo.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Abastecimentos" url="consultarabastecimento.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Agendas" url="consultaragenda.xhtml"
+				styleClass="nav-item-menu" />
+			<p:menuitem value="Controle" url="consultarcontrole.xhtml"
+				styleClass="nav-item-menu" />
+		</p:submenu>
 
-				<p:commandLink id="dynConsulta" value="Consulta" type="button"
-					icon="ui-icon-extlink" styleClass="dynButton" />
-				<p:menu overlay="true" trigger="dynConsulta" my="left top"
-					at="left bottom">
-					<p:menuitem value="Setores"
-						action="consultarsetor?faces-redirect=true" icon="ui-icon-disk" />
-					<p:menuitem value="Usuarios"
-						action="consultarusuario?faces-redirect=true" icon="ui-icon-disk" />
-					<p:menuitem value="Veiculos"
-						action="consultarveiculo?faces-redirect=true" icon="ui-icon-disk" />
-					<p:menuitem value="Abastecimento"
-						action="consultarabastecimento?faces-redirect=true"
-						icon="ui-icon-arrowrefresh-1-w" />
-					<p:menuitem value="Agendas"
-						action="consultaragenda?faces-redirect=true" icon="ui-icon-disk" />
-					<p:menuitem value="Controle"
-						action="consultarcontrole?faces-redirect=true"
-						icon="ui-icon-arrowrefresh-1-w" />
-				</p:menu>
+		<p:submenu label="Help" icon="ui-icon-help">
+			<p:menuitem value="Contents" url="#" styleClass="nav-item-menu" />
+			<p:submenu label="Search" icon="ui-icon-search"
+				styleClass="nav-item-menu">
+				<p:submenu label="Text">
+					<p:menuitem value="Workspace" url="#" styleClass="nav-item-menu" />
+				</p:submenu>
+				<p:menuitem value="File" url="#" styleClass="nav-item-menu" />
+			</p:submenu>
+		</p:submenu>
 
-				<h:commandLink value="Relatorios"
-					action="relatorios?faces-redirect=true" styleClass="dynButton" />
 
-		<h:commandLink value="Sobre"
-			action="sobre?faces-redirect=true" styleClass="dynButton" />
-			
-		<p:commandButton value="Logout" icon="ui-icon-extlink"
-			action="#{loginBean.logout}" style="float: right;" />
-	</h:form>
-</nav>
+		<f:facet name="options">
+			<!-- /*			<p:inputText style="margin-right:10px" placeholder="Buscar" /> */-->
+			<p:commandButton value="Logout" action="#{loginBean.logout}"
+				icon="ui-icon-extlink" />
+		</f:facet>
+	</p:menubar>
+</h:form>
 </html>

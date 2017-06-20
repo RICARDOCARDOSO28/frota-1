@@ -5,65 +5,156 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
 	xmlns:p="http://primefaces.org/ui">
 
 
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
-		<h1>Consultar Setores</h1>
+
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>Consultar Setores</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-coffee" style="margin-right: 5px;" /> <p:commandLink
+						value="Cadastrar Novo Setor" action="#{setorBean.novo}" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formSetorConsulta" styleClass="ui-g-12 linha">
-			<h:outputLabel value="Nome do Setor: " for="setorNome"
-				styleClass="ui-g-12 ui-md-6 ui-lg-4">
-			<h:inputText value="#{setorBean.setorNome}" id="setorNome"
-				styleClass="ui-g-12" /></h:outputLabel>
-
-				<h:outputLabel styleClass="ui-g-1">
-					<h:commandButton value="Buscar" action="#{setorBean.listar}"
-						styleClass="ui-g-12 botao" />
-				</h:outputLabel>
-				<h:outputLabel styleClass="ui-g-1">
-					<h:commandButton value="Novo" action="#{setorBean.novo}"
-						styleClass="ui-g-12 botao" />
-				</h:outputLabel>
+		<h:form id="formSetorConsulta">
+			<p:panelGrid styleClass="tab-formulario">
+				<p:row>
+					<p:column>
+						<p:outputLabel value="Nome do Setor: " for="setorNome" />
+						<p:inputText value="#{setorBean.setorNome}" id="setorNome"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{setorBean.listar}"
+								process="@form" update="@form :tabelaSetores" />
+						</p:inputText>
+					</p:column>
+					<p:column styleClass="td-botao-consulta">
+						<p:commandButton id="buscarSetor" value="Filtrar"
+							action="#{setorBean.listar}" process="@form"
+							update="@form :tabelaSetores" icon="fa fa-fw fa-filter" />
+						<p:commandButton value="Limpar" icon="fa fa-fw fa-eraser"
+							action="#{setorBean.limpar}" process="@form"
+							update="@form :tabelaSetores" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
 		</h:form>
-
 
 		<h:form id="tabelaSetores">
 			<p:dataTable id="setor" var="setor" value="#{setorBean.setores}"
+				resizableColumns="true" reflow="true" rows="10" paginator="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,25,50" draggableColumns="true"
+				rowKey="#{setor.id}" selection="#{setorBean.setor}"
+				selectionMode="single" emptyMessage="Nenhum Setor Encontrado!"
 				styleClass="tabela">
-				<f:facet name="header">
-            Lista de Setores
-        </f:facet>
-				<p:column headerText="Nome">
+
+				<f:facet name="header">Lista de Setores
+            		<p:commandButton id="toggler" type="button"
+						value="Columns" style="float:right" icon="ui-icon-calculator" />
+					<p:columnToggler datasource="setor" trigger="toggler" />
+				</f:facet>
+
+				<p:column headerText="#" style="width:36px" priority="4">
+					<p:rowToggler />
+				</p:column>
+
+				<p:column headerText="Nome" sortBy="#{setor.nome}">
 					<h:outputText value="#{setor.nome}" />
 				</p:column>
-				<p:column headerText="Telefone">
+
+				<p:column headerText="Telefone" sortBy="#{setor.fone}">
 					<h:outputText value="#{setor.fone}" />
 				</p:column>
 
-				<p:column headerText="Numero de Funcionarios">
+				<p:column headerText="Numero de Funcionarios"
+					sortBy="#{setor.usuarios.size()}" priority="5">
 					<h:outputText value="#{setor.usuarios.size()}" />
 				</p:column>
 
-				<p:column headerText="Email">
+				<p:column headerText="Email" priority="3">
 					<h:outputText value="#{setor.email}" />
 				</p:column>
 
-				<p:column headerText="Editar">
+				<p:column headerText="Editar" style="width: 7ch;" priority="6">
 					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
 						outcome="#{setorBean.editar(setor)}" />
 				</p:column>
-				<p:column headerText="Excluir">
-					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
-						action="#{setorBean.remover(setor)}" />
+
+				<p:column headerText="Excluir" style="width: 7ch;" priority="6">
+					<p:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
+						action="#{setorBean.remover(setor)}" update="@form"
+						process="@this @form" />
 				</p:column>
+
+				<f:facet name="footer">
+					Número de Consultas retornadas: 
+					<h:outputText
+						value=" #{setorBean.totalSetores} de #{setorBean.totalSetoresConsulta}" />
+				</f:facet>
+
+				<p:rowExpansion rendered="#{setor.usuarios.size() > 0}">
+					<div class="tab-interna">
+						<ui:repeat var="user" value="#{setor.usuarios}">
+							<b>#{user.nome}</b>
+							<h:outputText rendered="#{user.cpf != ''}"
+								value="  -  #{user.cpf}" />
+							<h:outputText rendered="#{user.fone != ''}"
+								value="  -  #{user.fone}" />
+							<br />
+						</ui:repeat>
+					</div>
+				</p:rowExpansion>
+
 			</p:dataTable>
 
+			<p:contextMenu for="setor">
+				<p:menuitem value="Edição" update="setorEditar"
+					icon="ui-icon-search" oncomplete="PF('setorDialog').show()" />
+				<p:menuitem value="Deletar" update="setor" icon="ui-icon-close"
+					action="#{setorBean.remover}" />
+			</p:contextMenu>
+
+			<p:dialog header="Edição de Setor" widgetVar="setorDialog"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+				<p:outputPanel id="setorEditar" style="text-align:center;">
+					<p:panelGrid columns="2" rendered="#{not empty setorBean.setores}"
+						columnClasses="label,value">
+						<f:facet name="header">
+						Titulo
+						</f:facet>
+						<h:outputText value="Nome:" />
+						<h:outputText value="#{setorBean.setor.nome}" />
+						<h:outputText value="Telefone" />
+						<h:outputText value="#{setorBean.setor.fone}" />
+						<h:outputText value="Qnt Funcionários:" />
+						<h:outputText value="#{setorBean.setor.usuarios.size()}" />
+						<h:commandButton styleClass="botao" value="Excluir"
+							action="#{setorBean.remover(setorBean.setor)}" />
+						<h:link styleClass="botao" value="Editar"
+							outcome="#{setorBean.editar(setorBean.setor)}" />
+					</p:panelGrid>
+				</p:outputPanel>
+			</p:dialog>
+
 		</h:form>
+
+		<p:chart type="pie" model="#{chartBean.pieModel}"
+			style="width:45%;height:400px" />
+
+		<p:chart type="pie" model="#{chartBean.funcionariosPorSexo}"
+			style="width:45%;height:400px" />
+			
 	</ui:define>
 </ui:composition>
 </html>

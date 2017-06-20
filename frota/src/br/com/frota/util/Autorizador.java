@@ -23,7 +23,6 @@ public class Autorizador implements PhaseListener {
 		Usuario usuariologado = (Usuario) context.getExternalContext().getSessionMap().get("usuariologado");
 
 		if (usuariologado != null) {
-			// new LoginBean().setUsuario(usuariologado);
 			return;
 		}
 

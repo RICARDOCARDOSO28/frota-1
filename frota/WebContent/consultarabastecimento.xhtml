@@ -11,99 +11,145 @@
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
-		<h1>Consultar Abastecimentos</h1>
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>Consultar Abastecimentos</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-plus-circle" style="margin-right: 5px;" /> <p:commandLink
+						value="Cadastrar Novo Abastecimento"
+						action="#{abastecimentoBean.novo}" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formAbastecimentoConsulta" styleClass="ui-g-12 linha">
+		<h:form id="formAbastecimentoConsulta">
 
-			<h:outputLabel value="Nome do Veiculo: " for="abastecimentoNome"
-				styleClass="ui-g-3">
-				<h:inputText value="#{abastecimentoBean.abastecimentoNome}"
-					id="abastecimentoNome" styleClass="ui-g-12" />
-			</h:outputLabel>
+			<p:panelGrid styleClass="tab-formulario">
+				<p:row>
+					<p:column colspan="2">
+						<p:outputLabel value="Nome do Veiculo: " for="abastecimentoNome" />
+						<p:inputText label="Nome do Veiculo"
+							value="#{abastecimentoBean.abastecimentoNome}"
+							id="abastecimentoNome" styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{abastecimentoBean.listar}"
+								process="@form" update="@form :tabelaAbastecimentos" />
+						</p:inputText>
+					</p:column>
 
-			<h:outputLabel value="Data Inicial:" for="dataInicial"
-				styleClass="ui-g-2">
-				<h:inputText id="dataInicial"
-					value="#{abastecimentoBean.dataInicial}" maxlength="10"
-					styleClass="ui-g-12">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:inputText>
-			</h:outputLabel>
+					<p:column styleClass="td-data-botao" style="width: 18ch;">
+						<p:outputLabel value="Data Inicial:" for="dataInicial" />
+						<p:calendar label="Data Inicial" id="dataInicial"
+							value="#{abastecimentoBean.dataInicial}" showOn="button"
+							locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+							maxlength="10" mindate="01/01/2000" maxdate="31/12/17"
+							mask="true">
+							<p:ajax event="keyup" listener="#{abastecimentoBean.listar}"
+								process="@form" update="@form :tabelaAbastecimentos" />
+						</p:calendar>
+					</p:column>
 
-			<h:outputLabel value="Data Final:" for="dataFinal"
-				styleClass="ui-g-2">
-				<h:inputText id="dataFinal" value="#{abastecimentoBean.dataFinal}"
-					maxlength="10" styleClass="ui-g-12">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:inputText>
-			</h:outputLabel>
-			<h:outputLabel />
-			
-			<h:outputLabel value="Tipo do Veiculo: " for="veiculoTipo"
-				styleClass="ui-g-12 ui-md-6 ui-lg-3">
-				<h:selectOneMenu value="#{veiculoBean.veiculoTipo}" id="veiculoTipo"
-					styleClass="ui-g-12">
-					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
-					<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
-						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-					<f:ajax execute="@form" render="@form :tabelaVeiculos" />
-				</h:selectOneMenu>
-			</h:outputLabel>
-			
-			<h:outputLabel styleClass="ui-g-1">
-				<h:commandButton value="Buscar" action="#{abastecimentoBean.listar}"
-					styleClass="ui-g-12 botao">
-					<f:ajax render="@form :tabelaAbastecimentos" execute="@form" />
-				</h:commandButton>
-			</h:outputLabel>
+					<p:column styleClass="td-data-botao" style="width: 18ch;">
+						<p:outputLabel value="Data Final:" for="dataFinal" />
+						<p:calendar label="Data Final" id="dataFinal"
+							value="#{abastecimentoBean.dataFinal}" showOn="button"
+							locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+							maxlength="10" mindate="01/01/2000" maxdate="31/12/17"
+							mask="true">
+							<p:ajax event="keyup" listener="#{abastecimentoBean.listar}"
+								process="@form" update="@form :tabelaAbastecimentos" />
+						</p:calendar>
+					</p:column>
 
-			<h:outputLabel styleClass="ui-g-1">
-				<h:commandButton value="Novo" action="#{abastecimentoBean.novo}"
-					styleClass="ui-g-12 botao" />
-			</h:outputLabel>
+					<p:column colspan="2">
+						<p:outputLabel value="Tipo do Veiculo: " for="veiculoTipo" />
+						<h:selectOneMenu label="Tipo do Veiculo"
+							value="#{abastecimentoBean.veiculoTipo}" id="veiculoTipo"
+							styleClass="form-normal">
+							<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
+							<f:selectItems value="#{abastecimentoBean.tipoVeiculos}" var="tipo"
+								itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+							<p:ajax event="blur" listener="#{abastecimentoBean.listar}"
+								process="@form" update="@form :tabelaAbastecimentos" />
+						</h:selectOneMenu>
+					</p:column>
 
+					<p:column styleClass="td-botao-consulta">
+						<p:commandButton value="Filtrar"
+							action="#{abastecimentoBean.listar}" icon="fa fa-fw fa-filter"
+							process="@this @form" update="@form :tabelaAbastecimentos" />
+						<p:commandButton value="Limpar"
+							action="#{abastecimentoBean.limpar}" icon="fa fa-fw fa-eraser"
+							update="@form :tabelaAbastecimentos" />
+					</p:column>
+
+				</p:row>
+			</p:panelGrid>
 		</h:form>
 
 
-		<h:form id="tabelaAbastecimentos" styleClass="ui-g-12">
-			<p:dataTable var="abastecimento"
-				value="#{abastecimentoBean.abastecimentos}" styleClass="tabela">
+		<h:form id="tabelaAbastecimentos">
+			<p:dataTable id="abastecimento" var="abastecimento"
+				value="#{abastecimentoBean.abastecimentos}" reflow="true" rows="10"
+				paginator="true" emptyMessage="Nenhum Abastecimento Encontrado!"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="3,10,25,50" draggableColumns="true"
+				rowKey="#{abastecimento.id}"
+				selection="#{abastecimentoBean.abastecimento}"
+				selectionMode="single" styleClass="tabela">
+
 				<f:facet name="header">
-            Lista de Abastecimentos
-        </f:facet>
-				<p:column headerText="Motorista">
+            		Lista de Abastecimentos
+        		</f:facet>
+
+				<p:column headerText="Motorista"
+					sortBy="#{abastecimento.usuario.nome}">
 					<h:outputText value="#{abastecimento.usuario.nome}" />
 				</p:column>
-				<p:column headerText="Veiculo">
-					placa: <h:outputText value="#{abastecimento.veiculo.placa}" />
+
+				<p:column headerText="Veiculo"
+					sortBy="#{abastecimento.veiculo.placa}">
+					placa: <b><h:outputText value="#{abastecimento.veiculo.placa}" /></b>
 					, <h:outputText value="#{abastecimento.veiculo.marca}" /> -
 					<h:outputText value="#{abastecimento.veiculo.modelo}" />
 				</p:column>
+				
+				<p:column headerText="Tipo de Veículo"
+					sortBy="#{abastecimento.veiculo.tipoVeiculo.label}">
+					<h:outputText value="#{abastecimento.veiculo.tipoVeiculo.label}" />
+				</p:column>
 
-				<p:column headerText="Quantidade Combustivel">
+				<p:column headerText="Quantidade Combustivel"
+					sortBy="#{abastecimento.qntCombustivel}">
 					<h:outputText value="#{abastecimento.qntCombustivel}" />
 				</p:column>
 
-				<p:column headerText="Data de Abastecimento">
+				<p:column headerText="Data de Abastecimento"
+					sortBy="#{abastecimento.dataAbastecimento.time}">
 					<h:outputText value="#{abastecimento.dataAbastecimento.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy"
 							timeZone="America/Sao_Paulo" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="Editar">
+				<p:column headerText="Editar" style="width: 7ch;">
 					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
 						outcome="#{abastecimentoBean.editar(abastecimento)}" />
 				</p:column>
 
-				<p:column headerText="Excluir">
+				<p:column headerText="Excluir" style="width: 7ch;">
 					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
 						action="#{abastecimentoBean.remover(abastecimento)}" />
 				</p:column>
+
+				<f:facet name="footer">
+					Número de Consultas retornadas: 
+					<h:outputText
+						value=" #{abastecimentoBean.totalAbastecimentos} de #{abastecimentoBean.totalAbastecimentosConsulta}" />
+				</f:facet>
 			</p:dataTable>
 		</h:form>
 

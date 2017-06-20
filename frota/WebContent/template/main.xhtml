@@ -6,193 +6,35 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-
 <h:head>
-	<title><ui:insert name="title">Sistema Gerenciador de Frotas</ui:insert></title>
+	<title><ui:insert name="title">VOLANTIS</ui:insert></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<link rel="icon"
+		href="#{facesContext.externalContext.requestContextPath}/resources/img/favicon.png" />
 	<link
-		href="#{facesContext.externalContext.requestContextPath}/css/default.css"
-		rel="stylesheet" type="text/css" />
-
-	<style>
-/* html {font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;}  */
-/*  .ui-widget {font-size: 16px !important;}  */
-* {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;
-}
-
-html, body, header, footer, main, form {
-	width: 100%;
-}
-
-body {
-	padding: 0 25px;
-}
-
-fieldset {
-	margin: 0 0 20px 0;
-}
-
-label {
-	display: inline-table;
-}
-
-#content, .container {
-	display: flex;
-	flex-direction: column;
-}
-
-.linha {
-	display: flex;
-	align-items: flex-end;
-}
-
-.botao, .botoes, .dynButton {
-	border: 1px solid #cbc7bd;
-	background: #f8f7f6
-		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_10_f8f7f6_60x60.png.xhtml?ln=primefaces-pepper-grinder)
-		50% 50% repeat;
-	font-weight: bold;
-	color: #654b24;
-	margin-right: 20px;
-	cursor: pointer;
-	border-radius: 6px;
-	align-self: flex-end;
-}
-
-.botao:hover, .botoes:hover, .dynButton:hover {
-	border: 1px solid #654b24;
-	background: #654b24
-		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_65_654b24_60x60.png.xhtml?ln=primefaces-pepper-grinder)
-		50% 50% repeat;
-	color: #ffffff;
-}
-
-.dynButton {
-	text-decoration: none;
-	padding: .3em 1em .3em 1em;
-	float: inherit;
-}
-
-.tabela {
-	table-layout: auto !important;
-}
-
-.tabela tr:hover {
-	background: #654b24
-		url(/frota/javax.faces.resource/images/ui-bg_fine-grain_65_654b24_60x60.png.xhtml?ln=primefaces-pepper-grinder)
-		50% 50% repeat;
-	color: #ffffff;
-	margin-bottom: 20px
-}
-
-.txt-center {
-	text-align: center;
-}
-
-/* --------------------- Elementos do Header --------------------- */
-#img-logo {
-	float: left;
-}
-/* #title-logo {} */
-
-/* --------------------- Elementos da Nav --------------------- */
-#navegacao {
-	padding-top: 0;
-}
-
-/* --------------------- Elementos do Footer --------------------- */
-#footer {
-	align-self: flex-end;
-	justify-content: center;
-	text-align: center;
-	padding-bottom: 0 !important;
-	margin-top: 20px;
-}
-
-footer {
-	padding: 15px;
-}
-
-.informacao {
-	padding: 1em;
-	border-radius: 6px;
-	margin-bottom: 20px;
-	width: 100%;
-}
-
-.txt-info {
-	font-weight: 700;
-	margin: 0 30px 0 5px;;
-}
-
-.status-info {
-	color: red;
-	font-size: 1.2em;
-	font-weight: 900;
-}
-
-.status-info-center {
-	text-align: center;
-	display: block;
-	padding: .5em 0;
-}
-
-.status-info-rigth {
-	display: flex;
-	justify-content: flex-end;
-}
-
-.green {color:#006e51;}
-.blue{color: #034f84;}
-
-
-.bg-green {
-	background: #29ffcd;
-}
-
-.bg-yellow {
-	background: #fced8b
-}
-
-.bg-red {
-	background: #db847d;
-}
-
-.bg-blue {
-	background: #21a0fa; 
-}
-
-.show-div {
-	display: block;
-	visibility: visible;
-}
-
-.hidden-div {
-	display: none;
-	visibility: hidden;
-}
-</style>
-
+		href="https://fonts.googleapis.com/css?family=Lato:400,700|Montserrat:400,700|Play:400,700|Varela+Round"
+		rel="stylesheet" />
+	<h:outputStylesheet library="font-awesome"
+		name="css/font-awesome.min.css" />
+	<h:outputStylesheet name="default.css" library="css" />
+	<h:outputScript name="locale-primefaces.js" library="js" />
 </h:head>
 
-<h:body id="body" styleClass="ui-widget">
+<h:body id="body">
 
-	<div id="header" class="ui-g-12">
+	<div id="header">
 		<ui:include src="header.xhtml" />
 	</div>
 
-	<div id="navegacao" class="ui-g-12">
+	<div id="navegacao">
 		<ui:include src="nav.xhtml" />
 	</div>
 
-	<div id="content" class="ui-g-12">
+	<div id="content">
 		<ui:insert name="content" />
 	</div>
 
-	<div id="footer" class="ui-g-12">
+	<div id="footer">
 		<ui:include src="footer.xhtml" />
 	</div>
 </h:body>

@@ -1,9 +1,15 @@
 package br.com.frota.bean;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -16,21 +22,28 @@ import br.com.frota.util.TipoVeiculo;
 
 @ManagedBean
 @ViewScoped
-public class AgendaBean {
-
-	private AgendaDAO agendaDAO;
+public class AgendaBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private Agenda agenda = new Agenda();
-	private Integer agendaId;
-	private String agendaNome;
-	private List<Agenda> agendas;
 
+	private Integer agendaId;
+
+	// Atributos de Consulta
 	private Integer usuarioId;
 
+	private String agendaNome = "";
 	private StatusAgenda statusAgenda;
 	private TipoVeiculo tipoVeiculo;
 	private Date dataInicial = null;
 	private Date dataFinal = Calendar.getInstance().getTime();
+
+	// Listas de Consulta
+	private List<Agenda> agendas;
+	private List<Agenda> lista = new ArrayList<>();
+
+	// Dao
+	private AgendaDAO agendaDAO;
 
 	public AgendaBean() {
 		agendaDAO = new AgendaDAO();
@@ -38,6 +51,10 @@ public class AgendaBean {
 
 	public Agenda getAgenda() {
 		return agenda;
+	}
+
+	public void setAgenda(Agenda agenda) {
+		this.agenda = agenda;
 	}
 
 	public Integer getAgendaId() {
@@ -54,15 +71,6 @@ public class AgendaBean {
 
 	public void setAgendaNome(String agendaNome) {
 		this.agendaNome = agendaNome;
-	}
-
-	public List<Agenda> getAgendas() {
-		agendas = agendaDAO.listarAgenda(agendaNome, dataInicial, dataFinal, tipoVeiculo, statusAgenda);
-		return agendas;
-	}
-
-	public void setAgendas(List<Agenda> agendas) {
-		this.agendas = agendas;
 	}
 
 	public Integer getUsuarioId() {
@@ -113,15 +121,83 @@ public class AgendaBean {
 		return TipoVeiculo.values();
 	}
 
+	public List<Agenda> getAgendas() {
+		return agendas;
+	}
+
+	public List<Agenda> getLista() {
+		return Collections.unmodifiableList(lista);
+	}
+
+	public Integer getTotalAgendas() {
+		return agendas.size();
+	}
+
+	public Integer getTotalLista() {
+		return lista.size();
+	}
+
+	@PostConstruct
+	public void createAgendas() {
+		if (this.agendas == null) {
+			lista.clear();
+			agendas = agendaDAO.listarAgenda(agendaNome, dataInicial, dataFinal, tipoVeiculo, statusAgenda);
+			lista.addAll(agendas);
+		}
+		createListaConsulta();
+	}
+
+	public void createListaConsulta() {
+		Stream<Agenda> consulta = lista.stream();
+
+		if (agendaNome != null)
+			consulta = consulta.filter(a -> a.getUsuario().getNome().toLowerCase().contains(agendaNome.toLowerCase()));
+
+		Calendar datanova = Calendar.getInstance();
+		if (dataInicial != null) {
+			datanova.setTime(dataInicial);
+			datanova.add(Calendar.DATE, -1);
+			Date time = datanova.getTime();
+			consulta = consulta.filter(a -> (a.getDataSaida().getTime().after(time)));
+		}
+
+		if (dataFinal != null) {
+			datanova.setTime(dataFinal);
+			datanova.add(Calendar.DATE, 1);
+			Date time = datanova.getTime();
+			consulta = consulta.filter(a -> (a.getDataChegada().getTime().before(time)));
+		}
+
+		if (tipoVeiculo != null)
+			consulta = consulta.filter(a -> (a.getTipoVeiculo().equals(tipoVeiculo)));
+
+		if (statusAgenda != null)
+			consulta = consulta.filter(a -> (a.getStatusAgenda().equals(statusAgenda)));
+
+		agendas = consulta.collect(Collectors.toList());
+	}
+
 	/**
 	 * Método para Iniciar os eventos na página Retorno null
 	 */
 	public String listar() {
+		createAgendas();
+		return null;
+	}
+
+	public String limpar() {
+		this.agendaNome = "";
+		this.tipoVeiculo = null;
+		this.statusAgenda = null;
+		this.dataInicial = null;
+		this.dataFinal = Calendar.getInstance().getTime();
+		createAgendas();
 		return null;
 	}
 
 	public void gravar() {
 		agendaDAO.gravar(agenda, usuarioId);
+		System.out.println(agenda);
 		agenda = new Agenda();
 	}
 
@@ -141,19 +217,26 @@ public class AgendaBean {
 	}
 
 	public void remover(Agenda agenda) {
-		agendaDAO.remover(agenda);
+		this.agenda = agenda;
+		remover();
 	}
 
 	public void remover() {
 		agendaDAO.remover(agenda);
+		agendas = null;
+		createAgendas();
 		agenda = null;
+	}
+
+	public String editar() {
+		agendaId = agenda.getId();
+		usuarioId = agenda.getUsuario().getId();
+		return "agenda?agendaId=" + agendaId;
 	}
 
 	public String editar(Agenda agenda) {
 		this.agenda = agenda;
-		agendaId = agenda.getId();
-		usuarioId = agenda.getUsuario().getId();
-		return "agenda?agendaId=" + agendaId;
+		return editar();
 	}
 
 	public String novo() {

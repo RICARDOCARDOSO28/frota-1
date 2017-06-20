@@ -19,20 +19,23 @@ public class Abastecimento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-	@Column(name="qnt_combustivel", nullable = false)
+
+	@Column(name = "qnt_combustivel", nullable = false)
 	private Integer qntCombustivel;
+
+	// @Column(name = "valor", precision = 8, scale = 2, nullable = false)
+	// private BigDecimal valor;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "usuario_fk", nullable = false)
 	private Usuario usuario;
-	
-	@ManyToOne(cascade=CascadeType.MERGE)
+
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "veiculo_fk", nullable = false)
 	private Veiculo veiculo;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="data_abastecimento", nullable = false)
+	@Column(name = "data_abastecimento", nullable = false)
 	private Calendar dataAbastecimento = Calendar.getInstance();
 
 	@Column(name = "descricao", length = 450)

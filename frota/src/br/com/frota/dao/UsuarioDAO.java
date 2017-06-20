@@ -1,11 +1,8 @@
 package br.com.frota.dao;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TemporalType;
 import javax.persistence.TypedQuery;
 
 import br.com.frota.model.Setor;
@@ -24,7 +21,7 @@ public class UsuarioDAO {
 	public void adicionar(Usuario usuario, int setorId) {
 		em.getTransaction().begin();
 		Setor setor = em.find(Setor.class, setorId);
-		setor.adicionarUsuario(usuario);		
+		setor.adicionarUsuario(usuario);
 		em.persist(usuario);
 		em.getTransaction().commit();
 	}
@@ -56,15 +53,8 @@ public class UsuarioDAO {
 			jpql += "u.nome like :pnome and ";
 		if (setorId != null)
 			jpql += "u.setor.id = :psetor and ";
-		if (tipoUsuario != null) {
-			if (tipoUsuario == TipoUsuario.MOTORISTA_ALL) {
-				jpql += "(u.cnhId != null or u.cnhId != '') and ";
-				if (tipoUsuario == TipoUsuario.MOTORISTA_OK)
-					jpql += "u.cnhValidade > :phoje and ";
-			} else {
-				jpql += "u.tipoUsuario = :ptipoUsuario and ";
-			}
-		}
+		if (tipoUsuario != null)
+			jpql += "u.tipoUsuario = :ptipoUsuario and ";
 		jpql += "1 = 1";
 
 		TypedQuery<Usuario> query = em.createQuery(jpql, Usuario.class);
@@ -73,30 +63,34 @@ public class UsuarioDAO {
 			query.setParameter("pnome", '%' + nome + '%');
 		if (setorId != null)
 			query.setParameter("psetor", setorId);
-		if (tipoUsuario != null) {
-			if (tipoUsuario == TipoUsuario.MOTORISTA_ALL) {
-				if (tipoUsuario == TipoUsuario.MOTORISTA_OK)
-					query.setParameter("phoje", Calendar.getInstance().getTime(), TemporalType.DATE);
-			} else {
-				query.setParameter("ptipoUsuario", tipoUsuario);
-			}
-		}
+		if (tipoUsuario != null)
+			query.setParameter("ptipoUsuario", tipoUsuario);
+
 		System.out.println(jpql);
 		return query.getResultList();
 	}
 
-	public boolean usuarioExiste(Usuario usuario) {
+	// public boolean usuarioExiste(Usuario usuario) {
+	// TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where
+	// u.cpf = :pcpf and u.senha = :psenha",
+	// Usuario.class);
+	// query.setParameter("pcpf", usuario.getCpf());
+	// query.setParameter("psenha", usuario.getSenha());
+	//
+	// try {
+	// Usuario resultado = query.getSingleResult();
+	// } catch (NoResultException e) {
+	// return false;
+	// }
+	// return true;
+	// }
+
+	public Usuario usuarioExiste(Usuario usuario) {
 		TypedQuery<Usuario> query = em.createQuery("select u from Usuario u where u.cpf = :pcpf and u.senha = :psenha",
 				Usuario.class);
 		query.setParameter("pcpf", usuario.getCpf());
 		query.setParameter("psenha", usuario.getSenha());
-
-		try {
-			Usuario resultado = query.getSingleResult();
-		} catch (NoResultException e) {
-			return false;
-		}
-		return true;
+		return query.getSingleResult();
 	}
 
 	public boolean usuarioCpfExiste(Usuario usuario) {

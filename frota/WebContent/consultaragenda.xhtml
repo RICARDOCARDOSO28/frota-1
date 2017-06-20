@@ -11,91 +11,125 @@
 <ui:composition template="/template/main.xhtml">
 
 	<ui:define name="content">
-		<h1>Consultar Agendamentos</h1>
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>Consultar Agendamentos</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-calendar-plus-o" style="margin-right: 5px;" /> <p:commandLink
+						value="Cadastrar Novo Agendamento" action="#{agendaBean.novo}" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
-		<h:form id="formAgendaConsulta" styleClass="ui-g-12 linha">
+		<h:form id="formAgendaConsulta">
+			<p:panelGrid styleClass="tab-formulario">
+				<p:row>
+					<p:column colspan="2">
+						<p:outputLabel value="Nome do Usuário " for="agendaNome" />
+						<p:inputText label="Nome do Usuário"
+							value="#{agendaBean.agendaNome}" id="agendaNome"
+							styleClass="form-normal">
+							<p:ajax event="keyup" listener="#{agendaBean.listar}"
+								process="@form" update="@form :tabelaAgendamentos" />
+						</p:inputText>
+					</p:column>
 
-			<h:outputLabel value="Nome do Veiculo: " for="agendaNome"
-				styleClass="ui-g-3">
-				<h:inputText value="#{agendaBean.agendaNome}" id="agendaNome"
-					styleClass="ui-g-12" />
-			</h:outputLabel>
+					<p:column styleClass="td-data-botao">
+						<p:outputLabel value="Data Inicial:" for="dataInicial" />
+						<p:calendar label="Data Inicial" id="dataInicial"
+							value="#{agendaBean.dataInicial}" showOn="button" locale="pt_BR"
+							navigator="true" pattern="dd/MM/yyyy" maxlength="10"
+							mindate="01/01/2000" maxdate="31/12/17" mask="true">
+							<p:ajax event="keyup" listener="#{agendaBean.listar}"
+								process="@form" update="@form :tabelaAgendamentos" />
+						</p:calendar>
+					</p:column>
 
-			<h:outputLabel value="Data Inicial:" for="dataInicial"
-				styleClass="ui-g-2">
-				<h:inputText id="dataInicial" value="#{agendaBean.dataInicial}"
-					maxlength="10" styleClass="ui-g-12">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:inputText>
-			</h:outputLabel>
+					<p:column styleClass="td-data-botao">
+						<p:outputLabel value="Data Final:" for="dataFinal" />
+						<p:calendar label="Data Final" id="dataFinal"
+							value="#{agendaBean.dataFinal}" showOn="button" locale="pt_BR"
+							navigator="true" pattern="dd/MM/yyyy" maxlength="10"
+							mindate="01/01/2000" maxdate="31/12/17" mask="true">
+							<p:ajax event="keyup" listener="#{agendaBean.listar}"
+								process="@form" update="@form :tabelaAgendamentos" />
+						</p:calendar>
+					</p:column>
 
-			<h:outputLabel value="Data Final:" for="dataFinal"
-				styleClass="ui-g-2">
-				<h:inputText id="dataFinal" value="#{agendaBean.dataFinal}"
-					maxlength="10" styleClass="ui-g-12">
-					<f:convertDateTime pattern="dd/MM/yyyy"
-						timeZone="America/Sao_Paulo" />
-				</h:inputText>
-			</h:outputLabel>
+					<p:column colspan="2">
+						<p:outputLabel value="Tipo do Veiculo: " for="veiculoTipo" />
+						<h:selectOneMenu value="#{agendaBean.tipoVeiculo}"
+							id="veiculoTipo" styleClass="form-normal">
+							<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
+							<f:selectItems value="#{agendaBean.tipoVeiculos}" var="tipo"
+								itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+							<p:ajax event="blur" listener="#{agendaBean.listar}"
+								process="@form" update="@form :tabelaAgendamentos" />
+						</h:selectOneMenu>
+					</p:column>
 
-			<h:outputLabel value="Tipo do Veiculo: " for="veiculoTipo"
-				styleClass="ui-g-12 ui-md-6 ui-lg-2">
-				<h:selectOneMenu value="#{agendaBean.tipoVeiculo}" id="veiculoTipo"
-					styleClass="ui-g-12">
-					<f:selectItem itemValue="" itemLabel="Escolha um Tipo de Veiculo" />
-					<f:selectItems value="#{agendaBean.tipoVeiculos}" var="tipo"
-						itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-					<f:ajax execute="@form" render="@form :tabelaAgenda" />
-				</h:selectOneMenu>
-			</h:outputLabel>
+					<p:column colspan="2">
+						<h:outputLabel value="Status do Agendamento: " for="statusAgenda" />
+						<h:selectOneMenu value="#{agendaBean.statusAgenda}"
+							id="statusAgenda" styleClass="form-normal">
+							<f:selectItem itemValue="" itemLabel="Escolha um Status" />
+							<f:selectItems value="#{agendaBean.statusAgendas}" var="status"
+								itemLabel="#{status.label}" itemValue="#{status}" />
+							<p:ajax event="blur" listener="#{agendaBean.listar}"
+								process="@form" update="@form :tabelaAgendamentos" />
+						</h:selectOneMenu>
+					</p:column>
 
-			<h:outputLabel value="Status do Agendamento: " for="statusAgenda"
-				styleClass="ui-g-12 ui-md-3 ui-lg-2">
-				<h:selectOneMenu value="#{agendaBean.statusAgenda}"
-					id="statusAgenda" styleClass="ui-g-12">
-					<f:selectItem itemValue="" itemLabel="Escolha um Status" />
-					<f:selectItems value="#{agendaBean.statusAgendas}" var="status"
-						itemLabel="#{status.label}" itemValue="#{status}" />
-					<f:ajax execute="@form" render="@form :tabelaAgenda" />
-				</h:selectOneMenu>
-			</h:outputLabel>
-
-			<h:outputLabel styleClass="ui-g-1">
-				<h:commandButton value="Buscar" action="#{agendaBean.listar}"
-					styleClass="ui-g-12 botao">
-					<f:ajax render="@form :tabelaAgenda" execute="@form" />
-				</h:commandButton>
-			</h:outputLabel>
+					<p:column styleClass="td-botao-consulta">
+						<p:commandButton value="Filtrar" action="#{agendaBean.listar}"
+							icon="fa fa-fw fa-filter" process="@this @form"
+							update="@form :tabelaAgendamentos" />
+						<p:commandButton value="Limpar" action="#{agendaBean.limpar}"
+							icon="fa fa-fw fa-eraser" update="@form :tabelaAgendamentos" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
 		</h:form>
 
 		<h:form id="tabelaAgendamentos">
-			<p:dataTable var="agenda" value="#{agendaBean.agendas}"
-				styleClass="tabela">
+			<p:dataTable id="agenda" var="agenda" value="#{agendaBean.agendas}"
+				styleClass="tabela" reflow="true" rows="10" paginator="true"
+				emptyMessage="Nenhum Agendamento Encontrado!"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,25,50" draggableColumns="true"
+				rowKey="#{agenda.id}" selection="#{agendaBean.agenda}"
+				selectionMode="single">
+
 				<f:facet name="header">
-            Lista de Agendamentos
-        </f:facet>
-				<p:column headerText="Solicitante">
+            		Lista de Agendamentos
+        		</f:facet>
+
+				<p:column headerText="Solicitante" sortBy="#{agenda.usuario.nome}">
 					<h:outputText value="#{agenda.usuario.nome}" />
 					<br />
 					<h:outputText value="#{agenda.usuario.setor.nome}" />
 				</p:column>
 
-				<p:column headerText="Destino">
+				<p:column headerText="Destino" sortBy="#{agenda.destino}">
 					<h:outputText value="#{agenda.destino}" />
 				</p:column>
 
-				<p:column headerText="Descrição da Solicitação">
+				<p:column headerText="Descrição da Solicitação"
+					sortBy="#{agenda.descricao}">
 					<h:outputText value="#{agenda.descricao}" />
 				</p:column>
 
-				<p:column headerText="Tipo de Veiculo" style="text-align: center;">
+				<p:column headerText="Tipo de Veiculo" style="text-align: center;"
+					sortBy="#{agenda.tipoVeiculo.label}">
 					<h:outputText value="#{agenda.tipoVeiculo.label}" />
 				</p:column>
 
-				<p:column headerText="Horario para Saida" styleClass="txt-center">
+				<p:column headerText="Horario para Saida" styleClass="txt-center"
+					sortBy="#{agenda.dataSaida.time}">
 					<h:outputText value="#{agenda.dataSaida.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy"
 							timeZone="America/Sao_Paulo" />
@@ -103,7 +137,8 @@
 					<h:outputText value=" as #{agenda.horaSaida}" />
 				</p:column>
 
-				<p:column headerText="Horario para Chegada" styleClass="txt-center">
+				<p:column headerText="Horario para Chegada" styleClass="txt-center"
+					sortBy="#{agenda.dataChegada.time}">
 					<h:outputText value="#{agenda.dataChegada.time}">
 						<f:convertDateTime pattern="dd/MM/yyyy"
 							timeZone="America/Sao_Paulo" />
@@ -111,7 +146,8 @@
 					<h:outputText value=" as #{agenda.horaChegada}" />
 				</p:column>
 
-				<p:column headerText="Status do Agendamento">
+				<p:column headerText="Status do Agendamento"
+					sortBy="#{agenda.statusAgenda.label}">
 					<h:link value="#{agenda.statusAgenda.label}"
 						outcome="#{agendaBean.agendaControle(agenda)}"
 						rendered="#{agenda.statusAgenda == 'EM_ABERTO'}" />
@@ -121,15 +157,21 @@
 						rendered="#{agenda.statusAgenda == 'CANCELADO'}" />
 				</p:column>
 
-				<p:column headerText="Editar">
+				<p:column headerText="Editar" style="width: 7ch;">
 					<h:link styleClass="ui-icon  ui-icon-pencil" value="Editar"
 						outcome="#{agendaBean.editar(agenda)}" />
 				</p:column>
 
-				<p:column headerText="Excluir">
+				<p:column headerText="Excluir" style="width: 7ch;">
 					<h:commandLink styleClass="ui-icon  ui-icon-trash" value="Excluir"
 						action="#{agendaBean.remover(agenda)}" />
 				</p:column>
+
+				<f:facet name="footer">
+					Número de Consultas retornadas: 
+					<h:outputText
+						value="#{agendaBean.totalAgendas} de #{agendaBean.totalLista}" />
+				</f:facet>
 			</p:dataTable>
 		</h:form>
 

@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Setor {
@@ -18,9 +20,12 @@ public class Setor {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@NotNull
+	@Size(min = 2)
 	@Column(name = "nome", nullable = false)
 	private String nome;
 
+	@Size(min = 4)
 	@Column(name = "fone", length = 11)
 	private String fone;
 
@@ -82,7 +87,14 @@ public class Setor {
 
 	@Override
 	public String toString() {
-		return "Setor[id:" + getId() + ", nome:" + getNome() + ", fone:" + getFone() + ", email:" + getEmail() + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName() + " [");
+		builder.append("\n\tid: " + getId());
+		builder.append("\n\tnome: " + getNome());
+		builder.append("\n\tfone: " + getFone());
+		builder.append("\n\temail: " + getEmail());
+		builder.append("\n ]");
+		return builder.toString();
 	}
 
 	@Override

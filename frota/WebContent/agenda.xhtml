@@ -17,47 +17,71 @@
 	</f:metadata>
 
 	<ui:define name="content">
-
 		<f:view>
-			<h1>Agendamentos</h1>
+			<p:panelGrid styleClass="tab-formulario">
+				<p:column>
+					<h1>
+						<h:outputText rendered="#{agendaBean.agendaId == null}"
+							value="Cadastro de Agendamentos" />
+						<h:outputText rendered="#{agendaBean.agendaId != null}"
+							value="Edição de Agendamentos" />
+					</h1>
+				</p:column>
+				<p:column>
+					<span style="float: right; position: relative; top: .5em;">
+						<i class="fa fa-calendar" style="margin-right: 5px;" /> <p:link
+							value="Consultar Agendamentos" outcome="consultaragenda" />
+					</span>
+				</p:column>
+			</p:panelGrid>
 
 			<p:messages id="messages" globalOnly="true" />
 
 			<p:fieldset legend="Dados do Agendamento" id="fieldAgenda">
 				<h:inputHidden value="#{agendaBean.usuarioId}" />
-				<h:form id="formAgendaBusca" styleClass="linha">
-					<h:outputLabel value="Solicitante: " for="nome" styleClass="ui-g-4">
-						<h:inputText id="nome" value="#{usuarioBean.usuarioNome}"
-							required="true" requiredMessage="Nome do Usuario obrigatório"
-							validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres"
-							styleClass="ui-g-12">
-							<f:validateLength maximum="30" minimum="2" />
-							<f:ajax execute="@form"
-								render="@form :tabelaUsuarios :fieldAgenda" />
-						</h:inputText>
-					</h:outputLabel>
+				<p:focus context="fieldAgenda" />
 
-					<h:outputLabel value="Setor: " for="setorId" styleClass="ui-g-3">
-						<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId"
-							styleClass="ui-g-12">
-							<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
-							<f:selectItems value="#{setorBean.setores}" var="setor"
-								itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
-							<f:ajax execute="@form"
-								render="@form :tabelaUsuarios :fieldAgenda" />
-						</h:selectOneMenu>
-					</h:outputLabel>
+				<h:form id="formAgendaBusca">
+					<p:panelGrid styleClass="tab-formulario">
+						<p:row>
+							<p:column colspan="2">
+								<p:outputLabel value="Solicitante: " for="nome" />
+								<p:inputText id="nome" label="Solicitante"
+									value="#{usuarioBean.usuarioNome}" styleClass="form-normal"
+									required="true" requiredMessage="Nome do Usuario obrigatório"
+									validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres">
+									<f:validateLength maximum="30" minimum="2" />
+									<f:ajax execute="@form"
+										render="@form :tabelaUsuarios :fieldAgenda" />
+								</p:inputText>
+							</p:column>
 
-					<h:outputLabel styleClass="ui-g-2">
-						<h:commandButton value="Buscar Solicitante"
-							action="#{usuarioBean.listar}" styleClass="ui-g-12 botao">
-							<f:ajax execute="@form"
-								render="@form :tabelaUsuarios :fieldAgenda" />
-						</h:commandButton>
-					</h:outputLabel>
+							<p:column colspan="2">
+								<p:outputLabel value="Setor: " for="setorId">
+									<h:selectOneMenu label="Setor" value="#{usuarioBean.setorId}"
+										id="setorId" styleClass="form-normal">
+										<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
+										<f:selectItems value="#{setorBean.setores}" var="setor"
+											itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
+										<f:ajax execute="@form"
+											render="@form :tabelaUsuarios :fieldAgenda" />
+									</h:selectOneMenu>
+								</p:outputLabel>
+							</p:column>
+
+							<p:column>
+								<p:outputLabel>
+									<h:commandButton value="Buscar Solicitante"
+										action="#{usuarioBean.listar}" styleClass="botao">
+										<f:ajax execute="@form" render="@form :tabelaUsuarios" />
+									</h:commandButton>
+								</p:outputLabel>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
 				</h:form>
 
-				<h:form id="tabelaUsuarios" styleClass="ui-g-12 tabela"
+				<h:form id="tabelaUsuarios" styleClass="tabela"
 					rendered="#{(usuarioBean.usuarioNome != usuarioBean.usuario.nome) and (usuarioBean.usuarioNome != '' )}">
 					<p:dataTable var="usuario" value="#{usuarioBean.usuarios}">
 						<p:column headerText="Nome">
@@ -73,115 +97,159 @@
 							<h:outputText value="#{usuario.fone}" />
 						</p:column>
 						<p:column headerText="Carregar">
-							<h:commandButton styleClass="ui-g-12" value="Carregar"
+							<h:commandButton styleClass="botao" value="Carregar"
 								action="#{agendaBean.carregarUsuario(usuario)}"
 								actionListener="#{usuarioBean.carregarUsuario(usuario)}">
 							</h:commandButton>
 						</p:column>
+						<f:facet name="footer">
+						Número de Consultas retornadas: CRIAR QUERY
+						</f:facet>
 					</p:dataTable>
 				</h:form>
 
-				<h:form id="formAgendaCadastro" styleClass="container">
-					<div class="container">
-						<div class="linha">
-							<h:outputLabel value="Data de Saida:" for="dataSaida"
-								styleClass="ui-g-1" />
-							<h:inputText id="dataSaida"
-								value="#{agendaBean.agenda.dataSaida.time}" required="true"
-								requiredMessage="Data de Saida Obrigatória" maxlength="10"
-								styleClass="ui-g-2">
-								<f:convertDateTime pattern="dd/MM/yyyy"
-									timeZone="America/Sao_Paulo" />
-								<f:ajax event="blur" render="messagens" />
-							</h:inputText>
+				<h:form id="formAgendaCadastro">
+					<p:panelGrid styleClass="tab-formulario">
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Data de Saida:" for="dataSaida" />
+							</p:column>
+							<p:column styleClass="td-data-botao" style="width: 18ch;">
+								<p:calendar id="dataSaida" label="Data de Saida"
+									value="#{agendaBean.agenda.dataSaida.time}" showOn="button"
+									locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+									required="true" requiredMessage="Data de Saida Obrigatória"
+									maxlength="10" mindate="#{agendaBean.agenda.dataSaida.time}"
+									maxdate="31/12/17" mask="true">
+									<f:ajax event="blur" render="dataSaidaMessage" />
+								</p:calendar>
+							</p:column>
+							<p:column>
+								<p:outputLabel value="Hora de Saida:" for="horaSaida" />
+							</p:column>
+							<p:column>
+								<p:calendar id="horaSaida" label="Hora de Saida"
+									value="#{agendaBean.agenda.horaSaida}" required="true"
+									requiredMessage="Hora de Saida Obrigatória" maxlength="5"
+									styleClass="form-normal" pattern="HH:mm" timeOnly="true"
+									mask="true">
+									<f:ajax event="blur" render="horaSaidaMessage" />
+								</p:calendar>
+							</p:column>
+							<p:column colspan="3" style="width: 55%;">
+								<p:message for="dataSaida" id="dataSaidaMessage" />
+								<p:message for="horaSaida" id="horaSaidaMessage" />
+							</p:column>
+						</p:row>
 
-							<h:outputLabel value="Hora de Saida:" for="horaSaida"
-								styleClass="ui-g-1" />
-							<h:inputText id="horaSaida"
-								value="#{agendaBean.agenda.horaSaida}" required="true"
-								requiredMessage="Hora de Saida Obrigatória" maxlength="5"
-								styleClass="ui-g-1">
-								<f:ajax event="blur" render="horaSaidaMessage" />
-							</h:inputText>
-							<p:message for="horaSaida" id="horaSaidaMessage"
-								styleClass="ui-g-3" />
-						</div>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Data de Chegada:" for="dataChegada" />
+							</p:column>
+							<p:column styleClass="td-data-botao">
+								<p:calendar id="dataChegada" label="Data de Chegada"
+									value="#{agendaBean.agenda.dataChegada.time}" showOn="button"
+									locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+									required="true" requiredMessage="Data de Chegada Obrigatória"
+									maxlength="10" mindate="#{agendaBean.agenda.dataSaida.time}"
+									maxdate="31/12/17" mask="true">
+									<f:ajax event="blur" render="dataChegadaMessage" />
+								</p:calendar>
+							</p:column>
 
-						<div class="linha">
-							<h:outputLabel value="Data de Chegada:" for="dataChegada"
-								styleClass="ui-g-1" />
-							<h:inputText id="dataChegada"
-								value="#{agendaBean.agenda.dataChegada.time}" required="true"
-								requiredMessage="Data de Chegada Obrigatória" maxlength="10"
-								styleClass="ui-g-2">
-								<f:convertDateTime pattern="dd/MM/yyyy"
-									timeZone="America/Sao_Paulo" />
-								<f:ajax event="blur" render="messagens" />
-							</h:inputText>
+							<p:column>
+								<p:outputLabel value="Hora de Chegada:" for="horaChegada" />
+							</p:column>
+							<p:column>
+								<p:calendar id="horaChegada" label="Hora de Chegada"
+									value="#{agendaBean.agenda.horaChegada}" required="true"
+									requiredMessage="Hora de Chegada Obrigatória" maxlength="5"
+									pattern="HH:mm" timeOnly="true" mask="true">
+									<f:ajax event="blur" render="horaChegadaMessage" />
+								</p:calendar>
+							</p:column>
+							<p:column colspan="3">
+								<p:message for="dataChegada" id="dataChegadaMessage" />
+								<p:message for="horaChegada" id="horaChegadaMessage" />
+							</p:column>
+						</p:row>
 
-							<h:outputLabel value="Hora de Chegada:" for="horaChegada"
-								styleClass="ui-g-1" />
-							<h:inputText id="horaChegada"
-								value="#{agendaBean.agenda.horaChegada}" required="true"
-								requiredMessage="Hora de Chegada Obrigatória" maxlength="5"
-								styleClass="ui-g-1">
-								<f:ajax event="blur" render="horaChegadaMessage" />
-							</h:inputText>
-							<p:message for="horaChegada" id="horaChegadaMessage"
-								styleClass="ui-g-3" />
-						</div>
-					</div>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Tipo de Veiculo:" for="tipo" />
+							</p:column>
+							<p:column colspan="3">
+								<h:selectOneMenu value="#{agendaBean.agenda.tipoVeiculo}"
+									label="Tipo de Veiculo" styleClass="form-normal" id="tipo"
+									required="true" requiredMessage="Tipo de Veiculo obrigatório">
+									<c:choose>
+										<c:when test="#{agendaBean.agenda.tipoVeiculo == null}">
+											<f:selectItem itemValue=""
+												itemLabel="Escolha um Tipo de Veiculo" />
+										</c:when>
+									</c:choose>
+									<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+										itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+									<f:ajax event="blur" render="tipoMessage" />
+								</h:selectOneMenu>
+							</p:column>
+							<p:column colspan="3">
+								<p:message for="tipo" id="tipoMessage" />
+							</p:column>
+						</p:row>
 
-
-					<div class="container">
-						<div class="linha">
-							<h:outputLabel value="Tipo de Veiculo:" for="tipo"
-								styleClass="ui-g-1" />
-							<h:selectOneMenu value="#{agendaBean.agenda.tipoVeiculo}"
-								id="tipo" required="true"
-								requiredMessage="Tipo de Veiculo obrigatório"
-								styleClass="ui-g-3">
-								<c:choose>
-									<c:when test="#{agendaBean.agenda.tipoVeiculo == null}">
-										<f:selectItem itemValue=""
-											itemLabel="Escolha um Tipo de Veiculo" />
-									</c:when>
-								</c:choose>
-								<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
-									itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-								<f:ajax event="blur" render="tipoMessage" />
-							</h:selectOneMenu>
-							<p:message for="tipo" id="tipoMessage" styleClass="ui-g-4" />
-						</div>
-
-						<div class="linha">
-							<h:outputLabel value="Destino:" for="destino" styleClass="ui-g-1" />
-							<h:inputText id="destino" value="#{agendaBean.agenda.destino}"
-								required="true"
-								requiredMessage="Descrição do Destino Obrigatória"
-								styleClass="ui-g-3">
-								<f:ajax event="blur" render="destinoMessage" />
-							</h:inputText>
-							<p:message for="destino" id="destinoMessage" styleClass="ui-g-4" />
-						</div>
-
-						<div class="linha">
-							<h:outputLabel value="Observações:" for="descricao"
-								styleClass="ui-g-1" />
-							<h:inputTextarea id="descricao"
-								value="#{agendaBean.agenda.descricao}" styleClass="ui-g-6"
-								rows="3" />
-						</div>
-					</div>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Destino:" for="destino" />
+							</p:column>
+							<p:column colspan="4">
+								<p:inputText id="destino" label="Destino"
+									styleClass="form-normal" value="#{agendaBean.agenda.destino}"
+									required="true"
+									requiredMessage="Descrição do Destino Obrigatória">
+									<f:ajax event="blur" render="destinoMessage" />
+								</p:inputText>
+							</p:column>
+							<p:column colspan="2" style="width: 40%;">
+								<p:message for="destino" id="destinoMessage" />
+							</p:column>
+						</p:row>
 
 
-					<h:outputLabel styleClass="ui-g-2">
-						<h:commandButton value="Gravar" action="#{agendaBean.gravar}"
-							styleClass="ui-g-12 botao">
-						</h:commandButton>
-					</h:outputLabel>
+						<p:row>
+							<p:column>
+								<p:outputLabel value="Observações:" for="descricao" />
+							</p:column>
+							<p:column colspan="4">
+								<p:inputTextarea id="descricao" label="Observações"
+									styleClass="form-normal" value="#{agendaBean.agenda.descricao}"
+									rows="5" cols="30" counter="display" maxlength="255"
+									counterTemplate="{0} caracteres restantes." autoResize="true" />
+							</p:column>
+							<p:column colspan="2">
+								<p:message for="descricao" id="descricaoMessage" />
+							</p:column>
+						</p:row>
+
+						<p:row>
+							<p:column></p:column>
+							<p:column colspan="4">
+								<h:outputText id="display" />
+							</p:column>
+							<p:column></p:column>
+						</p:row>
+					</p:panelGrid>
 				</h:form>
 			</p:fieldset>
+
+			<div class="td-botao-consulta">
+				<p:commandButton id="gravarAgenda" value="Gravar"
+					action="#{agendaBean.gravar}"
+					process="@this :formAgendaCadastro :formAgendaBusca"
+					update=":formAgendaCadastro :messages :formAgendaBusca" icon="fa fa-fw fa-save" />
+				<p:commandButton value="Limpar" type="reset"
+					icon="fa fa-fw fa-eraser" update=":formAgendaCadastro :formAgendaBusca" />
+			</div>
 		</f:view>
 	</ui:define>
 </ui:composition>

@@ -16,73 +16,156 @@
 	</f:metadata>
 
 	<ui:define name="content">
-		<h1>Veiculos</h1>
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>
+					<h:outputText rendered="#{veiculoBean.veiculoId == null}"
+						value="Cadastro de Veículos" />
+					<h:outputText rendered="#{veiculoBean.veiculoId != null}"
+						value="Edição de Veículos" />
+				</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-car" style="margin-right: 5px;" /> <p:link
+						value="Consultar Veículos" outcome="consultarveiculo" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
 		<h:form id="formVeiculo">
+			<p:focus context="formVeiculo" />
 			<p:fieldset legend="Dados do Veiculo">
 
-				<h:panelGrid columns="2">
-					<h:outputLabel value="Placa:" for="placa" />
-					<h:inputText id="placa" value="#{veiculoBean.veiculo.placa}"
-						required="true" requiredMessage="Placa obrigatória"
-						validatorMessage="A placa deve possuir 7 (sete) caracteres"
-						maxlength="7">
-						<f:validateLength minimum="7" />
-					</h:inputText>
+				<p:panelGrid styleClass="tab-formulario">
+					<p:row>
+						<p:column style="width: 15ch;">
+							<p:outputLabel value="Placa:" for="placa" />
+						</p:column>
+						<p:column>
+							<p:inputText label="Placa do Veículo" id="placa"
+								styleClass="form-normal" value="#{veiculoBean.veiculo.placa}"
+								required="true" requiredMessage="Placa obrigatória"
+								validatorMessage="A placa deve possuir 7 (sete) caracteres"
+								maxlength="7">
+								<f:validateLength minimum="7" />
+								<f:ajax event="blur" render="placaMessage" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="5" style="width: 55%;">
+							<p:message for="placa" id="placaMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Marca:" for="marca" />
-					<h:inputText id="marca" value="#{veiculoBean.veiculo.marca}" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Marca:" for="marca" />
+						</p:column>
+						<p:column>
+							<p:inputText label="Marca do Veículo" id="marca"
+								styleClass="form-normal" value="#{veiculoBean.veiculo.marca}" />
+						</p:column>
 
-					<h:outputLabel value="Modelo:" for="modelo" />
-					<h:inputText id="modelo" value="#{veiculoBean.veiculo.modelo}"
-						required="true" requiredMessage="Modelo do Veiculo obrigatório"
-						validatorMessage="Modelo do Veiculo deve possuir no minimo 2 caracteres">
-						<f:validateLength minimum="2" />
-					</h:inputText>
+						<p:column>
+							<p:outputLabel value="Modelo:" for="modelo" />
+						</p:column>
+						<p:column colspan="2">
+							<p:inputText label="Modelo do Veículo" id="modelo"
+								styleClass="form-normal" value="#{veiculoBean.veiculo.modelo}"
+								required="true" requiredMessage="Modelo do Veiculo obrigatório"
+								validatorMessage="Modelo do Veiculo deve possuir no minimo 2 caracteres">
+								<f:validateLength minimum="2" />
+								<f:ajax event="blur" render="modeloMessage" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="2" style="width: 25%;">
+							<p:message for="modelo" id="modeloMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Tipo do Veiculo: " for="tipoVeiculo" />
-					<h:selectOneMenu value="#{veiculoBean.veiculo.tipoVeiculo}"
-						id="tipoVeiculo" required="true"
-						requiredMessage="Tipo de Veiculo obrigatório">
-						<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
-							itemLabel="#{tipo.label}" itemValue="#{tipo}" />
-					</h:selectOneMenu>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Tipo do Veiculo: " for="tipoVeiculo" />
+						</p:column>
+						<p:column>
+							<h:selectOneMenu label="Tipo de Veículo" styleClass="form-normal"
+								value="#{veiculoBean.veiculo.tipoVeiculo}" id="tipoVeiculo"
+								required="true" requiredMessage="Tipo de Veiculo obrigatório">
+								<f:selectItem itemValue=""
+									itemLabel="Escolha um Tipo de Veículo" />
+								<f:selectItems value="#{veiculoBean.tipoVeiculo}" var="tipo"
+									itemLabel="#{tipo.label}" itemValue="#{tipo}" />
+								<f:ajax event="blur" render="tipoMessage" />
+							</h:selectOneMenu>
+						</p:column>
 
-					<h:outputLabel value="Ano:" for="ano" />
-					<h:inputText id="ano" value="#{veiculoBean.veiculo.ano}"
-						required="true" requiredMessage="Ano do Veiculo obrigatório"
-						validatorMessage="Ano do Veiculo deve possuir 4 caracteres"
-						maxlength="4">
-						<f:validateLength minimum="4" />
-					</h:inputText>
+						<p:column>
+							<p:outputLabel value="Ano:" for="ano" />
+						</p:column>
+						<p:column colspan="1">
+							<p:inputText label="Ano de Fabricação/Modelo do Veículo" id="ano"
+								value="#{veiculoBean.veiculo.ano}" required="true"
+								requiredMessage="Ano do Veiculo obrigatório"
+								validatorMessage="Ano do Veiculo deve possuir 4 caracteres"
+								maxlength="4">
+								<f:validateLength minimum="4" />
+								<f:ajax event="blur" render="anoMessage" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="3" style="width: 35%;">
+							<p:message for="tipoVeiculo" id="tipoMessage" />
+							<p:message for="ano" id="anoMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Odometro:" for="odometro" />
-					<h:inputText id="odometro" value="#{veiculoBean.veiculo.odometro}"
-						required="true" requiredMessage="Valor do Odometro obrigatório">
-					</h:inputText>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Tipo de Combustivel:" for="combustivel" />
+						</p:column>
+						<p:column>
+							<h:selectOneMenu label="Tipo de Combustível"
+								styleClass="form-normal"
+								value="#{veiculoBean.veiculo.tipoCombustivel}" id="combustivel"
+								required="true" requiredMessage="Tipo de Veiculo obrigatório">
+								<f:selectItem itemValue=""
+									itemLabel="Escolha um Tipo de Combustível" />
+								<f:selectItems value="#{veiculoBean.tipoCombustivel}"
+									var="combustivel" itemLabel="#{combustivel.label}"
+									itemValue="#{combustivel}" />
+								<f:ajax event="blur" render="combustivelMessage" />
+							</h:selectOneMenu>
+						</p:column>
 
-					<h:outputLabel value="Tipo de Combustivel:" for="combustivel" />
-					<h:selectOneMenu value="#{veiculoBean.veiculo.tipoCombustivel}"
-						id="combustivel" required="true"
-						requiredMessage="Tipo de Veiculo obrigatório">
-						<f:selectItems value="#{veiculoBean.tipoCombustivel}"
-							var="combustivel" itemLabel="#{combustivel.label}"
-							itemValue="#{combustivel}" />
-					</h:selectOneMenu>
-
-				</h:panelGrid>
+						<p:column>
+							<p:outputLabel value="Odometro:" for="odometro" />
+						</p:column>
+						<p:column colspan="1">
+							<p:inputNumber label="Odometro do Veículo" id="odometro"
+								value="#{veiculoBean.veiculo.odometro}" required="true"
+								requiredMessage="Valor do Odometro obrigatório" minValue="0"
+								maxValue="1000000000" decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" symbol=" Km" symbolPosition="s">
+								<f:ajax event="blur" render="odometroMessage" />
+							</p:inputNumber>
+						</p:column>
+						<p:column colspan="3">
+							<p:message for="combustivel" id="combustivelMessage" />
+							<p:message for="odometro" id="odometroMessage" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
 			</p:fieldset>
 
-
-			<div>
-				<h:commandButton value="Gravar" action="#{veiculoBean.gravar}" styleClass="ui-g-1 botao">
-					<f:ajax execute="@form" render="@form :messages" />
-				</h:commandButton>
+			<div class="td-botao-consulta">
+				<p:commandButton id="gravarVeiculo" value="Gravar"
+					action="#{veiculoBean.gravar}" process="@this @form"
+					update="@form :messages" icon="fa fa-fw fa-save" />
+				<p:commandButton value="Limpar" type="reset"
+					icon="fa fa-fw fa-eraser" update="@form" />
 			</div>
 		</h:form>
-
 	</ui:define>
 </ui:composition>
 </html>

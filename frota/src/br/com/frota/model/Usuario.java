@@ -17,6 +17,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.br.CPF;
 
 import br.com.frota.util.TipoSexo;
 import br.com.frota.util.TipoUsuario;
@@ -28,12 +32,16 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@NotNull
+	@NotEmpty
 	@Column(name = "nome", length = 80, nullable = false)
 	private String nome;
 
+	@CPF
 	@Column(name = "cpf", length = 11)
 	private String cpf;
 
+	@NotNull
 	@Column(name = "sexo", length = 1, nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TipoSexo sexo;
@@ -67,6 +75,7 @@ public class Usuario {
 	@Temporal(TemporalType.DATE)
 	private Calendar cnhValidade = Calendar.getInstance();
 
+	@NotNull
 	@Column(name = "tipo_usuario", nullable = false)
 	private TipoUsuario tipoUsuario;
 
@@ -162,6 +171,8 @@ public class Usuario {
 	}
 
 	public Calendar getCnhValidade() {
+		if (cnhValidade == null)
+			return Calendar.getInstance();
 		return cnhValidade;
 	}
 
@@ -221,8 +232,25 @@ public class Usuario {
 
 	@Override
 	public String toString() {
-		return "Usuario[id:" + getId() + ", nome:" + getNome() + ", cpf:" + getCpf() + ", sexo:" + getSexo() + "]\n"
-				+ getSetor().toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName() + "[");
+		builder.append("\n\tid: " + getId());
+		builder.append("\n\tNome do Usuário: " + getNome());
+		builder.append("\n\tCPF: " + getCpf());
+		builder.append("\n\tSexo do Usuário: " + getSexo().getLabel());
+		builder.append("\n\tTelefone: " + getFone());
+		builder.append("\n\tEmail: " + getEmail());
+		builder.append("\n\tSetor: " + getSetor().getNome());
+		builder.append("\n\tCNH: " + getCnhId());
+		if (getCnhValidade() != null)
+			builder.append("\n\tValidade da CNH: " + getCnhValidade().getTime());
+		else
+			builder.append("\n\tValidade da CNH: " + "Nada Consta");
+		builder.append("\n\tTipo de Usuário: " + getTipoUsuario().getLabel());
+		builder.append("\n\tSenha: " + getSenha());
+		builder.append("\n\tDescrição: " + getDescricao());
+		builder.append("\n]");
+		return builder.toString();
 	}
 
 	@Override

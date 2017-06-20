@@ -4,9 +4,7 @@ public enum TipoUsuario {
 
 	SUPERUSER("Super Usuario", 0), 
 	ADMINISTRADOR("Administrador", 2), 
-	USUARIO("Usuario Comum", 5), 
-	MOTORISTA_ALL("Motorista",10), 
-	MOTORISTA_OK("Motorista regularizado", 11);
+	USUARIO("Usuario Comum", 5);
 
 	private String label;
 	private Integer id;

@@ -1,5 +1,7 @@
 package br.com.frota.bean;
 
+import java.io.Serializable;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -7,7 +9,8 @@ import br.com.frota.util.StatusAgenda;
 
 @ManagedBean
 @ViewScoped
-public class UtilBean {
+public class UtilBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private Integer valor = 0;
 

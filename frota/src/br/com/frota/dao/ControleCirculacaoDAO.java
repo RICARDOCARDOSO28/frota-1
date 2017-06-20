@@ -16,13 +16,14 @@ import br.com.frota.util.JPAUtil;
 
 public class ControleCirculacaoDAO {
 
-	private EntityManager em;
-
-	public ControleCirculacaoDAO() {
-		em = new JPAUtil().getEntityManager();
-	}
+	// private EntityManager em;
+	//
+	// public ControleCirculacaoDAO() {
+	// em = new JPAUtil().getEntityManager();
+	// }
 
 	public void gravar(ControleCirculacao controle, Integer agendaId, Integer veiculoId, Integer motoristaId) {
+		EntityManager em = new JPAUtil().getEntityManager();
 		em.getTransaction().begin();
 
 		Usuario motorista = em.find(Usuario.class, motoristaId);
@@ -35,9 +36,11 @@ public class ControleCirculacaoDAO {
 
 		em.persist(controle);
 		em.getTransaction().commit();
+		em.close();
 	}
 
 	public void atualizar(ControleCirculacao controle, Integer agendaId, Integer veiculoId, Integer motoristaId) {
+		EntityManager em = new JPAUtil().getEntityManager();
 		em.getTransaction().begin();
 
 		controle.getMotorista().removerControle(controle);
@@ -54,9 +57,11 @@ public class ControleCirculacaoDAO {
 
 		em.merge(controle);
 		em.getTransaction().commit();
+		em.close();
 	}
 
 	public void remover(ControleCirculacao controle) {
+		EntityManager em = new JPAUtil().getEntityManager();
 		em.getTransaction().begin();
 
 		controle.getMotorista().removerControle(controle);
@@ -65,34 +70,36 @@ public class ControleCirculacaoDAO {
 		em.remove(em.merge(controle));
 
 		em.getTransaction().commit();
+		em.close();
 	}
 
 	public ControleCirculacao recuperarControleCirculacaoPorId(Integer id) {
+		EntityManager em = new JPAUtil().getEntityManager();
 		return em.find(ControleCirculacao.class, id);
 	}
 
 	public List<ControleCirculacao> listarControle(String solicitante, Integer veiculoId, Integer motoristaId,
 			String veiculo, String destino, String motorista, Date dataInicial, Date dataFinal) {
+		EntityManager em = new JPAUtil().getEntityManager();
 		String jpql = "select c from ControleCirculacao c where ";
 
 		if (solicitante != null)
-			jpql += "c.agenda.usuario.nome like :psolicitante and ";
+			jpql += "(c.agenda.usuario.nome like :psolicitante) and ";
 		if (veiculoId != null)
-			jpql += "c.veiculo.id = :veiculoId and ";
+			jpql += "(c.veiculo.id = :veiculoId) and ";
 		if (motoristaId != null)
-			jpql += "c.motorista.id = :pmotoristaId and ";
+			jpql += "(c.motorista.id = :pmotoristaId) and ";
 		if (motorista != null)
-			jpql += "c.motorista.nome like :pmotorista and ";
+			jpql += "(c.motorista.nome like :pmotorista) and ";
 		if (veiculo != null)
-			jpql += "c.veiculo.placa like :pveiculo and ";
+			jpql += "(c.veiculo.placa like :pveiculo) and ";
 		if (destino != null)
-			jpql += "c.destino like :pdestino and ";
-
+			jpql += "(c.destino like :pdestino) and ";
 		if (dataInicial != null) {
 			if (dataFinal == null) {
 				dataFinal = Calendar.getInstance().getTime();
 			}
-			jpql += "(a.dataSaida between :pdataInicial and :pdataFinal) and (a.dataChegada between :pdataInicial and :pdataFinal) and ";
+			jpql += "(c.dataSaida between :pdataInicial and :pdataFinal) and (c.dataChegada between :pdataInicial and :pdataFinal) and ";
 		}
 		jpql += "1 = 1";
 

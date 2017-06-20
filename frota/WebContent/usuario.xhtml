@@ -6,7 +6,6 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/template/main.xhtml">
@@ -18,114 +17,201 @@
 	</f:metadata>
 
 	<ui:define name="content">
-		<h1>Usuario</h1>
+		<p:panelGrid styleClass="tab-formulario">
+			<p:column>
+				<h1>
+					<h:outputText rendered="#{usuarioBean.usuarioId == null}"
+						value="Cadastro de Usuário" />
+					<h:outputText rendered="#{usuarioBean.usuarioId != null}"
+						value="Edição de Usuário" />
+				</h1>
+			</p:column>
+			<p:column>
+				<span style="float: right; position: relative; top: .5em;"> <i
+					class="fa fa-users" style="margin-right: 5px;" /> <p:link
+						value="Consultar Usuários" outcome="consultarusuario" />
+				</span>
+			</p:column>
+		</p:panelGrid>
 
 		<p:messages id="messages" globalOnly="true" />
 
 		<h:form id="formUsuario">
+			<p:focus context="formUsuario" />
 			<p:fieldset legend="Dados Pessoais">
-				<h:panelGrid columns="3">
-					<h:outputLabel value="Nome:" for="nome" />
-					<h:inputText id="nome" value="#{usuarioBean.usuario.nome}"
-						required="true"
-						requiredMessage="Nome completo do Usuario obrigatório"
-						validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres"
-						pt:placeholder="Nome Completo">
-						<f:validateLength maximum="80" minimum="2" />
-						<f:ajax event="blur" render="messages" />
-					</h:inputText>
-					<p:message for="nome" />
+				<p:panelGrid styleClass="tab-formulario">
+					<p:row>
+						<p:column style="width: 12ch;">
+							<p:outputLabel value="Nome:" for="nome" />
+						</p:column>
+						<p:column>
+							<p:inputText label="Nome de Usuário" id="nome"
+								styleClass="form-normal" value="#{usuarioBean.usuario.nome}"
+								required="true"
+								requiredMessage="Nome completo do Usuario obrigatório"
+								validatorMessage="Nome do Usuario deve ter no minimo 2 caracteres"
+								placeholder="Nome Completo">
+								<f:validateLength maximum="80" minimum="2" />
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="3" style="width: 60%;">
+							<p:message for="nome" id="nomeMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="CPF:" for="cpf" />
-					<h:inputText id="cpf" value="#{usuarioBean.usuario.cpf}"
-						validatorMessage="CPF deve ter 11 caracteres" maxlength="11">
-						<f:validateLength minimum="11" />
-						<f:ajax event="blur" render="messages" />
-					</h:inputText>
-					<p:message for="cpf" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="CPF:" for="cpf" />
+						</p:column>
+						<p:column>
+							<p:inputText label="CPF do Usuário" id="cpf"
+								styleClass="form-normal" value="#{usuarioBean.usuario.cpf}"
+								required="false" validatorMessage="CPF deve ter 11 caracteres"
+								maxlength="11">
+								<f:validateLength minimum="11" />
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="3">
+							<p:message for="cpf" id="cpfMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Sexo:" for="sexo" />
-					<h:selectOneRadio value="#{usuarioBean.usuario.sexo}" id="sexo"
-						required="true" requiredMessage="Selecione uma opção de sexo">
-						<f:selectItems value="#{usuarioBean.tipoSexo}" var="sexo"
-							itemValue="#{sexo}" itemLabel="#{sexo.label}" />
-						<f:ajax event="blur" render="messages" />
-					</h:selectOneRadio>
-					<p:message for="sexo" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Sexo:" for="sexo" />
+						</p:column>
+						<p:column>
+							<h:selectOneRadio label="Sexo do Usuário"
+								styleClass="form-normal" value="#{usuarioBean.usuario.sexo}"
+								id="sexo" required="true"
+								requiredMessage="Selecione uma opção de sexo">
+								<f:selectItems value="#{usuarioBean.tipoSexo}" var="sexo"
+									itemValue="#{sexo}" itemLabel="#{sexo.label}" />
+								<p:clientValidator event="blur" />
+							</h:selectOneRadio>
+						</p:column>
+						<p:column colspan="3">
+							<p:message for="sexo" id="sexoMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Setor:" for="setorId" />
-					<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId">
-						<c:choose>
-							<c:when test="#{usuarioBean.usuario.setor.id == null}">
-								<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
-							</c:when>
-							<c:when test="#{usuarioBean.usuario.setor.id != null}">
-								<f:selectItem itemValue="#{usuarioBean.usuario.setor.id}"
-									itemLabel="#{usuarioBean.usuario.setor.nome}" />
-							</c:when>
-						</c:choose>
-						<f:selectItems value="#{setorBean.setores}" var="setor"
-							itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
-					</h:selectOneMenu>
-					<h:commandLink value="Cadastrar Novo Setor"
-						action="setor?faces-redirect=true" immediate="true" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Setor:" for="setorId" />
+						</p:column>
+						<p:column>
+							<h:selectOneMenu value="#{usuarioBean.setorId}" id="setorId"
+								styleClass="form-normal">
+								<c:choose>
+									<c:when test="#{usuarioBean.usuario.setor.id == null}">
+										<f:selectItem itemValue="" itemLabel="Escolha um Setor" />
+									</c:when>
+									<c:when test="#{usuarioBean.usuario.setor.id != null}">
+										<f:selectItem itemValue="#{usuarioBean.usuario.setor.id}"
+											itemLabel="#{usuarioBean.usuario.setor.nome}" />
+									</c:when>
+								</c:choose>
+								<f:selectItems value="#{setorBean.setores}" var="setor"
+									itemLabel="#{setor.nome}" itemValue="#{setor.id}" />
+								<p:clientValidator event="blur" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column>
+							<i class="fa fa-coffee" style="margin-right: 5px;" />
+							<p:link value="Cadastrar Novo Setor" outcome="setor" />
+						</p:column>
+						<p:column colspan="2" style="width: 40%;">
+							<p:message for="sexo" id="setorMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Telefone:" for="fone" />
-					<h:inputText id="fone" value="#{usuarioBean.usuario.fone}"
-						validatorMessage="Telefone deve ter no maximo 11 caracteres">
-						<f:validateLength maximum="11" minimum="8" />
-						<f:ajax event="blur" render="messages" />
-					</h:inputText>
-					<p:message for="fone" />
 
-					<h:outputLabel value="Email:" for="email" />
-					<h:inputText id="email" value="#{usuarioBean.usuario.email}"
-						validatorMessage="insira um endereço de email válido"
-						maxlength="80">
-						<f:validateLength minimum="7" />
-						<f:ajax event="blur" render="emailMessage" />
-					</h:inputText>
-					<p:message for="email" id="emailMessage" />
-				</h:panelGrid>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Telefone:" for="fone" />
+						</p:column>
+						<p:column>
+							<p:inputText id="fone" value="#{usuarioBean.usuario.fone}"
+								styleClass="form-normal"
+								validatorMessage="Telefone deve ter no maximo 11 caracteres">
+								<!-- /*	<f:validateLength maximum="11" minimum="8" /> */ -->
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="3">
+							<p:message for="fone" id="foneMessage" />
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Email:" for="email" />
+						</p:column>
+						<p:column>
+							<p:inputText label="Email do Usuário" id="email"
+								styleClass="form-normal" value="#{usuarioBean.usuario.email}"
+								validatorMessage="insira um endereço de email válido"
+								maxlength="80">
+								<f:validateLength minimum="7" />
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="3">
+							<p:message for="email" id="emailMessage" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
 			</p:fieldset>
 
 
 			<p:fieldset legend="Dados do Motorista">
-				<h:panelGrid columns="3">
-					<h:outputLabel value="CNH:" for="cnh" />
-					<h:inputText id="cnh" value="#{usuarioBean.usuario.cnhId}"
-						validatorMessage="insira uma CNH válida" maxlength="11">
-						<f:validateLength minimum="11" />
-						<f:ajax event="blur" render="cnhIdMessage" />
-					</h:inputText>
-					<p:message for="cnh" id="cnhIdMessage" />
+				<p:panelGrid styleClass="tab-formulario">
+					<p:row>
+						<p:column style="width:12ch;">
+							<p:outputLabel value="CNH:" for="cnh" />
+						</p:column>
+						<p:column style="width: 30%;">
+							<p:inputText label="CNH do Usuário" id="cnh"
+								styleClass="form-normal" value="#{usuarioBean.usuario.cnhId}"
+								maxlength="11">
+								<p:clientValidator event="blur" />
+							</p:inputText>
+						</p:column>
+						<p:column colspan="3" style="width: 60%;">
+							<p:message for="cnh" id="cnhIdMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Validade da CNH:" for="cnhValidade" />
-					<h:inputText id="cnhValidade"
-						value="#{usuarioBean.usuario.cnhValidade.time}" maxlength="10">
-						<f:convertDateTime pattern="dd/MM/yyyy"
-							timeZone="America/Sao_Paulo" />
-					</h:inputText>
-					<p:message for="cnhValidade" id="cnhValidadeMessage" />
-				</h:panelGrid>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Validade da CNH:" for="cnhValidade" />
+						</p:column>
+						<p:column styleClass="td-data-botao">
+							<p:calendar id="cnhValidade" label="Validade da CNH"
+								value="#{usuarioBean.usuario.cnhValidade.time}" showOn="button"
+								locale="pt_BR" navigator="true" pattern="dd/MM/yyyy"
+								maxlength="10" mindate="#{usuarioBean.usuario.cnhValidade.time}"
+								maxdate="31/12/17" mask="true">
+								<p:clientValidator event="blur" />
+							</p:calendar>
+						</p:column>
+						<p:column colspan="3">
+							<p:message for="cnhValidade" id="cnhValidadeMessage" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
 			</p:fieldset>
 
-			<div class="ui-g-12">
-				<h:commandButton id="gravarUsuario" value="Gravar"
-					action="#{usuarioBean.gravar}" styleClass="ui-g-1 botao">
-					<f:ajax execute="@form" render="@form :messages" />
-				</h:commandButton>
-
-				<c:choose>
-					<c:when test="#{usuarioBean.usuario.id == null}">
-						<h:commandButton value="Limpar" type="reset" styleClass="ui-g-1 botao"/>
-					</c:when>
-				</c:choose>
-
-				<h:commandButton value="Voltar" action="index?faces-redirect=true"
-					immediate="true" styleClass="ui-g-1 botao"/>
+			<div class="td-botao-consulta">
+				<p:commandButton id="gravarUsuario" value="Gravar"
+					action="#{usuarioBean.gravar}" process="@this @form"
+					update="@form :messages" icon="fa fa-fw fa-save"
+					validateClient="true" />
+				<p:commandButton value="Limpar" type="reset"
+					icon="fa fa-fw fa-eraser" update="@form" />
 			</div>
-
 		</h:form>
 	</ui:define>
 </ui:composition>

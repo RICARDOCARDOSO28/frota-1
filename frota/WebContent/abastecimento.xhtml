@@ -19,97 +19,158 @@
 	</f:metadata>
 
 	<ui:define name="content">
-		<h1>Abastecimentos</h1>
+		<h1>
+			<h:outputText rendered="#{abastecimentoBean.abastecimentoId == null}"
+				value="Cadastro de Abastecimentos" />
+			<h:outputText rendered="#{abastecimentoBean.abastecimentoId != null}"
+				value="Edição de Abastecimentos" />
+		</h1>
 
 		<p:messages id="messages" globalOnly="true" />
 
 		<h:form id="formAbastecimento">
+			<p:focus context="formAbastecimento" />
 			<p:fieldset legend="Dados do Abastecimento">
-				<h:panelGrid columns="3">
 
-					<h:outputLabel value="Veiculo pela Placa: " for="veiculoId" />
-					<h:selectOneMenu value="#{abastecimentoBean.veiculoId}"
-						id="veiculoId" required="true"
-						requiredMessage="Escolha um veiculo da lista">
-						<c:choose>
-							<c:when
-								test="#{abastecimentoBean.abastecimento.veiculo.id == null}">
-								<f:selectItem itemValue="" itemLabel="Escolha um Veiculo" />
-							</c:when>
-							<c:when
-								test="#{abastecimentoBean.abastecimento.veiculo.id != null}">
-								<f:selectItem
-									itemValue="#{abastecimentoBean.abastecimento.veiculo.id}"
-									itemLabel="#{abastecimentoBean.abastecimento.veiculo.placa}" />
-							</c:when>
-						</c:choose>
-						<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo"
-							itemLabel="#{veiculo.placa}" itemValue="#{veiculo.id}" />
-						<f:ajax event="blur" render="veiculoIdMessage" />
-					</h:selectOneMenu>
-					<h:commandLink styleClass="fa fa-car" value=" Novo Veiculo"
-						action="veiculo?faces-redirect=true" immediate="true" />
+				<p:panelGrid styleClass="tab-formulario">
+					<p:row>
+						<p:column style="width: 15ch;">
+							<p:outputLabel value="Veiculo pela Placa: " for="veiculoId" />
+						</p:column>
+						<p:column colspan="2">
+							<h:selectOneMenu label="Veículo" styleClass="form-normal"
+								value="#{abastecimentoBean.veiculoId}" id="veiculoId"
+								required="true" requiredMessage="Escolha um veiculo da lista">
+								<c:choose>
+									<c:when
+										test="#{abastecimentoBean.abastecimento.veiculo.id == null}">
+										<f:selectItem itemValue="" itemLabel="Escolha um Veiculo" />
+									</c:when>
+									<c:when
+										test="#{abastecimentoBean.abastecimento.veiculo.id != null}">
+										<f:selectItem
+											itemValue="#{abastecimentoBean.abastecimento.veiculo.id}"
+											itemLabel="#{abastecimentoBean.abastecimento.veiculo.placa}" />
+									</c:when>
+								</c:choose>
+								<f:selectItems value="#{veiculoBean.veiculos}" var="veiculo"
+									itemLabel="#{veiculo.placa}" itemValue="#{veiculo.id}" />
+								<f:ajax event="blur" render="veiculoIdMessage" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column>
+							<i class="fa fa-car" style="margin-right: 5px;" />
+							<p:link value="Novo Veículo" outcome="veiculo" />
+						</p:column>
+						<p:column colspan="4" style="width: 50%;">
+							<p:message for="veiculoId" id="veiculoIdMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Quantidade de Combustivel: "
-						for="qntCombustivel" />
-					<h:inputText id="qntCombustivel"
-						value="#{abastecimentoBean.abastecimento.qntCombustivel}"
-						required="true"
-						requiredMessage="Entre com a Quantidade de Combustivel"
-						validatorMessage="Entre com um valor numérico valido"
-						maxlength="5">
-						<f:ajax event="blur" render="qntCombustivelMessage" />
-					</h:inputText>
-					<p:message for="qntCombustivel" id="qntCombustivelMessage" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Quantidade de Combustivel: "
+								for="qntCombustivel" />
+						</p:column>
+						<p:column>
+							<p:inputText label="Quantidade de Combustível"
+								styleClass="form-normal" id="qntCombustivel"
+								value="#{abastecimentoBean.abastecimento.qntCombustivel}"
+								required="true"
+								requiredMessage="Entre com a Quantidade de Combustivel"
+								validatorMessage="Entre com um valor numérico valido"
+								maxlength="5">
+								<f:ajax event="blur" render="qntCombustivelMessage" />
+								<f:convertNumber maxFractionDigits="2" locale="pt_BR" />
+							</p:inputText>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Data do Abastecimento:"
+								for="dataAbastecimento" />
+						</p:column>
+						<p:column styleClass="td-data-botao">
+							<p:calendar id="dataAbastecimento" label="Data de Abastecimento"
+								value="#{abastecimentoBean.abastecimento.dataAbastecimento.time}"
+								showOn="button" locale="pt_BR" navigator="true"
+								pattern="dd/MM/yyyy" required="true"
+								requiredMessage="Data de Abastecimento Obrigatória"
+								maxlength="10" mindate="#{agendaBean.agenda.dataSaida.time}"
+								maxdate="31/12/17" mask="true">
+								<f:ajax event="blur" render="dataAbastecimentoMessage" />
+							</p:calendar>
+						</p:column>
+						<p:column colspan="4">
+							<p:message for="qntCombustivel" id="qntCombustivelMessage" />
+							<p:message for="dataAbastecimento" id="dataAbastecimentoMessage" />
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Data do Abastecimento:"
-						for="dataAbastecimento" />
-					<h:inputText id="dataAbastecimento"
-						value="#{abastecimentoBean.abastecimento.dataAbastecimento.time}"
-						required="true"
-						requiredMessage="Data de Abastecimento Obrigatória" maxlength="10">
-						<f:convertDateTime pattern="dd/MM/yyyy"
-							timeZone="America/Sao_Paulo" />
-					</h:inputText>
-					<p:message for="dataAbastecimento" id="dataAbastecimentoMessage" />
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Usuario: " for="usuarioId" />
+						</p:column>
+						<p:column colspan="2">
+							<h:selectOneMenu label="Motorista do Abastecimento"
+								styleClass="form-normal" value="#{abastecimentoBean.usuarioId}"
+								id="usuarioId" required="true"
+								requiredMessage="Escolha um Motorista da lista">
+								<c:choose>
+									<c:when
+										test="#{abastecimentoBean.abastecimento.usuario.id == null}">
+										<f:selectItem itemValue="" itemLabel="Escolha um Motorista" />
+									</c:when>
+									<c:when
+										test="#{abastecimentoBean.abastecimento.usuario.id != null}">
+										<f:selectItem
+											itemValue="#{abastecimentoBean.abastecimento.usuario.id}"
+											itemLabel="#{abastecimentoBean.abastecimento.usuario.nome}" />
+									</c:when>
+								</c:choose>
+								<f:selectItems value="#{usuarioBean.motoristas}" var="motorista"
+									itemLabel="#{motorista.nome}" itemValue="#{motorista.id}" />
+								<f:ajax event="blur" render="usuarioIdMessage" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column>
+							<i class="fa fa-user-plus" style="margin-right: 5px;" />
+							<p:link value="Novo Motorista" outcome="usuario" />
+						</p:column>
+						<p:column colspan="4">
+							<p:message for="usuarioId" id="usuarioIdMessage" />
+						</p:column>
+					</p:row>
 
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Observações:" for="descricao" />
+						</p:column>
+						<p:column colspan="4">
+							<p:inputTextarea id="descricao" styleClass="form-normal"
+								value="#{abastecimentoBean.abastecimento.descricao}" rows="3"
+								counter="display" maxlength="255"
+								counterTemplate="{0} caracteres restantes." autoResize="true" />
+						</p:column>
+						<p:column colspan="3" style="width: 40%;">
+						</p:column>
+					</p:row>
 
-					<h:outputLabel value="Usuario: " for="usuarioId" />
-					<h:selectOneMenu value="#{abastecimentoBean.usuarioId}"
-						id="usuarioId">
-						<c:choose>
-							<c:when
-								test="#{abastecimentoBean.abastecimento.usuario.id == null}">
-								<f:selectItem itemValue="" itemLabel="Escolha um Motorista" />
-							</c:when>
-							<c:when
-								test="#{abastecimentoBean.abastecimento.usuario.id != null}">
-								<f:selectItem
-									itemValue="#{abastecimentoBean.abastecimento.usuario.id}"
-									itemLabel="#{abastecimentoBean.abastecimento.usuario.nome}" />
-							</c:when>
-						</c:choose>
-						<f:selectItems value="#{usuarioBean.motoristas}" var="motorista"
-							itemLabel="#{motorista.nome}" itemValue="#{motorista.id}" />
-					</h:selectOneMenu>
-					<h:commandLink styleClass="fa fa-user-plus" value=" Novo motorista"
-						action="usuario?faces-redirect=true" immediate="true" />
+					<p:row>
+						<p:column></p:column>
+						<p:column>
+							<h:outputText id="display" />
+						</p:column>
+					</p:row>
 
-
-					<h:outputLabel value="Observações:" for="descricao" />
-					<h:inputTextarea id="descricao"
-						value="#{abastecimentoBean.abastecimento.descricao}" />
-				</h:panelGrid>
+				</p:panelGrid>
 			</p:fieldset>
 
-			<div class="ui-g-12">
-				<h:commandButton value="Gravar" action="#{abastecimentoBean.gravar}"
-					styleClass="ui-g-1 botao">
-					<f:ajax execute="@form" render="@form :messages" />
-				</h:commandButton>
-				<h:commandButton value="Limpar" type="reset" styleClass="ui-g-1 botao"/>
+			<div class="td-botao-consulta">
+				<p:commandButton id="gravarAbastecimento" value="Gravar"
+					action="#{abastecimentoBean.gravar}" process="@this @form"
+					update="@form :messages" icon="fa fa-fw fa-save" />
+				<p:commandButton value="Limpar" type="reset"
+					icon="fa fa-fw fa-eraser" update="@form" />
 			</div>
-
 		</h:form>
 	</ui:define>
 </ui:composition>
